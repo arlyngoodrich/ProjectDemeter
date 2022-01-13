@@ -13,7 +13,7 @@ class PROJECTDEMETER_API ACharacter_C : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	ACharacter_C();
+	ACharacter_C(const class FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned
