@@ -12,7 +12,8 @@ Saved
 *.suo
 *.xcodeproj
 *.xcworkspace
-Content/Environment/LandscapeMaterials/
+Content/Environment/LandscapeMaterials/Landscape
+Content/Environment/LandscapeMaterials/Noise
 Content/Environment/WeatherSystem/Materials
 Content/Environment/WeatherSystem/Sound
 Content/Environment/WeatherSystem/Textures
