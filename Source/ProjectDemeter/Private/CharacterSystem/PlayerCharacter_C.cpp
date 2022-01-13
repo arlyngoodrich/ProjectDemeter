@@ -18,7 +18,7 @@
 APlayerCharacter_C::APlayerCharacter_C(const FObjectInitializer& ObjectInitializer)
 
 
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<APlayerCharacter_C>(ACharacter_C::CharacterMovementComponentName))
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UPlayerCharMovementComponent_C>(ACharacter_C::CharacterMovementComponentName))
 
 {
 
