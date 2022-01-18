@@ -7,13 +7,16 @@
 		{
 			"Name": "ProjectDemeter",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "AdvancedRPGSystem",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/e5dae4ba623f4af69e8a7bd7a153d1b1"
 		},
 		{
@@ -195,6 +198,22 @@
 		{
 			"Name": "GooglePAD",
 			"Enabled": false
+		},
+		{
+			"Name": "EditorTests",
+			"Enabled": true
+		},
+		{
+			"Name": "FunctionalTestingEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "RuntimeTests",
+			"Enabled": true
+		},
+		{
+			"Name": "ScreenshotTools",
+			"Enabled": true
 		}
 	]
 }

@@ -12,3 +12,11 @@ Saved
 *.suo
 *.xcodeproj
 *.xcworkspace
+Content/Environment/LandscapeMaterials/Landscape
+Content/Environment/LandscapeMaterials/Noise
+Content/Environment/WeatherSystem/Materials
+Content/Environment/WeatherSystem/Sound
+Content/Environment/WeatherSystem/Textures
+Content/Environment/WeatherSystem/Particles
+Content/Environment/MegaScansTrees
+Content/Environment/Megascans
