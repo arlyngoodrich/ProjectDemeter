@@ -51,8 +51,40 @@ void UHealthComponent_C::AdjustHealth(float HealthDelta)
 
 	if (CurrentHealth != OldHealth)
 	{
-		UE_LOG(LogTemp,Log, TEXT("New Health: %f"), CurrentHealth)
+		UE_LOG(LogTemp, Log, TEXT("New Health: %f"), CurrentHealth);
+
+		if (CurrentHealth < MaxHealth && bShouldRegenerate)
+		{
+			ToggleHealthRegen(true);
+		}
+
 	}
+
+	if (CurrentHealth == MaxHealth)
+	{
+		ToggleHealthRegen(false);
+	}
+}
+
+void UHealthComponent_C::ToggleHealthRegen(bool bShouldtSartRegen)
+{
+	
+	if (bShouldtSartRegen)
+	{
+		//Do nothing if timer is already active
+		if (GetWorld()->GetTimerManager().IsTimerActive(HealthRegenTimer)) { return; }
+
+		GetWorld()->GetTimerManager().SetTimer(HealthRegenTimer, this, &UHealthComponent_C::RegenHealth, 1.f, true);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().ClearTimer(HealthRegenTimer);
+	}
+}
+
+void UHealthComponent_C::RegenHealth()
+{
+	AdjustHealth(BaseRegenerationAmount);
 }
 
 

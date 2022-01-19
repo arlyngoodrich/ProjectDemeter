@@ -30,6 +30,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Health")
 	float MaxHealth;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Health")
+	bool bShouldRegenerate;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Health", meta = (EditCondition = "bShouldRegenerate"))
+	float BaseRegenerationAmount;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Health")
 	float CurrentHealth;
 
@@ -39,5 +45,12 @@ protected:
 private:
 
 	void AdjustHealth(float HealthDelta);
-		
+
+	//Will ignore start request if already regenerating
+	void ToggleHealthRegen(bool bShouldtSartRegen);
+
+	void RegenHealth();
+	
+	FTimerHandle HealthRegenTimer;
+
 };
