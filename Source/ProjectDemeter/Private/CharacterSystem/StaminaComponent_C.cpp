@@ -3,6 +3,9 @@
 
 #include "CharacterSystem/StaminaComponent_C.h"
 
+//UE4 Includes
+#include "Net/UnrealNetwork.h"
+
 // Sets default values for this component's properties
 UStaminaComponent_C::UStaminaComponent_C()
 {
@@ -18,6 +21,16 @@ UStaminaComponent_C::UStaminaComponent_C()
 
 	// ...
 }
+
+void UStaminaComponent_C::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
+{
+
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UStaminaComponent_C, CurrentStamina);
+
+}
+
 
 
 // Called when the game starts
@@ -54,6 +67,11 @@ void UStaminaComponent_C::OnGaitUpdate(EGait NewGait)
 		break;
 	}
 
+}
+
+void UStaminaComponent_C::OnRep_StaminaChange()
+{
+	BP_OnStaminaUpdate(CurrentStamina);
 }
 
 void UStaminaComponent_C::OnSprintStart()
@@ -95,7 +113,7 @@ void UStaminaComponent_C::RegenerateStamina()
 
 	if (bIsStaminaDepleted == true && CurrentStamina >= StaminaDepletionLevel)
 	{
-		OnStaminaRegenerated();
+		BP_OnStaminaRegenerated();
 		bIsStaminaDepleted = false;
 	}
 	
@@ -113,7 +131,7 @@ void UStaminaComponent_C::DrainSprintStamina()
 
 	if (bIsStaminaDepleted == false && CurrentStamina <= StaminaDepletionLevel)
 	{
-		OnStaminaDepleted();
+		BP_OnStaminaDepleted();
 		bIsStaminaDepleted = true;
 	}
 
@@ -123,7 +141,13 @@ void UStaminaComponent_C::UpdateStamina(float StaminaDelta)
 {	
 	float OldStamina = CurrentStamina;
 	CurrentStamina = FMath::Clamp(OldStamina + StaminaDelta, 0.f, MaxStamina);
-	UE_LOG(LogTemp, Log, TEXT("Current Stamina: %f"), CurrentStamina);
+
+	if (OldStamina != CurrentStamina)
+	{
+		BP_OnStaminaUpdate(CurrentStamina);
+		UE_LOG(LogTemp, Log, TEXT("Current Stamina: %f"), CurrentStamina);
+	}
+
 }
 
 void UStaminaComponent_C::StartStaminaRegeneration()

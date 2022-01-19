@@ -28,29 +28,36 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
 	float MaxStamina;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
 	float StaminaDepletionLevel;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
 	float SprintStaminaDrain;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
 	float StaminaRegenerationAmount;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Stamina")
+	UPROPERTY(ReplicatedUsing = OnRep_StaminaChange, BlueprintReadOnly, Category = "Stamina")
 	float CurrentStamina;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
 	void OnGaitUpdate(EGait NewGait);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina")
-	void OnStaminaDepleted();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina", DisplayName = "On Stamina Depleted")
+	void BP_OnStaminaDepleted();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina")
-	void OnStaminaRegenerated();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina", DisplayName = "On Stamina Regenerated")
+	void BP_OnStaminaRegenerated();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina", DisplayName = "Local On Stamina Update")
+	void BP_OnStaminaUpdate(float UpdatedStamina);
+
+
+	UFUNCTION()
+	void OnRep_StaminaChange();
 
 	void OnSprintStart();
 
