@@ -28,12 +28,40 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	float MaxStamina;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	float SprintStaminaDrain;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	float StaminaRegenerationAmount;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Stamina")
+	float CurrentStamina;
+
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
 	void OnGaitUpdate(EGait NewGait);
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void OnSprintStart();
+
+	void OnRunStart();
+
+	void OnWalkStart();
+
+	void OnNoneStart();
+
+	FTimerHandle SprintStaminaDrainTimer;
+
+	FTimerHandle StaminaRegenerationTimer;
+
+private:
+
+	void RegenerateStamina();
+
+	void DrainSprintStamina();
+
+	void UpdateStamina(float StaminaDelta);
 
 		
 };
