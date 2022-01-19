@@ -32,6 +32,9 @@ protected:
 	float MaxStamina;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
+	float StaminaDepletionLevel;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
 	float SprintStaminaDrain;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stamina")
@@ -42,6 +45,12 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
 	void OnGaitUpdate(EGait NewGait);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina")
+	void OnStaminaDepleted();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina")
+	void OnStaminaRegenerated();
 
 	void OnSprintStart();
 
@@ -55,6 +64,8 @@ protected:
 
 	FTimerHandle StaminaRegenerationTimer;
 
+	bool bIsStaminaDepleted;
+
 private:
 
 	void RegenerateStamina();
@@ -62,6 +73,14 @@ private:
 	void DrainSprintStamina();
 
 	void UpdateStamina(float StaminaDelta);
+
+	void StartStaminaRegeneration();
+
+	void StopStaminaRegeneration();
+
+	void StartStaminaDrain();
+
+	void StopStaminaDrain();
 
 		
 };

@@ -14,6 +14,7 @@ UStaminaComponent_C::UStaminaComponent_C()
 	MaxStamina = 100;
 	SprintStaminaDrain = 2;
 	StaminaRegenerationAmount = 4;
+	StaminaDepletionLevel = 80;
 
 	// ...
 }
@@ -59,11 +60,8 @@ void UStaminaComponent_C::OnSprintStart()
 {
 	UE_LOG(LogTemp, Log, TEXT("On Sprint Start"));
 	
-	//Start stamian drain timer
-	GetWorld()->GetTimerManager().SetTimer(SprintStaminaDrainTimer, this, &UStaminaComponent_C::DrainSprintStamina, 1.f, true);
-	
-	//Clear Stamina Regen
-	GetWorld()->GetTimerManager().ClearTimer(StaminaRegenerationTimer);
+	StartStaminaDrain();
+	StopStaminaRegeneration();
 	
 }
 
@@ -72,19 +70,16 @@ void UStaminaComponent_C::OnRunStart()
 	UE_LOG(LogTemp, Log, TEXT("On Run Start"));
 	
 	//Clear Stamina Drain
-	GetWorld()->GetTimerManager().ClearTimer(SprintStaminaDrainTimer);
-
+	StopStaminaRegeneration(); 
+	StopStaminaDrain();
 }
 
 void UStaminaComponent_C::OnWalkStart()
 {
 
-	//Start Stamina Regen
 	UE_LOG(LogTemp, Log, TEXT("On Walk Start"))
-	GetWorld()->GetTimerManager().SetTimer(StaminaRegenerationTimer, this, &UStaminaComponent_C::RegenerateStamina, 1.f, true);
-	
-	//Clear Stamina Drain
-	GetWorld()->GetTimerManager().ClearTimer(SprintStaminaDrainTimer);
+	StartStaminaRegeneration();
+	StopStaminaDrain();
 	
 }
 
@@ -97,11 +92,17 @@ void UStaminaComponent_C::RegenerateStamina()
 {
 	UE_LOG(LogTemp, Log, TEXT("RegenerateStamina"))
 	UpdateStamina(StaminaRegenerationAmount);
+
+	if (bIsStaminaDepleted == true && CurrentStamina >= StaminaDepletionLevel)
+	{
+		OnStaminaRegenerated();
+		bIsStaminaDepleted = false;
+	}
 	
 	//Stop Stamina Regen once it reaches max level
 	if (CurrentStamina == MaxStamina)
 	{
-		GetWorld()->GetTimerManager().ClearTimer(StaminaRegenerationTimer);
+		StopStaminaRegeneration();
 	}
 }
 
@@ -109,6 +110,13 @@ void UStaminaComponent_C::DrainSprintStamina()
 {
 	UE_LOG(LogTemp, Log, TEXT("Drain Stamina"))
 	UpdateStamina(-SprintStaminaDrain);
+
+	if (bIsStaminaDepleted == false && CurrentStamina <= StaminaDepletionLevel)
+	{
+		OnStaminaDepleted();
+		bIsStaminaDepleted = true;
+	}
+
 }
 
 void UStaminaComponent_C::UpdateStamina(float StaminaDelta)
@@ -116,6 +124,26 @@ void UStaminaComponent_C::UpdateStamina(float StaminaDelta)
 	float OldStamina = CurrentStamina;
 	CurrentStamina = FMath::Clamp(OldStamina + StaminaDelta, 0.f, MaxStamina);
 	UE_LOG(LogTemp, Log, TEXT("Current Stamina: %f"), CurrentStamina);
+}
+
+void UStaminaComponent_C::StartStaminaRegeneration()
+{
+	GetWorld()->GetTimerManager().SetTimer(StaminaRegenerationTimer, this, &UStaminaComponent_C::RegenerateStamina, 1.f, true);
+}
+
+void UStaminaComponent_C::StopStaminaRegeneration()
+{
+	GetWorld()->GetTimerManager().ClearTimer(StaminaRegenerationTimer);
+}
+
+void UStaminaComponent_C::StartStaminaDrain()
+{
+	GetWorld()->GetTimerManager().SetTimer(SprintStaminaDrainTimer, this, &UStaminaComponent_C::DrainSprintStamina, 1.f, true);
+}
+
+void UStaminaComponent_C::StopStaminaDrain()
+{
+	GetWorld()->GetTimerManager().ClearTimer(SprintStaminaDrainTimer);
 }
 
 
