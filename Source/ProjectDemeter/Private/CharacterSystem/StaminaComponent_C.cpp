@@ -17,7 +17,8 @@ UStaminaComponent_C::UStaminaComponent_C()
 	MaxStamina = 100;
 	SprintStaminaDrain = 2;
 	StaminaRegenerationAmount = 4;
-	StaminaDepletionLevel = 80;
+	StaminaDepletionLevel = 20;
+	JumpStaminaDrain = 10;
 
 	// ...
 }
@@ -67,6 +68,12 @@ void UStaminaComponent_C::OnGaitUpdate(EGait NewGait)
 		break;
 	}
 
+}
+
+
+void UStaminaComponent_C::OnJump()
+{
+	UpdateStamina(-JumpStaminaDrain);
 }
 
 void UStaminaComponent_C::OnRep_StaminaChange()
