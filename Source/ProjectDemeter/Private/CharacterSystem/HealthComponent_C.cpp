@@ -95,6 +95,8 @@ void UHealthComponent_C::AdjustHealth(float HealthDelta)
 	{
 		bHasDied = true;
 		OnRep_bHasDied();
+		ToggleHealthRegen(false);
+		bShouldRegenerate = false;
 	}
 }
 
