@@ -38,6 +38,9 @@ protected:
 	float SprintStaminaDrain;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
+	float JumpStaminaDrain;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
 	float StaminaRegenerationAmount;
 
 	UPROPERTY(ReplicatedUsing = OnRep_StaminaChange, BlueprintReadOnly, Category = "Stamina")
@@ -45,6 +48,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
 	void OnGaitUpdate(EGait NewGait);
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
+	void OnJump();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina", DisplayName = "On Stamina Depleted")
 	void BP_OnStaminaDepleted();
