@@ -36,11 +36,26 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Health", meta = (EditCondition = "bShouldRegenerate"))
 	float BaseRegenerationAmount;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthChange, Category = "Health")
 	float CurrentHealth;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_bHasDied, Category = "Health")
+	bool bHasDied;
 
 	UFUNCTION()
 	virtual void OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION()
+	void OnRep_HealthChange();
+
+	UFUNCTION()
+	void OnRep_bHasDied();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Health", DisplayName = "On Health Change")
+	void BP_OnHealthChange(float NewHealth);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Health", DisplayName = "On Death")
+	void BP_OnDied();
 
 private:
 

@@ -3,6 +3,9 @@
 
 #include "CharacterSystem/HealthComponent_C.h"
 
+//UE4 Includes
+#include "Net/UnrealNetwork.h"
+
 // Sets default values for this component's properties
 UHealthComponent_C::UHealthComponent_C()
 {
@@ -31,17 +34,39 @@ void UHealthComponent_C::BeginPlay()
 	
 }
 
+void UHealthComponent_C::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
+{
+
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UHealthComponent_C, CurrentHealth);
+	DOREPLIFETIME(UHealthComponent_C, bHasDied);
+
+}
+
 void UHealthComponent_C::Initalize()
 {
 	MyOwner = GetOwner();
 	CurrentHealth = MaxHealth;
 	MyOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent_C::OnOwnerTakeDamage);	
+	bHasDied = false;
 }
 
 void UHealthComponent_C::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	UE_LOG(LogTemp, Log, TEXT("Damage taken: %f"), Damage);
 	AdjustHealth(-Damage);
+}
+
+void UHealthComponent_C::OnRep_HealthChange()
+{
+	BP_OnHealthChange(CurrentHealth);
+}
+
+void UHealthComponent_C::OnRep_bHasDied()
+{
+	UE_LOG(LogTemp,Log,TEXT("%s has died"),*GetOwner()->GetName())
+	BP_OnDied();
 }
 
 void UHealthComponent_C::AdjustHealth(float HealthDelta)
@@ -52,6 +77,7 @@ void UHealthComponent_C::AdjustHealth(float HealthDelta)
 	if (CurrentHealth != OldHealth)
 	{
 		UE_LOG(LogTemp, Log, TEXT("New Health: %f"), CurrentHealth);
+		OnRep_HealthChange();
 
 		if (CurrentHealth < MaxHealth && bShouldRegenerate)
 		{
@@ -63,6 +89,12 @@ void UHealthComponent_C::AdjustHealth(float HealthDelta)
 	if (CurrentHealth == MaxHealth)
 	{
 		ToggleHealthRegen(false);
+	}
+
+	if (CurrentHealth == 0)
+	{
+		bHasDied = true;
+		OnRep_bHasDied();
 	}
 }
 
