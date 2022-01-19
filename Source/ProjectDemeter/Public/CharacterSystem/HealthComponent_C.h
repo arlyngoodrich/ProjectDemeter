@@ -16,6 +16,9 @@ public:
 	// Sets default values for this component's properties
 	UHealthComponent_C();
 
+	UFUNCTION(BlueprintPure, Category = "Health")
+	void GetHealthStats(float& OutCurrentHealth, float& OutMaxHealth);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

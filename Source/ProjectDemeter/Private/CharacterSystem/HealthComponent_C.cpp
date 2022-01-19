@@ -16,6 +16,12 @@ UHealthComponent_C::UHealthComponent_C()
 }
 
 
+void UHealthComponent_C::GetHealthStats(float& OutCurrentHealth, float& OutMaxHealth)
+{
+	OutCurrentHealth = CurrentHealth;
+	OutMaxHealth = MaxHealth;
+}
+
 // Called when the game starts
 void UHealthComponent_C::BeginPlay()
 {
