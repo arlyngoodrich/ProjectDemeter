@@ -29,10 +29,15 @@ void UStaminaComponent_C::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UStaminaComponent_C, CurrentStamina);
+	DOREPLIFETIME(UStaminaComponent_C, bIsStaminaDepleted);
 
 }
 
 
+bool UStaminaComponent_C::GetIsStaminaDepleted()
+{
+	return bIsStaminaDepleted;
+}
 
 // Called when the game starts
 void UStaminaComponent_C::BeginPlay()
@@ -76,9 +81,33 @@ void UStaminaComponent_C::OnJump()
 	UpdateStamina(-JumpStaminaDrain);
 }
 
+void UStaminaComponent_C::OnRoll()
+{
+	UpdateStamina(-RollStaminaDrain);
+}
+
+void UStaminaComponent_C::OnCustomAction(float StaminaCost)
+{
+	UpdateStamina(-StaminaCost);
+
+}
+
 void UStaminaComponent_C::OnRep_StaminaChange()
 {
 	BP_OnStaminaUpdate(CurrentStamina);
+}
+
+void UStaminaComponent_C::OnRep_IsDepletedUpdated()
+{
+	if (bIsStaminaDepleted)
+	{
+		BP_OnStaminaDepleted();
+	}
+	else
+	{
+		BP_OnStaminaRegenerated();
+	}
+
 }
 
 void UStaminaComponent_C::OnSprintStart()
@@ -120,8 +149,8 @@ void UStaminaComponent_C::RegenerateStamina()
 
 	if (bIsStaminaDepleted == true && CurrentStamina >= StaminaDepletionLevel)
 	{
-		BP_OnStaminaRegenerated();
 		bIsStaminaDepleted = false;
+		OnRep_IsDepletedUpdated();
 	}
 	
 	//Stop Stamina Regen once it reaches max level
@@ -138,8 +167,8 @@ void UStaminaComponent_C::DrainSprintStamina()
 
 	if (bIsStaminaDepleted == false && CurrentStamina <= StaminaDepletionLevel)
 	{
-		BP_OnStaminaDepleted();
 		bIsStaminaDepleted = true;
+		OnRep_IsDepletedUpdated();
 	}
 
 }
