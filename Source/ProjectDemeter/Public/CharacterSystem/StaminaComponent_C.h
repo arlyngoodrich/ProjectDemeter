@@ -15,6 +15,7 @@ enum class EGait : uint8 {
 };
 
 
+
 UCLASS( ClassGroup=(Custom), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UStaminaComponent_C : public UActorComponent
 {
@@ -23,6 +24,9 @@ class PROJECTDEMETER_API UStaminaComponent_C : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UStaminaComponent_C();
+
+	UFUNCTION(BlueprintPure, Category = "Stamina")
+	bool GetIsStaminaDepleted();
 
 protected:
 	// Called when the game starts
@@ -35,22 +39,34 @@ protected:
 	float StaminaDepletionLevel;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
+	float StaminaRegenerationAmount;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
 	float SprintStaminaDrain;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
 	float JumpStaminaDrain;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Stamina")
-	float StaminaRegenerationAmount;
+	float RollStaminaDrain;
 
 	UPROPERTY(ReplicatedUsing = OnRep_StaminaChange, BlueprintReadOnly, Category = "Stamina")
 	float CurrentStamina;
+
+	UPROPERTY(ReplicatedUsing = OnRep_IsDepletedUpdated, BlueprintReadOnly, Category = "Stamina")
+	bool bIsStaminaDepleted;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
 	void OnGaitUpdate(EGait NewGait);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
 	void OnJump();
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
+	void OnRoll();
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina")
+	void OnCustomAction(float StaminaCost);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina", DisplayName = "On Stamina Depleted")
 	void BP_OnStaminaDepleted();
@@ -61,9 +77,11 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Stamina", DisplayName = "Local On Stamina Update")
 	void BP_OnStaminaUpdate(float UpdatedStamina);
 
-
 	UFUNCTION()
 	void OnRep_StaminaChange();
+
+	UFUNCTION()
+	void OnRep_IsDepletedUpdated();
 
 	void OnSprintStart();
 
@@ -76,8 +94,6 @@ protected:
 	FTimerHandle SprintStaminaDrainTimer;
 
 	FTimerHandle StaminaRegenerationTimer;
-
-	bool bIsStaminaDepleted;
 
 private:
 
