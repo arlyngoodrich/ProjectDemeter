@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Character_C.generated.h"
 
+
 UCLASS()
 class PROJECTDEMETER_API ACharacter_C : public ACharacter
 {
