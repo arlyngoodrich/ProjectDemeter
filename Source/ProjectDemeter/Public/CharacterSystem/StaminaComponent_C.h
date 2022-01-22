@@ -111,5 +111,7 @@ private:
 
 	void StopStaminaDrain();
 
+	bool bIsWalking;
+
 		
 };

@@ -79,17 +79,31 @@ void UStaminaComponent_C::OnGaitUpdate(EGait NewGait)
 void UStaminaComponent_C::OnJump()
 {
 	UpdateStamina(-JumpStaminaDrain);
+
+	if (bIsWalking)
+	{
+		StartStaminaRegeneration();
+	}
 }
 
 void UStaminaComponent_C::OnRoll()
 {
 	UpdateStamina(-RollStaminaDrain);
+
+	if (bIsWalking)
+	{
+		StartStaminaRegeneration();
+	}
 }
 
 void UStaminaComponent_C::OnCustomAction(float StaminaCost)
 {
 	UpdateStamina(-StaminaCost);
 
+	if (bIsWalking)
+	{
+		StartStaminaRegeneration();
+	}
 }
 
 void UStaminaComponent_C::OnRep_StaminaChange()
@@ -116,6 +130,7 @@ void UStaminaComponent_C::OnSprintStart()
 	
 	StartStaminaDrain();
 	StopStaminaRegeneration();
+	bIsWalking = false;
 	
 }
 
@@ -126,6 +141,7 @@ void UStaminaComponent_C::OnRunStart()
 	//Clear Stamina Drain
 	StopStaminaRegeneration(); 
 	StopStaminaDrain();
+	bIsWalking = false;
 }
 
 void UStaminaComponent_C::OnWalkStart()
@@ -133,8 +149,8 @@ void UStaminaComponent_C::OnWalkStart()
 
 	UE_LOG(LogTemp, Log, TEXT("On Walk Start"))
 	StartStaminaRegeneration();
-	StopStaminaDrain();
-	
+	StopStaminaDrain();	
+	bIsWalking = true;
 }
 
 void UStaminaComponent_C::OnNoneStart()
@@ -147,29 +163,12 @@ void UStaminaComponent_C::RegenerateStamina()
 	UE_LOG(LogTemp, Log, TEXT("RegenerateStamina"))
 	UpdateStamina(StaminaRegenerationAmount);
 
-	if (bIsStaminaDepleted == true && CurrentStamina >= StaminaDepletionLevel)
-	{
-		bIsStaminaDepleted = false;
-		OnRep_IsDepletedUpdated();
-	}
-	
-	//Stop Stamina Regen once it reaches max level
-	if (CurrentStamina == MaxStamina)
-	{
-		StopStaminaRegeneration();
-	}
 }
 
 void UStaminaComponent_C::DrainSprintStamina()
 {
-	UE_LOG(LogTemp, Log, TEXT("Drain Stamina"))
+	UE_LOG(LogTemp, Log, TEXT("Drain Sprint Stamina"))
 	UpdateStamina(-SprintStaminaDrain);
-
-	if (bIsStaminaDepleted == false && CurrentStamina <= StaminaDepletionLevel)
-	{
-		bIsStaminaDepleted = true;
-		OnRep_IsDepletedUpdated();
-	}
 
 }
 
@@ -178,10 +177,31 @@ void UStaminaComponent_C::UpdateStamina(float StaminaDelta)
 	float OldStamina = CurrentStamina;
 	CurrentStamina = FMath::Clamp(OldStamina + StaminaDelta, 0.f, MaxStamina);
 
+	//If stamina has changed
 	if (OldStamina != CurrentStamina)
 	{
 		BP_OnStaminaUpdate(CurrentStamina);
 		UE_LOG(LogTemp, Log, TEXT("Current Stamina: %f"), CurrentStamina);
+
+		//Check to see if stamina should be depleted
+		if (bIsStaminaDepleted == false && CurrentStamina <= StaminaDepletionLevel)
+		{
+			bIsStaminaDepleted = true;
+			OnRep_IsDepletedUpdated();
+		}
+
+		//Check to see if stamina should be regenerated
+		if (bIsStaminaDepleted == true && CurrentStamina >= StaminaDepletionLevel)
+		{
+			bIsStaminaDepleted = false;
+			OnRep_IsDepletedUpdated();
+		}
+
+		//Stop Stamina Regen once it reaches max level
+		if (CurrentStamina == MaxStamina)
+		{
+			StopStaminaRegeneration();
+		}
 	}
 
 }
