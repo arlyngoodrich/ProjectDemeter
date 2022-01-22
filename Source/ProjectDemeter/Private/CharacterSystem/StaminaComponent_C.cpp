@@ -2,6 +2,7 @@
 
 
 #include "CharacterSystem/StaminaComponent_C.h"
+#include "Core/Logs_C.h"
 
 //UE4 Includes
 #include "Net/UnrealNetwork.h"
@@ -52,8 +53,6 @@ void UStaminaComponent_C::BeginPlay()
 
 void UStaminaComponent_C::OnGaitUpdate(EGait NewGait)
 {
-
-	//UE_LOG(LogTemp, Log, TEXT("Gait Enum is %s"), *UEnum::GetValueAsString(NewGait));
 
 	switch (NewGait)
 	{
@@ -116,17 +115,19 @@ void UStaminaComponent_C::OnRep_IsDepletedUpdated()
 	if (bIsStaminaDepleted)
 	{
 		BP_OnStaminaDepleted();
+		UE_LOG(LogStamina, Log, TEXT("%s stamina is now depleted"), *GetOwner()->GetName())
 	}
 	else
 	{
 		BP_OnStaminaRegenerated();
+		UE_LOG(LogStamina, Log, TEXT("%s stamina is now regenerated"), *GetOwner()->GetName())
 	}
 
 }
 
 void UStaminaComponent_C::OnSprintStart()
 {
-	UE_LOG(LogTemp, Log, TEXT("On Sprint Start"));
+
 	
 	StartStaminaDrain();
 	StopStaminaRegeneration();
@@ -136,7 +137,6 @@ void UStaminaComponent_C::OnSprintStart()
 
 void UStaminaComponent_C::OnRunStart()
 {
-	UE_LOG(LogTemp, Log, TEXT("On Run Start"));
 	
 	//Clear Stamina Drain
 	StopStaminaRegeneration(); 
@@ -147,7 +147,6 @@ void UStaminaComponent_C::OnRunStart()
 void UStaminaComponent_C::OnWalkStart()
 {
 
-	UE_LOG(LogTemp, Log, TEXT("On Walk Start"))
 	StartStaminaRegeneration();
 	StopStaminaDrain();	
 	bIsWalking = true;
@@ -155,19 +154,18 @@ void UStaminaComponent_C::OnWalkStart()
 
 void UStaminaComponent_C::OnNoneStart()
 {
-	UE_LOG(LogTemp, Log, TEXT("On None Start"))
 }
 
 void UStaminaComponent_C::RegenerateStamina()
 {
-	UE_LOG(LogTemp, Log, TEXT("RegenerateStamina"))
+	UE_LOG(LogStamina, Log, TEXT("%s regenerating %f stamina"), *GetOwner()->GetName(),StaminaRegenerationAmount)
 	UpdateStamina(StaminaRegenerationAmount);
 
 }
 
 void UStaminaComponent_C::DrainSprintStamina()
 {
-	UE_LOG(LogTemp, Log, TEXT("Drain Sprint Stamina"))
+	UE_LOG(LogStamina, Log, TEXT("%s draining %f stamina by sprinting"), *GetOwner()->GetName(), SprintStaminaDrain)
 	UpdateStamina(-SprintStaminaDrain);
 
 }
@@ -181,7 +179,7 @@ void UStaminaComponent_C::UpdateStamina(float StaminaDelta)
 	if (OldStamina != CurrentStamina)
 	{
 		BP_OnStaminaUpdate(CurrentStamina);
-		UE_LOG(LogTemp, Log, TEXT("Current Stamina: %f"), CurrentStamina);
+		UE_LOG(LogStamina, Log, TEXT("%s current stamina: %f"), *GetOwner()->GetName(), CurrentStamina);
 
 		//Check to see if stamina should be depleted
 		if (bIsStaminaDepleted == false && CurrentStamina <= StaminaDepletionLevel)
