@@ -11,6 +11,8 @@ APawn_C::APawn_C()
 
 }
 
+
+
 // Called when the game starts or when spawned
 void APawn_C::BeginPlay()
 {

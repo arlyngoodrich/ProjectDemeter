@@ -6,6 +6,10 @@
 #include "GameFramework/Pawn.h"
 #include "Pawn_C.generated.h"
 
+
+
+
+
 UCLASS()
 class PROJECTDEMETER_API APawn_C : public APawn
 {
