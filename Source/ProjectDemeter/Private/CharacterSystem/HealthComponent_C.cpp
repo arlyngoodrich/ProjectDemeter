@@ -2,6 +2,7 @@
 
 
 #include "CharacterSystem/HealthComponent_C.h"
+#include "Core/Logs_C.h"
 
 //UE4 Includes
 #include "Net/UnrealNetwork.h"
@@ -54,7 +55,7 @@ void UHealthComponent_C::Initalize()
 
 void UHealthComponent_C::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Log, TEXT("Damage taken: %f"), Damage);
+	UE_LOG(LogHealth, Log, TEXT("%s recieved %f damage"), *GetOwner()->GetName(), Damage);
 	AdjustHealth(-Damage);
 }
 
@@ -65,7 +66,7 @@ void UHealthComponent_C::OnRep_HealthChange()
 
 void UHealthComponent_C::OnRep_bHasDied()
 {
-	UE_LOG(LogTemp,Log,TEXT("%s has died"),*GetOwner()->GetName())
+	UE_LOG(LogHealth, Log, TEXT("%s has died"),*GetOwner()->GetName())
 	BP_OnDied();
 }
 
@@ -76,8 +77,8 @@ void UHealthComponent_C::AdjustHealth(float HealthDelta)
 
 	if (CurrentHealth != OldHealth)
 	{
-		UE_LOG(LogTemp, Log, TEXT("New Health: %f"), CurrentHealth);
 		OnRep_HealthChange();
+		UE_LOG(LogHealth, Log, TEXT("%s changed to %f "), *GetOwner()->GetName(), CurrentHealth)
 
 		if (CurrentHealth < MaxHealth && bShouldRegenerate)
 		{
@@ -119,6 +120,7 @@ void UHealthComponent_C::ToggleHealthRegen(bool bShouldtSartRegen)
 void UHealthComponent_C::RegenHealth()
 {
 	AdjustHealth(BaseRegenerationAmount);
+	UE_LOG(LogHealth, Log, TEXT("%s has regenerated %f health"), *GetOwner()->GetName(), BaseRegenerationAmount)
 }
 
 
