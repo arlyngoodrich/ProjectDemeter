@@ -206,6 +206,7 @@ void UStaminaComponent_C::UpdateStamina(float StaminaDelta)
 
 void UStaminaComponent_C::StartStaminaRegeneration()
 {
+	if (CurrentStamina == MaxStamina) { return; }
 	GetWorld()->GetTimerManager().SetTimer(StaminaRegenerationTimer, this, &UStaminaComponent_C::RegenerateStamina, 1.f, true);
 }
 
