@@ -29,8 +29,23 @@ void UInteractableObjectComponent::Interact()
 
 }
 
-void UInteractableObjectComponent::ToggleFocus(bool bIsInFocus)
+void UInteractableObjectComponent::ToggleFocus(bool bNewIsInFocus)
 {
+	bIsInFocus = bNewIsInFocus;
+
+	if (bNewIsInFocus)
+	{
+		UE_LOG(LogInteractionSystem, Log, TEXT("%s is now in focus"), *GetOwner()->GetName())
+		BP_OnStartFocus();
+	}
+	else
+	{
+		UE_LOG(LogInteractionSystem, Log, TEXT("%s is no longer in focus"), *GetOwner()->GetName())
+		BP_OnEndFocus();
+	}
+
+	
+
 }
 
 // Called when the game starts

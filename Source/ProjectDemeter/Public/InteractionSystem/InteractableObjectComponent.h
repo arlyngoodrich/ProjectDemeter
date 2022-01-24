@@ -18,11 +18,22 @@ public:
 
 	void Interact();
 
-	void ToggleFocus(bool bIsInFocus);
+	void ToggleFocus(bool bNewIsInFocus);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Focus Start")
+	void BP_OnStartFocus();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On End Focus")
+	void BP_OnEndFocus();
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Interaction System")
+	bool bIsInFocus;
+
+
 
 
 		
