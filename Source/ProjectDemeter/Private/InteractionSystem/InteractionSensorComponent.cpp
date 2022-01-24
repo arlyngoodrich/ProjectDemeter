@@ -35,6 +35,7 @@ void UInteractionSensorComponent::BeginPlay()
 void UInteractionSensorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	InteractionCheckLoop();
 
 	// ...
 }
@@ -71,26 +72,39 @@ void UInteractionSensorComponent::Initalize()
 
 void UInteractionSensorComponent::InteractionCheckLoop()
 {
-	AActor* ActorInView;
+
+
+
+	AActor* HitActorInView;
 
 	//Perform hit scan to get hit actor
-	if (GetHitActorInView(ActorInView))
+	if (GetHitActorInView(HitActorInView))
 	{
+		//If Actor in view is not the same as the new actor in view, set as new one.  
+		//Otherwise don't check for interactable componet if it's the same
+		if (HitActorInView != ActorInView)
+		{
 
-		//check if has interactable actor
-		if (GetInteractableComponent(ActorInView, InteractableObjectComponentInView))
-		{
-			bInteractableObjectInView = true;
-		}
-		else
-		{
-			bInteractableObjectInView = false;
+			ActorInView = HitActorInView;
+
+			//check if has interactable actor
+			if (GetInteractableComponent(HitActorInView, InteractableObjectComponentInView))
+			{
+				bInteractableObjectInView = true;
+			}
+			else
+			{
+				bInteractableObjectInView = false;
+			}
 		}
 	}
 }
 
 bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor)
 {
+
+	if (!OwningController) { return false; }
+
 
 	FVector StartLocation;
 	FRotator ViewRotation;
@@ -108,12 +122,18 @@ bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor)
 
 	if (bDrawDebug)
 	{
-		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.f);
+		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, .1f);
 	}
 
 	if (TraceResult)
 	{
 		HitActor = Hit.GetActor();
+
+		if (bDrawDebug)
+		{
+			DrawDebugBox(GetWorld(), Hit.Location, FVector(10.f, 10.f, 10.f), FColor::Red, false, .1f);
+		}
+
 		return true;
 	}
 	else

@@ -39,6 +39,8 @@ protected:
 
 	APlayerController* OwningController;
 
+	AActor* ActorInView;
+
 	void Initalize();
 
 	UFUNCTION()
