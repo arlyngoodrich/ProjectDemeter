@@ -35,9 +35,12 @@ void UInteractionSensorComponent::BeginPlay()
 void UInteractionSensorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	InteractionCheckLoop();
+	
+	if (bShouldCheckForInteractable)
+	{
+		InteractionCheckLoop();
+	}
 
-	// ...
 }
 
 void UInteractionSensorComponent::Initalize()
@@ -65,7 +68,9 @@ void UInteractionSensorComponent::Initalize()
 		else
 		{
 			OwningController = OwningControllerCheck;
-			UE_LOG(LogInteractionSystem, Log, TEXT("Interaction Sensor Component succesfully initalized on %s"),*GetOwner()->GetName())
+			UE_LOG(LogInteractionSystem, Log, TEXT("Interaction Sensor Component succesfully initalized on %s"), *GetOwner()->GetName())
+				
+			ToggleInteraction(true);
 		}
 	}
 }
@@ -79,6 +84,20 @@ void UInteractionSensorComponent::Interact()
 	else
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("No interactable in view for %s.  Disregarding request."), *GetOwner()->GetName())
+	}
+}
+
+void UInteractionSensorComponent::ToggleInteraction(bool bShouldCheckForInteraction)
+{
+	bShouldCheckForInteractable = bShouldCheckForInteraction;
+
+	if (bShouldCheckForInteraction)
+	{
+		UE_LOG(LogInteractionSystem,Log,TEXT("Interaction Started for %s"),*GetOwner()->GetName())
+	}
+	else
+	{
+		UE_LOG(LogInteractionSystem,Log,TEXT("Interaction Stopped for %s"),*GetOwner()->GetName())
 	}
 }
 
@@ -131,6 +150,7 @@ bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor)
 	FCollisionQueryParams TraceParams;
 
 	TraceParams.bTraceComplex = true;
+	TraceParams.AddIgnoredActor(GetOwner());
 
 	OwningController->GetPlayerViewPoint(StartLocation, ViewRotation);
 	EndLocation = StartLocation + (ViewRotation.Vector() * InteractionDistance);

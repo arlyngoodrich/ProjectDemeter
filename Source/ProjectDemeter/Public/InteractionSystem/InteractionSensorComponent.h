@@ -37,6 +37,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Debug")
 	bool bDrawDebug;
 
+	bool bShouldCheckForInteractable;
+
 	APlayerController* OwningController;
 
 	AActor* ActorInView;
@@ -45,6 +47,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction System")
 	void Interact();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction System")
+	void ToggleInteraction(bool bShouldCheckForInteraction);
+
 
 	UFUNCTION()
 	void InteractionCheckLoop();
