@@ -14,6 +14,8 @@ AItem::AItem()
 	InteractionComponent = CreateDefaultSubobject<UInteractableObjectComponent>(TEXT("Interaction Component"));
 }
 
+
+
 // Called when the game starts or when spawned
 void AItem::BeginPlay()
 {
@@ -21,6 +23,13 @@ void AItem::BeginPlay()
 
 	Initalize();
 	
+}
+
+// Called every frame
+void AItem::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
 }
 
 void AItem::Initalize()
@@ -33,10 +42,5 @@ void AItem::OnInteraction(AActor* InstigatingActor)
 	UE_LOG(LogInteractionSystem,Log,TEXT("%s received interaction from %s"),*GetName(),*InstigatingActor->GetName())
 }
 
-// Called every frame
-void AItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
