@@ -7,6 +7,8 @@
 #include "ItemSystem/ItemData.h"
 #include "Item.generated.h"
 
+class UInteractableObjectComponent;
+
 UCLASS()
 class PROJECTDEMETER_API AItem : public AActor
 {
@@ -16,6 +18,9 @@ public:
 	// Sets default values for this actor's properties
 	AItem();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -23,11 +28,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Item Data")
 	FItemData ItemData;
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Interaction System")
-	void PickupItem(AActor* InstigatingActor);
+	UPROPERTY(VisibleAnywhere)
+	UInteractableObjectComponent* InteractionComponent;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void Initalize();
+
+	UFUNCTION()
+	void OnInteraction(AActor* InstigatingActor);
+
 
 };

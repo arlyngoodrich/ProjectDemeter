@@ -2,6 +2,7 @@
 
 
 #include "ItemSystem/Item.h"
+#include "InteractionSystem/InteractableObjectComponent.h"
 
 
 // Sets default values
@@ -9,6 +10,7 @@ AItem::AItem()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	InteractionComponent = CreateDefaultSubobject<UInteractableObjectComponent>(TEXT("Interaction Component"));
 
 }
 
@@ -19,8 +21,14 @@ void AItem::BeginPlay()
 	
 }
 
-void AItem::PickupItem(AActor* InstigatingActor)
+void AItem::Initalize()
 {
+	InteractionComponent->OnInteractionTriggered.AddDynamic(this, &AItem::OnInteraction);
+}
+
+void AItem::OnInteraction(AActor* InstigatingActor)
+{
+
 }
 
 // Called every frame
