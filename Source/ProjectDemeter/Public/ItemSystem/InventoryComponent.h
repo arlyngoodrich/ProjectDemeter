@@ -7,7 +7,7 @@
 #include "ItemSystem/ItemData.h"
 #include "InventoryComponent.generated.h"
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
 UCLASS( ClassGroup=(ItemSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UInventoryComponent : public UActorComponent
@@ -17,6 +17,9 @@ class PROJECTDEMETER_API UInventoryComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UInventoryComponent();
+
+	UPROPERTY(BlueprintAssignable, Category = "Inventory")
+	FOnInventoryUpdated OnInventoryUpdated;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
 	bool AddItem(FItemData Item);

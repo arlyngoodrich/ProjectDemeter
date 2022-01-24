@@ -63,4 +63,5 @@ bool UInventoryComponent::AddItem(FItemData Item)
 
 void UInventoryComponent::OnRep_InventoryUpdate()
 {
+	OnInventoryUpdated.Broadcast();
 }
