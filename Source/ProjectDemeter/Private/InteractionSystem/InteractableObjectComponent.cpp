@@ -2,6 +2,8 @@
 
 
 #include "InteractionSystem/InteractableObjectComponent.h"
+#include "Core/Logs_C.h"
+
 
 // Sets default values for this component's properties
 UInteractableObjectComponent::UInteractableObjectComponent()
@@ -13,6 +15,23 @@ UInteractableObjectComponent::UInteractableObjectComponent()
 	// ...
 }
 
+
+void UInteractableObjectComponent::Interact()
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		UE_LOG(LogInteractionSystem,Log,TEXT("Interaction called on %s"),*GetOwner()->GetName())
+	}
+	else
+	{
+		UE_LOG(LogInteractionSystem,Warning,TEXT("Attempting to call interact with non-authority for %s"),*GetOwner()->GetName())
+	}
+
+}
+
+void UInteractableObjectComponent::ToggleFocus(bool bIsInFocus)
+{
+}
 
 // Called when the game starts
 void UInteractableObjectComponent::BeginPlay()

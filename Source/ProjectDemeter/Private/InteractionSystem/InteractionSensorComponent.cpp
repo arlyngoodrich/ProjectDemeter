@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
 #include "DrawDebugHelpers.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
 UInteractionSensorComponent::UInteractionSensorComponent()
@@ -79,12 +80,34 @@ void UInteractionSensorComponent::Interact()
 {
 	if (bInteractableObjectInView)
 	{
-		//Interact
+		if (GetOwnerRole() < ROLE_Authority)
+		{
+			TriggerInteraction(InteractableObjectComponentInView);
+		}
+		else
+		{
+			Server_TriggerInteraction(InteractableObjectComponentInView);
+		}
 	}
 	else
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("No interactable in view for %s.  Disregarding request."), *GetOwner()->GetName())
 	}
+}
+
+void UInteractionSensorComponent::TriggerInteraction(UInteractableObjectComponent* ComponentInView)
+{
+	ComponentInView->Interact();
+}
+
+bool UInteractionSensorComponent::Server_TriggerInteraction_Validate(UInteractableObjectComponent* ComponentInView)
+{
+	return true;
+}
+
+void UInteractionSensorComponent::Server_TriggerInteraction_Implementation(UInteractableObjectComponent* ComponentInView)
+{
+	TriggerInteraction(ComponentInView);
 }
 
 void UInteractionSensorComponent::ToggleInteraction(bool bShouldCheckForInteraction)
