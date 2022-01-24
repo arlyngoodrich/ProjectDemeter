@@ -6,6 +6,7 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogStamina, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogHealth, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogInteractionSystem, Log, All);
 
 
 class PROJECTDEMETER_API Logs_C;
