@@ -43,6 +43,9 @@ protected:
 
 	void Initalize();
 
+	UFUNCTION(BlueprintCallable, Category = "Interaction System")
+	void Interact();
+
 	UFUNCTION()
 	void InteractionCheckLoop();
 

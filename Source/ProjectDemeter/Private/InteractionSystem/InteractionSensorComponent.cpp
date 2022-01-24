@@ -70,6 +70,18 @@ void UInteractionSensorComponent::Initalize()
 	}
 }
 
+void UInteractionSensorComponent::Interact()
+{
+	if (bInteractableObjectInView)
+	{
+		//Interact
+	}
+	else
+	{
+		UE_LOG(LogInteractionSystem, Log, TEXT("No interactable in view for %s.  Disregarding request."), *GetOwner()->GetName())
+	}
+}
+
 void UInteractionSensorComponent::InteractionCheckLoop()
 {
 
@@ -84,6 +96,11 @@ void UInteractionSensorComponent::InteractionCheckLoop()
 		//Otherwise don't check for interactable componet if it's the same
 		if (HitActorInView != ActorInView)
 		{
+
+			//Tell old interactalbe no longer in view
+
+			//Tell new interactable now in view
+
 
 			ActorInView = HitActorInView;
 
