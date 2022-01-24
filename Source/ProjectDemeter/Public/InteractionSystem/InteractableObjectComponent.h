@@ -7,7 +7,7 @@
 #include "InteractableObjectComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(InteractionSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UInteractableObjectComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -16,13 +16,28 @@ public:
 	// Sets default values for this component's properties
 	UInteractableObjectComponent();
 
+	void Interact();
+
+	void ToggleFocus(bool bNewIsInFocus);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Focus Start")
+	void BP_OnStartFocus();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On End Focus")
+	void BP_OnEndFocus();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Interaction Triggered")
+	void BP_OnInteractionTriggered();
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Interaction System")
+	bool bIsInFocus;
+
+
+
 
 		
 };

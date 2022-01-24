@@ -6,10 +6,11 @@
 #include "Components/ActorComponent.h"
 #include "InteractionSensorComponent.generated.h"
 
+
 class UInteractableObjectComponent;
 class APlayerController;
 
-UCLASS( ClassGroup=(Custom), blueprintable, meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(InteractionSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UInteractionSensorComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -48,9 +49,15 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Interaction System")
 	void Interact();
 
+	void TriggerInteraction(UInteractableObjectComponent* ComponentInView);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_TriggerInteraction(UInteractableObjectComponent* ComponentInView);
+	bool Server_TriggerInteraction_Validate(UInteractableObjectComponent* ComponentInView);
+	void Server_TriggerInteraction_Implementation(UInteractableObjectComponent* ComponentInView);
+
 	UFUNCTION(BlueprintCallable, Category = "Interaction System")
 	void ToggleInteraction(bool bShouldCheckForInteraction);
-
 
 	UFUNCTION()
 	void InteractionCheckLoop();

@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
 #include "DrawDebugHelpers.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
 UInteractionSensorComponent::UInteractionSensorComponent()
@@ -63,7 +64,8 @@ void UInteractionSensorComponent::Initalize()
 
 		if (!OwningControllerCheck)
 		{
-			UE_LOG(LogInteractionSystem, Error,TEXT("Interaction Sensor Component does not have a player controller with it's owner."))
+			//Not controlled by player character
+
 		}
 		else
 		{
@@ -79,12 +81,34 @@ void UInteractionSensorComponent::Interact()
 {
 	if (bInteractableObjectInView)
 	{
-		//Interact
+		if (GetOwnerRole() == ROLE_Authority)
+		{
+			TriggerInteraction(InteractableObjectComponentInView);
+		}
+		else
+		{
+			Server_TriggerInteraction(InteractableObjectComponentInView);
+		}
 	}
 	else
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("No interactable in view for %s.  Disregarding request."), *GetOwner()->GetName())
 	}
+}
+
+void UInteractionSensorComponent::TriggerInteraction(UInteractableObjectComponent* ComponentInView)
+{
+	ComponentInView->Interact();
+}
+
+bool UInteractionSensorComponent::Server_TriggerInteraction_Validate(UInteractableObjectComponent* ComponentInView)
+{
+	return true;
+}
+
+void UInteractionSensorComponent::Server_TriggerInteraction_Implementation(UInteractableObjectComponent* ComponentInView)
+{
+	TriggerInteraction(ComponentInView);
 }
 
 void UInteractionSensorComponent::ToggleInteraction(bool bShouldCheckForInteraction)
@@ -103,9 +127,6 @@ void UInteractionSensorComponent::ToggleInteraction(bool bShouldCheckForInteract
 
 void UInteractionSensorComponent::InteractionCheckLoop()
 {
-
-
-
 	AActor* HitActorInView;
 
 	//Perform hit scan to get hit actor
@@ -116,24 +137,40 @@ void UInteractionSensorComponent::InteractionCheckLoop()
 		if (HitActorInView != ActorInView)
 		{
 
-			//Tell old interactalbe no longer in view
-
-			//Tell new interactable now in view
-
-
 			ActorInView = HitActorInView;
 
-			//check if has interactable actor
-			if (GetInteractableComponent(HitActorInView, InteractableObjectComponentInView))
+			//check if new actor has interactable actor
+			UInteractableObjectComponent* NewInteractableObject;
+
+			if (GetInteractableComponent(HitActorInView, NewInteractableObject))
 			{
+				//Tell old interactable no longer in focus
+				if (InteractableObjectComponentInView)
+				{
+					InteractableObjectComponentInView->ToggleFocus(false);
+				}
+				
+				
+				InteractableObjectComponentInView = NewInteractableObject;
+				InteractableObjectComponentInView->ToggleFocus(true);
 				bInteractableObjectInView = true;
-			}
-			else
-			{
-				bInteractableObjectInView = false;
+				return;
 			}
 		}
+		else
+		{
+			//If the actor is the same, no need to make any changes
+			return;
+		}
+	} 	//If there was previously an interactable in view but is no longer
+	else if (InteractableObjectComponentInView)
+	{
+		InteractableObjectComponentInView->ToggleFocus(false);
+		InteractableObjectComponentInView = nullptr;
+		ActorInView = nullptr;
+		bInteractableObjectInView = false;
 	}
+
 }
 
 bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor)
