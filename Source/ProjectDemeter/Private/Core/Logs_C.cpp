@@ -6,4 +6,3 @@
 DEFINE_LOG_CATEGORY(LogStamina);
 DEFINE_LOG_CATEGORY(LogHealth);
 DEFINE_LOG_CATEGORY(LogInteractionSystem);
-DEFINE_LOG_CATEGORY(LogInventorySystem);
