@@ -4,6 +4,8 @@
 #include "InteractionSystem/InteractableObjectComponent.h"
 #include "Core/Logs_C.h"
 
+//UE4 Includes
+#include "Components/MeshComponent.h"
 
 // Sets default values for this component's properties
 UInteractableObjectComponent::UInteractableObjectComponent()
@@ -11,17 +13,28 @@ UInteractableObjectComponent::UInteractableObjectComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
+	bShouldOutline = true;
+	OutlineStencilValue = 1;
 
 	// ...
 }
 
 
-void UInteractableObjectComponent::Interact()
+void UInteractableObjectComponent::Interact(AActor* InstigatingActor)
 {
+
+	if (!InstigatingActor)
+	{
+		UE_LOG(LogInteractionSystem, Error, TEXT("Interaction triggered on %s by null instigator"), *GetOwner()->GetName())
+		return;
+	}
+
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("Interaction called on %s"), *GetOwner()->GetName())
-		BP_OnInteractionTriggered();
+
+		BP_OnInteractionTriggered(InstigatingActor);
+		OnInteractionTriggered.Broadcast(InstigatingActor);
 	}
 	else
 	{
@@ -38,11 +51,23 @@ void UInteractableObjectComponent::ToggleFocus(bool bNewIsInFocus)
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("%s is now in focus"), *GetOwner()->GetName())
 		BP_OnStartFocus();
+		
+		if (bShouldOutline)
+		{
+			ToggleOutline(true);
+		}
+
 	}
 	else
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("%s is no longer in focus"), *GetOwner()->GetName())
 		BP_OnEndFocus();
+
+		if (bShouldOutline)
+		{
+			ToggleOutline(false);
+		}
+
 	}
 
 	
@@ -57,5 +82,19 @@ void UInteractableObjectComponent::BeginPlay()
 	// ...
 	
 }
+
+void UInteractableObjectComponent::ToggleOutline(bool bStartOutline)
+{
+	TArray<UMeshComponent*> MeshComponents;
+	GetOwner()->GetComponents<UMeshComponent>(MeshComponents);
+
+	for (int i = 0; i < MeshComponents.Num(); i++)
+	{
+		MeshComponents[i]->SetRenderCustomDepth(bStartOutline);
+		MeshComponents[i]->SetCustomDepthStencilValue(OutlineStencilValue);
+	}
+}
+
+
 
 
