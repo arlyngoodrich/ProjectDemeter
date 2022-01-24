@@ -19,6 +19,10 @@ void AItem::BeginPlay()
 	
 }
 
+void AItem::PickupItem(AActor* InstigatingActor)
+{
+}
+
 // Called every frame
 void AItem::Tick(float DeltaTime)
 {

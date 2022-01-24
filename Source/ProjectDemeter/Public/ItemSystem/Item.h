@@ -23,6 +23,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Item Data")
 	FItemData ItemData;
 
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Interaction System")
+	void PickupItem(AActor* InstigatingActor);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
