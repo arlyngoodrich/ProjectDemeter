@@ -3,6 +3,7 @@
 
 #include "ItemSystem/Item.h"
 #include "InteractionSystem/InteractableObjectComponent.h"
+#include "ItemSystem/InventoryComponent.h"
 #include "Core/Logs_C.h"
 
 
@@ -39,7 +40,17 @@ void AItem::Initalize()
 
 void AItem::OnInteraction(AActor* InstigatingActor)
 {
-	UE_LOG(LogInteractionSystem,Log,TEXT("%s received interaction from %s"),*GetName(),*InstigatingActor->GetName())
+	UE_LOG(LogInteractionSystem, Log, TEXT("%s received interaction from %s"), *GetName(), *InstigatingActor->GetName());
+
+	UInventoryComponent* InstigatingInventoryComponent;
+	InstigatingInventoryComponent = InstigatingActor->FindComponentByClass<UInventoryComponent>();
+
+	if (!InstigatingInventoryComponent) { return; }
+
+	if (InstigatingInventoryComponent->AddItem(ItemData))
+	{
+		this->Destroy();
+	}
 }
 
 
