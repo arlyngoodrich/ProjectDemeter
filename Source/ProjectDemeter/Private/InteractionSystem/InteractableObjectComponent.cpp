@@ -20,7 +20,8 @@ void UInteractableObjectComponent::Interact()
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
-		UE_LOG(LogInteractionSystem,Log,TEXT("Interaction called on %s"),*GetOwner()->GetName())
+		UE_LOG(LogInteractionSystem, Log, TEXT("Interaction called on %s"), *GetOwner()->GetName())
+		BP_OnInteractionTriggered();
 	}
 	else
 	{

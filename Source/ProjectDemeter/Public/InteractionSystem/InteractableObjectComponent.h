@@ -29,6 +29,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On End Focus")
 	void BP_OnEndFocus();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Interaction Triggered")
+	void BP_OnInteractionTriggered();
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Interaction System")
 	bool bIsInFocus;
