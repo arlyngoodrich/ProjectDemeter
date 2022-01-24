@@ -9,7 +9,7 @@
 class UInteractableObjectComponent;
 class APlayerController;
 
-UCLASS( ClassGroup=(Custom), blueprintable, meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(InteractionSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UInteractionSensorComponent : public UActorComponent
 {
 	GENERATED_BODY()
