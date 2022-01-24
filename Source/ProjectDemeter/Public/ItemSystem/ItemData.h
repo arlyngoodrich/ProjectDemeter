@@ -14,4 +14,7 @@ struct FItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
 	FName DisplayName;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Info")
+	UTexture2D* ItemIcon = nullptr;
+
 };
