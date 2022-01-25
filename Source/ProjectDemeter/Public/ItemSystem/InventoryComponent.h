@@ -24,6 +24,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
 	bool AddItem(FItemData Item);
 
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
+	bool RemoveItem(FItemData Item);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void ClientFriendly_RemoveItem(FItemData Item);
 
 protected:
 	// Called when the game starts
@@ -32,7 +37,16 @@ protected:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_InventoryUpdate, Category = "Inventory")
 	TArray<FItemData> Inventory;
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_RemoveItem(FItemData Item);
+	bool Server_RemoveItem_Validate(FItemData Item);
+	void Server_RemoveItem_Implementation(FItemData Item);
+
 	UFUNCTION()
 	void OnRep_InventoryUpdate();
+
+private:
+
+	bool FindFirstIndexOfItem(FItemData Item, int32& Index);
 		
 };

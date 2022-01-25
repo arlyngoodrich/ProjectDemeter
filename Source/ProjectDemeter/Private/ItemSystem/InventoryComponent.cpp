@@ -41,6 +41,26 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 
 }
 
+
+
+void UInventoryComponent::OnRep_InventoryUpdate()
+{
+	OnInventoryUpdated.Broadcast();
+}
+
+void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)
+{
+	if (GetOwnerRole() != ROLE_Authority)
+	{
+		Server_RemoveItem(Item);
+	}
+	else
+	{
+		RemoveItem(Item);
+	}
+}
+
+
 bool UInventoryComponent::AddItem(FItemData Item)
 {
 
@@ -61,7 +81,55 @@ bool UInventoryComponent::AddItem(FItemData Item)
 
 }
 
-void UInventoryComponent::OnRep_InventoryUpdate()
+bool UInventoryComponent::RemoveItem(FItemData Item)
 {
-	OnInventoryUpdated.Broadcast();
+	if (GetOwnerRole() != ROLE_Authority)
+	{
+		UE_LOG(LogInventorySystem, Log, TEXT("Attempting to remove %s item from %s inventory as non-authority"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
+
+			return false;
+	}
+
+	int32 ItemIndex;
+	if (FindFirstIndexOfItem(Item,ItemIndex))
+	{
+		Inventory.RemoveAt(ItemIndex);
+		OnRep_InventoryUpdate();
+
+		UE_LOG(LogInventorySystem, Log, TEXT("%s removed from %s inventory."), *Item.DisplayName.ToString(), *GetOwner()->GetName())
+		return true;
+	}
+	else
+	{
+
+		UE_LOG(LogInventorySystem,Log,TEXT("%s not found in %s inventory.  Could not remove item"),*Item.DisplayName.ToString(),*GetOwner()->GetName())
+		return false;
+	}
+}
+
+
+bool UInventoryComponent::FindFirstIndexOfItem(FItemData Item, int32& Index)
+{
+
+	for (int32 i = 0; i < Inventory.Num(); i++)
+	{
+		if (Inventory[i].DisplayName == Item.DisplayName)
+		{
+			Index = i;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+bool UInventoryComponent::Server_RemoveItem_Validate(FItemData Item)
+{
+	return true;
+}
+
+void UInventoryComponent::Server_RemoveItem_Implementation(FItemData Item)
+{
+	RemoveItem(Item);
 }
