@@ -6,8 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "InteractableObjectComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractionTriggeredDelegate, AActor*, InstigatingActor);
-
 
 UCLASS( ClassGroup=(InteractionSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UInteractableObjectComponent : public UActorComponent
@@ -18,22 +16,13 @@ public:
 	// Sets default values for this component's properties
 	UInteractableObjectComponent();
 
-	void Interact(AActor* InstigatingActor);
+	void Interact();
 
 	void ToggleFocus(bool bNewIsInFocus);
-
-	UPROPERTY(BlueprintAssignable, Category = "Interaction System")
-	FInteractionTriggeredDelegate OnInteractionTriggered;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Interaction System")
-	bool bShouldOutline;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Interaction System")
-	int32 OutlineStencilValue;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Focus Start")
 	void BP_OnStartFocus();
@@ -42,11 +31,13 @@ protected:
 	void BP_OnEndFocus();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Interaction Triggered")
-	void BP_OnInteractionTriggered(AActor* InstigatingActor);
+	void BP_OnInteractionTriggered();
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Interaction System")
 	bool bIsInFocus;
 
-	void ToggleOutline(bool bStartOutline);
+
+
+
 		
 };
