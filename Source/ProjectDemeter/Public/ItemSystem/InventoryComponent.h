@@ -34,6 +34,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
+	int32 MaxItems;
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_InventoryUpdate, Category = "Inventory")
 	TArray<FItemData> Inventory;
 

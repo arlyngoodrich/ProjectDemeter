@@ -14,6 +14,7 @@ UInventoryComponent::UInventoryComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
+	MaxItems = 5;
 
 	// ...
 }
@@ -71,6 +72,13 @@ bool UInventoryComponent::AddItem(FItemData Item)
 		return false;
 	}
 
+
+	if (Inventory.Num() == MaxItems)
+	{
+		UE_LOG(LogInventorySystem,Log,TEXT("Attempting to add %s item but inventory for %s is full"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
+
+		return false; 
+	}
 
 	Inventory.Add(Item);
 	UE_LOG(LogInventorySystem, Log, TEXT("%s was added to %s's inventory"), *Item.DisplayName.ToString(), *GetOwner()->GetName());
