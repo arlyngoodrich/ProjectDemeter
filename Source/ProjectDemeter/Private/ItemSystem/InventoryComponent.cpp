@@ -14,10 +14,8 @@ UInventoryComponent::UInventoryComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-<<<<<<< HEAD
 	MaxItems = 5;
-=======
->>>>>>> parent of a1585f7 (revert)
+
 
 	// ...
 }
@@ -45,7 +43,7 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 
 }
 
-<<<<<<< HEAD
+
 
 
 void UInventoryComponent::OnRep_InventoryUpdate()
@@ -66,8 +64,7 @@ void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)
 }
 
 
-=======
->>>>>>> parent of a1585f7 (revert)
+
 bool UInventoryComponent::AddItem(FItemData Item)
 {
 
@@ -79,7 +76,7 @@ bool UInventoryComponent::AddItem(FItemData Item)
 	}
 
 
-<<<<<<< HEAD
+
 	if (Inventory.Num() == MaxItems)
 	{
 		UE_LOG(LogInventorySystem,Log,TEXT("Attempting to add %s item but inventory for %s is full"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
@@ -87,8 +84,6 @@ bool UInventoryComponent::AddItem(FItemData Item)
 		return false; 
 	}
 
-=======
->>>>>>> parent of a1585f7 (revert)
 	Inventory.Add(Item);
 	UE_LOG(LogInventorySystem, Log, TEXT("%s was added to %s's inventory"), *Item.DisplayName.ToString(), *GetOwner()->GetName());
 	
@@ -98,7 +93,6 @@ bool UInventoryComponent::AddItem(FItemData Item)
 
 }
 
-<<<<<<< HEAD
 bool UInventoryComponent::RemoveItem(FItemData Item)
 {
 	if (GetOwnerRole() != ROLE_Authority)
@@ -150,9 +144,4 @@ bool UInventoryComponent::Server_RemoveItem_Validate(FItemData Item)
 void UInventoryComponent::Server_RemoveItem_Implementation(FItemData Item)
 {
 	RemoveItem(Item);
-=======
-void UInventoryComponent::OnRep_InventoryUpdate()
-{
-	OnInventoryUpdated.Broadcast();
->>>>>>> parent of a1585f7 (revert)
 }
