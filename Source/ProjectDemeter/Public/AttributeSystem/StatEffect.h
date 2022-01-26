@@ -6,12 +6,34 @@
 #include "UObject/NoExportTypes.h"
 #include "StatEffect.generated.h"
 
+class UBaseStatComponent;
+class AActor;
+
 /**
  * 
  */
-UCLASS()
+UCLASS(blueprintable)
 class PROJECTDEMETER_API UStatEffect : public UObject
 {
 	GENERATED_BODY()
+
+public:
+	UStatEffect();
+
+	virtual void InitalizeEffect(AActor* TargetActor, AController* InstigatingController);
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stat Effect")
+	TSubclassOf<UBaseStatComponent> TargetComponentClass;
 	
+	//Must be negative to decrease and positve to increase
+	UPROPERTY(EditDefaultsOnly, Category = "Stat Effect")
+	float StatEffectAmount;
+
+	bool GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& TargetComponent);
+
+
+	virtual void TriggerEffect(UBaseStatComponent* TargetComponent);
+
 };

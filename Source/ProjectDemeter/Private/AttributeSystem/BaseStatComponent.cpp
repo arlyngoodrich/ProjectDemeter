@@ -18,6 +18,8 @@ UBaseStatComponent::UBaseStatComponent()
 }
 
 
+
+
 // Called when the game starts
 void UBaseStatComponent::BeginPlay()
 {
@@ -34,6 +36,11 @@ void UBaseStatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& 
 
 	DOREPLIFETIME(UBaseStatComponent, CurrentValue);
 
+}
+
+void UBaseStatComponent::EffectStat(float EffectAmount)
+{
+	ChangeCurrentValue(EffectAmount);
 }
 
 void UBaseStatComponent::OnRep_CurrentValueChange()

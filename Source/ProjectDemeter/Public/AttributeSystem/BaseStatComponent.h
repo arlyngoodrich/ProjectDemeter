@@ -21,6 +21,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Stat System")
 	FOnCurrentValueChange OnCurrentValueChange;
 
+	//Must be called on server. Will add to the current sat value
+	void EffectStat(float EffectAmount);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
