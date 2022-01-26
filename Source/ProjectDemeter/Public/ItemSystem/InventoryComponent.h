@@ -31,10 +31,10 @@ public:
 	void ClientFriendly_RemoveItem(FItemData Item);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
-	bool ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
+	bool ConsumeItem(FItemData Item, AActor* TargetActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void  ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
+	void  ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor);
 
 
 protected:
@@ -55,9 +55,9 @@ protected:
 
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
-	bool Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
-	void Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
+	void Server_ConsumeItem(FItemData Item, AActor* TargetActor);
+	bool Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor);
+	void Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor);
 
 	UFUNCTION()
 	void OnRep_InventoryUpdate();

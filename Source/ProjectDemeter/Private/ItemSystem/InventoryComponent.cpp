@@ -45,18 +45,6 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 }
 
 
-
-
-bool UInventoryComponent::Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer)
-{
-	return true;
-}
-
-void UInventoryComponent::Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer)
-{
-	ConsumeItem(Item, TargetActor, InstigatingPlayer);
-}
-
 void UInventoryComponent::OnRep_InventoryUpdate()
 {
 	OnInventoryUpdated.Broadcast();
@@ -74,6 +62,18 @@ void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)
 	}
 }
 
+
+void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		ConsumeItem(Item, TargetActor);
+	}
+	else
+	{
+		Server_ConsumeItem(Item, TargetActor);
+	}
+}
 
 
 
@@ -132,7 +132,7 @@ bool UInventoryComponent::RemoveItem(FItemData Item)
 	}
 }
 
-bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer)
+bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor)
 {
 	//Confirm Authority
 	if (GetOwnerRole() != ROLE_Authority)
@@ -150,9 +150,9 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor, ACont
 	}
 
 	//Confirm target actor and player controller are not null 
-	if (TargetActor == nullptr || InstigatingPlayer == nullptr)
+	if (TargetActor == nullptr)
 	{
-		UE_LOG(LogInventorySystem,Error,TEXT("Attempted to consume %s item from %s inventory Target Actor or Player Controller are null"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
+		UE_LOG(LogInventorySystem,Error,TEXT("Attempted to consume %s item from %s inventory Target Actor is null"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
 		return false;
 	}
 
@@ -161,7 +161,7 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor, ACont
 	CreatedEffect = NewObject<UStatEffect>(this, Item.StatEffectOnConsume);
 
 	//Initialize Effect
-	CreatedEffect->InitalizeEffect(TargetActor, InstigatingPlayer);
+	CreatedEffect->InitalizeEffect(TargetActor);
 
 	//Trigger Effect
 	if (CreatedEffect->bReadyToTriggerEffect)
@@ -178,17 +178,6 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor, ACont
 	return false;
 }
 
-void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer)
-{
-	if (GetOwnerRole() == ROLE_Authority)
-	{
-		ConsumeItem(Item, TargetActor, InstigatingPlayer);
-	}
-	else
-	{
-		Server_ConsumeItem(Item, TargetActor, InstigatingPlayer);
-	}
-}
 
 
 bool UInventoryComponent::FindFirstIndexOfItem(FItemData Item, int32& Index)
@@ -215,4 +204,14 @@ bool UInventoryComponent::Server_RemoveItem_Validate(FItemData Item)
 void UInventoryComponent::Server_RemoveItem_Implementation(FItemData Item)
 {
 	RemoveItem(Item);
+}
+
+bool UInventoryComponent::Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor)
+{
+	return true;
+}
+
+void UInventoryComponent::Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor)
+{
+	ConsumeItem(Item, TargetActor);
 }

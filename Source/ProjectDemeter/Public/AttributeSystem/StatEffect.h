@@ -20,7 +20,7 @@ class PROJECTDEMETER_API UStatEffect : public UObject
 public:
 	UStatEffect();
 
-	virtual void InitalizeEffect(AActor* TargetActor, AController* InstigatingController);
+	virtual void InitalizeEffect(AActor* TargetActor);
 
 	bool bReadyToTriggerEffect;
 

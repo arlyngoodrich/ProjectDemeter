@@ -13,19 +13,19 @@ UStatEffect::UStatEffect()
 	TargetComponentClass = nullptr;
 }
 
-void UStatEffect::InitalizeEffect(AActor* TargetActor, AController* InstigatingController)
+void UStatEffect::InitalizeEffect(AActor* TargetActor)
 {
-	if (InstigatingController == nullptr || TargetActor == nullptr)
+	if (TargetActor == nullptr)
 	{
-		UE_LOG(LogAttributeSystem, Error, TEXT("Attempted to create %s stat effect with eith Controlled or Target Component Null"), *GetClass()->GetName());
+		UE_LOG(LogAttributeSystem, Error, TEXT("Attempted to create %s stat effect with  Target Actor Null"), *GetClass()->GetName());
 
 		MarkPendingKill();
 		return;
 	}
 
-	if (InstigatingController->GetLocalRole() != ROLE_Authority)
+	if (TargetActor->GetLocalRole() != ROLE_Authority)
 	{
-		UE_LOG(LogAttributeSystem, Error, TEXT("Attempted to created %s stat effect when instigator is not authority"), *GetClass()->GetName());
+		UE_LOG(LogAttributeSystem, Error, TEXT("Attempted to created %s stat effect when target actor is not authority"), *GetClass()->GetName());
 
 		MarkPendingKill();
 		return;
