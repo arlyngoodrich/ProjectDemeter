@@ -24,16 +24,20 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
 	bool AddItem(FItemData Item);
 
+<<<<<<< HEAD
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
 	bool RemoveItem(FItemData Item);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void ClientFriendly_RemoveItem(FItemData Item);
+=======
+>>>>>>> parent of a1585f7 (revert)
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
+<<<<<<< HEAD
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
 	int32 MaxItems;
 
@@ -51,5 +55,12 @@ protected:
 private:
 
 	bool FindFirstIndexOfItem(FItemData Item, int32& Index);
+=======
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_InventoryUpdate, Category = "Inventory")
+	TArray<FItemData> Inventory;
+
+	UFUNCTION()
+	void OnRep_InventoryUpdate();
+>>>>>>> parent of a1585f7 (revert)
 		
 };

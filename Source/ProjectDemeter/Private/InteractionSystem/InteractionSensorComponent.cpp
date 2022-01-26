@@ -98,7 +98,7 @@ void UInteractionSensorComponent::Interact()
 
 void UInteractionSensorComponent::TriggerInteraction(UInteractableObjectComponent* ComponentInView)
 {
-	ComponentInView->Interact();
+	ComponentInView->Interact(GetOwner());
 }
 
 bool UInteractionSensorComponent::Server_TriggerInteraction_Validate(UInteractableObjectComponent* ComponentInView)
