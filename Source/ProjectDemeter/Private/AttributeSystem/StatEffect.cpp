@@ -56,11 +56,13 @@ bool UStatEffect::GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& O
 	TArray<UBaseStatComponent*> StatComponents;
 	TargetActor->GetComponents<UBaseStatComponent>(StatComponents);
 
+	UE_LOG(LogAttributeSystem,Log,TEXT("found %d base attributes"),StatComponents.Num())
+
 	for (int32 i = 0; i < StatComponents.Num(); i++)
 	{
 		if (StatComponents[i]->GetClass() == TargetComponentClass)
 		{
-			TargetComponent = StatComponents[i];
+			OutTargetComponent = StatComponents[i];
 			return true;
 		}
 	}

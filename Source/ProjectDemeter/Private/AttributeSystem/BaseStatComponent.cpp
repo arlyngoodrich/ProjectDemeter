@@ -14,6 +14,8 @@ UBaseStatComponent::UBaseStatComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
+
+
 	// ...
 }
 
@@ -24,9 +26,15 @@ UBaseStatComponent::UBaseStatComponent()
 void UBaseStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	Initialize();
 
 	// ...
 	
+}
+
+void UBaseStatComponent::Initialize()
+{
+	CurrentValue = MaxValue;
 }
 
 void UBaseStatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const

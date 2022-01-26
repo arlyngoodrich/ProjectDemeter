@@ -32,7 +32,7 @@ protected:
 	TSubclassOf<UBaseStatComponent> TargetComponentClass;
 	
 	//Must be negative to decrease and positve to increase
-	UPROPERTY(EditDefaultsOnly, Category = "Stat Effect")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat Effect")
 	float StatEffectAmount;
 
 	bool GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& OutTargetComponent);

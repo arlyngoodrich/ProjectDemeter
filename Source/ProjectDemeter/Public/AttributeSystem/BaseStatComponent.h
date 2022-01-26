@@ -28,6 +28,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void Initialize();
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CurrentValueChange, Category = "Stat Info")
 	float CurrentValue;
 
