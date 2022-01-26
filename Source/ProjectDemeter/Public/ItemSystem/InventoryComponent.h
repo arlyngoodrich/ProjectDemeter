@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void ClientFriendly_RemoveItem(FItemData Item);
 
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
+	bool ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
+
 
 protected:
 	// Called when the game starts

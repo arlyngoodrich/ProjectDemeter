@@ -22,6 +22,10 @@ public:
 
 	virtual void InitalizeEffect(AActor* TargetActor, AController* InstigatingController);
 
+	bool bReadyToTriggerEffect;
+
+	virtual bool TriggerEffect();
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stat Effect")
@@ -31,9 +35,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Stat Effect")
 	float StatEffectAmount;
 
-	bool GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& TargetComponent);
+	bool GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& OutTargetComponent);
 
+	UBaseStatComponent* TargetComponent;
 
-	virtual void TriggerEffect(UBaseStatComponent* TargetComponent);
 
 };

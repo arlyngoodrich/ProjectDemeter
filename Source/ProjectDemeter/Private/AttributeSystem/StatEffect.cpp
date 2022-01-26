@@ -31,10 +31,10 @@ void UStatEffect::InitalizeEffect(AActor* TargetActor, AController* InstigatingC
 		return;
 	}
 
-	UBaseStatComponent* TargetComponent;
-	if(GetTargetComponent(TargetActor, TargetComponent))
+
+	if (GetTargetComponent(TargetActor, TargetComponent))
 	{
-		TriggerEffect(TargetComponent);
+		bReadyToTriggerEffect = true;
 	}
 	else
 	{
@@ -50,7 +50,7 @@ void UStatEffect::InitalizeEffect(AActor* TargetActor, AController* InstigatingC
 
 }
 
-bool UStatEffect::GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& TargetComponent)
+bool UStatEffect::GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& OutTargetComponent)
 {
 
 	TArray<UBaseStatComponent*> StatComponents;
@@ -68,20 +68,17 @@ bool UStatEffect::GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& T
 	return false;
 }
 
-void UStatEffect::TriggerEffect(UBaseStatComponent* TargetComponent)
+bool UStatEffect::TriggerEffect()
 {
 	if (TargetComponent == nullptr) 
 	{
 		UE_LOG(LogAttributeSystem, Error, TEXT("%s could not triggere effect because target component was null"), *GetClass()->GetName());
 
-		MarkPendingKill();
-		return; 
+		return false; 
 	}
 
 	TargetComponent->EffectStat(StatEffectAmount);
-	UE_LOG(LogAttributeSystem,Log,TEXT("%s applied effect on %s"),*GetName(),*TargetComponent->GetName())
-
-
-	MarkPendingKill();
+	UE_LOG(LogAttributeSystem, Log, TEXT("%s applied effect on %s"), *GetName(), *TargetComponent->GetName());
+	return true;
 
 }
