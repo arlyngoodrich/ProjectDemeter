@@ -6,6 +6,8 @@
 #include "Engine/DataTable.h"
 #include "ItemData.generated.h"
 
+class UStatEffect;
+
 USTRUCT(BlueprintType)
 struct FItemData : public FTableRowBase
 {
@@ -14,7 +16,10 @@ struct FItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
 	FName DisplayName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Info")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
 	UTexture2D* ItemIcon = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
+	TSubclassOf<UStatEffect> StatEffectOnConsume = nullptr;
 
 };

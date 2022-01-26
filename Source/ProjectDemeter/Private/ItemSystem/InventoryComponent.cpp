@@ -3,6 +3,7 @@
 
 #include "ItemSystem/InventoryComponent.h"
 #include "Core/Logs_C.h"
+#include "AttributeSystem/StatEffect.h"
 
 //UE4 Includes
 #include "Net/UnrealNetwork.h"
@@ -44,8 +45,6 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 }
 
 
-
-
 void UInventoryComponent::OnRep_InventoryUpdate()
 {
 	OnInventoryUpdated.Broadcast();
@@ -62,6 +61,20 @@ void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)
 		RemoveItem(Item);
 	}
 }
+
+
+void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		ConsumeItem(Item, TargetActor);
+	}
+	else
+	{
+		Server_ConsumeItem(Item, TargetActor);
+	}
+}
+
 
 
 
@@ -119,6 +132,53 @@ bool UInventoryComponent::RemoveItem(FItemData Item)
 	}
 }
 
+bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor)
+{
+	//Confirm Authority
+	if (GetOwnerRole() != ROLE_Authority)
+	{
+		UE_LOG(LogInventorySystem, Log, TEXT("Attempting to consume %s item in %s inventory as non-authority"), *Item.DisplayName.ToString(), *GetOwner()->GetName());
+		return false;
+	}
+
+	//Confirm in inventory
+	int32 ItemIndex;
+	if (FindFirstIndexOfItem(Item, ItemIndex) == false)
+	{
+		UE_LOG(LogInventorySystem,Error,TEXT("Attempted to consume %s item from %s inventory when item not server inventory "),*Item.DisplayName.ToString(),*GetOwner()->GetName())
+		return false;
+	}
+
+	//Confirm target actor and player controller are not null 
+	if (TargetActor == nullptr)
+	{
+		UE_LOG(LogInventorySystem,Error,TEXT("Attempted to consume %s item from %s inventory Target Actor is null"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
+		return false;
+	}
+
+	//Create Sat Effect
+	UStatEffect* CreatedEffect;
+	CreatedEffect = NewObject<UStatEffect>(this, Item.StatEffectOnConsume);
+
+	//Initialize Effect
+	CreatedEffect->InitalizeEffect(TargetActor);
+
+	//Trigger Effect
+	if (CreatedEffect->bReadyToTriggerEffect)
+	{
+		if (CreatedEffect->TriggerEffect())
+		{
+			if (RemoveItem(Item))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+
 
 bool UInventoryComponent::FindFirstIndexOfItem(FItemData Item, int32& Index)
 {
@@ -144,4 +204,14 @@ bool UInventoryComponent::Server_RemoveItem_Validate(FItemData Item)
 void UInventoryComponent::Server_RemoveItem_Implementation(FItemData Item)
 {
 	RemoveItem(Item);
+}
+
+bool UInventoryComponent::Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor)
+{
+	return true;
+}
+
+void UInventoryComponent::Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor)
+{
+	ConsumeItem(Item, TargetActor);
 }
