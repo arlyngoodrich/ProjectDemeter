@@ -47,6 +47,16 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 
 
 
+bool UInventoryComponent::Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer)
+{
+	return true;
+}
+
+void UInventoryComponent::Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer)
+{
+	ConsumeItem(Item, TargetActor, InstigatingPlayer);
+}
+
 void UInventoryComponent::OnRep_InventoryUpdate()
 {
 	OnInventoryUpdated.Broadcast();
@@ -166,6 +176,18 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor, ACont
 	}
 
 	return false;
+}
+
+void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer)
+{
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		ConsumeItem(Item, TargetActor, InstigatingPlayer);
+	}
+	else
+	{
+		Server_ConsumeItem(Item, TargetActor, InstigatingPlayer);
+	}
 }
 
 

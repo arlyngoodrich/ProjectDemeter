@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
 	bool ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void  ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
+
 
 protected:
 	// Called when the game starts
@@ -49,6 +52,12 @@ protected:
 	void Server_RemoveItem(FItemData Item);
 	bool Server_RemoveItem_Validate(FItemData Item);
 	void Server_RemoveItem_Implementation(FItemData Item);
+
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_ConsumeItem(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
+	bool Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
+	void Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor, AController* InstigatingPlayer);
 
 	UFUNCTION()
 	void OnRep_InventoryUpdate();
