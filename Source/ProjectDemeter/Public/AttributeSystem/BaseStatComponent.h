@@ -18,7 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UBaseStatComponent();
 
-	UPROPERTY(BlueprintAssignable, Category = "Stat Info")
+	UPROPERTY(BlueprintAssignable, Category = "Stat System")
 	FOnCurrentValueChange OnCurrentValueChange;
 
 protected:
@@ -31,8 +31,27 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Stat Info")
 	float MaxValue;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Stat Info")
+	bool bShouldRegenerate;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stat Info", meta = (EditCondition = "bShouldRegenerate"))
+	float BaseRegenerationAmount;
+
 	UFUNCTION()
 	virtual void OnRep_CurrentValueChange();
 
-		
+	//Called on both owning client and server when the current value is updated.  Usefully for driving non-game play needed events like UI updates. 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Stat System", DisplayName = "On Current Value Change")
+	void BP_OnCurrentValueChange();
+	
+
+
+
+private:
+	
+	//Delta Amount will be added to current value so use negative numbers if wanting to take away value.  Will only run when component owner has authority
+	void ChangeCurrentValue(float DeltaAmount);
+
+
+
 };

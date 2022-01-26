@@ -2,6 +2,7 @@
 
 
 #include "AttributeSystem/BaseStatComponent.h"
+#include "Core/Logs_C.h"
 
 //UE4 Includes
 #include "Net/UnrealNetwork.h"
@@ -26,17 +27,26 @@ void UBaseStatComponent::BeginPlay()
 	
 }
 
-void UBaseStatComponent::OnRep_CurrentValueChange()
-{
-	OnCurrentValueChange.Broadcast();
-}
-
-
 void UBaseStatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
 {
 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UBaseStatComponent, CurrentValue);
+
+}
+
+void UBaseStatComponent::OnRep_CurrentValueChange()
+{
+	OnCurrentValueChange.Broadcast();
+	BP_OnCurrentValueChange();
+}
+
+void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
+{
+	if (GetOwnerRole() != ROLE_Authority)
+	{
+		
+	}
 
 }
