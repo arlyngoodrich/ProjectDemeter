@@ -44,14 +44,19 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Stat System", DisplayName = "On Current Value Change")
 	void BP_OnCurrentValueChange();
 	
+	//Helper function that triggered when max value is reached
+	virtual void MaxValueReached();
 
-
+	FTimerHandle RegenerationTimer;
 
 private:
 	
 	//Delta Amount will be added to current value so use negative numbers if wanting to take away value.  Will only run when component owner has authority
 	void ChangeCurrentValue(float DeltaAmount);
 
+	void ToggleRegeneration(bool bShouldStart);
+
+	void RegenerateValue();
 
 
 };
