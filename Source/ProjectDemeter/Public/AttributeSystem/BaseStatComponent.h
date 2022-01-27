@@ -54,12 +54,12 @@ protected:
 
 	FTimerHandle RegenerationTimer;
 
-private:
-	
 	//Delta Amount will be added to current value so use negative numbers if wanting to take away value.  Will only run when component owner has authority
 	void ChangeCurrentValue(float DeltaAmount);
 
 	void ToggleRegeneration(bool bShouldStart);
+
+private:
 
 	void RegenerateValue();
 

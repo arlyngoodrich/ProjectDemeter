@@ -12,50 +12,50 @@ UHealthStat::UHealthStat()
     MaxValue = 100.f;
     BaseRegenerationAmount = 5.f;
     bShouldRegenerate = true;
-    RegenerationDelay = 5.f
+    RegenerationDelay = 5.f;
 }
 
 
-void UBaseStatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
+void UHealthStat::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
 {
 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UBaseStatComponent, bHasDied);
+	DOREPLIFETIME(UHealthStat, bHasDied);
 
 }
 
-float GetCurrentHealth(return CurrentValue;)
+float UHealthStat::GetCurrentHealth() { return CurrentValue; }
 
-float GetMaxHealth(return MaxValue;);
+float UHealthStat::GetMaxHealth(){return MaxValue;}
 
-float GetRegenerationAmount(return BaseRegenerationAmount;);
+float UHealthStat::GetRegenerationAmount(){return BaseRegenerationAmount;}
 
 // Called when the game starts
-void UBaseStatComponent::BeginPlay()
+void UHealthStat::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
 	
 }
 
-void UBaseStatComponent::Initalize()
+void UHealthStat::Initialize()
 {
-    Super::Initalize();
+    Super::Initialize();
 
-    GetOwner().AddDynamic(this,UBaseStatComponent::OnOwnerTakeDamage);
+    GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthStat::OnOwnerTakeDamage);
 }
 
-void OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+void UHealthStat::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
     ChangeCurrentValue(-Damage);
     StartRegenerationDelay();
 }
 
-void OnRep_CurrentValueChange() 
+void UHealthStat::OnRep_CurrentValueChange()
 {
     //Check to see if owner has died
-    if(CurrentHealth == 0)
+    if(CurrentValue == 0)
     {
         bHasDied = true;
         OnRep_HasDied();
@@ -64,9 +64,9 @@ void OnRep_CurrentValueChange()
     Super::OnRep_CurrentValueChange();
 }
 
-void OnRep_HasDied()
+void UHealthStat::OnRep_HasDied()
 {
-    UE_LOG(LogAttributeSystem,Log,TEXT("%s has died"),*GetOwner());
+    UE_LOG(LogAttributeSystem,Log,TEXT("%s has died"),*GetOwner()->GetName());
 
     //Trun off regeneration
     bShouldRegenerate = false;
@@ -76,7 +76,7 @@ void OnRep_HasDied()
     OnDeathDelegate.Broadcast();
 }
 
- void StartRegenerationDelay()
+ void UHealthStat::StartRegenerationDelay()
  {
      //Don't start timer if the owner has died
      if(bHasDied == true){return;}
@@ -87,11 +87,11 @@ void OnRep_HasDied()
         GetWorld()->GetTimerManager().ClearTimer(RegenerationDelayTimer);
     }
 
-    GetWorld()->GetTimerManager().SetTimer(RegenerationDelayTimer, this, &UHealthStat::StartRegeneration, RegenerationDelay, false)
+    GetWorld()->GetTimerManager().SetTimer(RegenerationDelayTimer, this, &UHealthStat::StartRegeneration, RegenerationDelay, false);
 
  }
 
- void StartRegeneration()
+ void UHealthStat::StartRegeneration()
  {
     ToggleRegeneration(true);
  }

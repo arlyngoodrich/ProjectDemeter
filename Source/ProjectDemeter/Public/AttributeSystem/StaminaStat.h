@@ -10,7 +10,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStaminaDepleted, bool, bIsDeplete
 
 //Used to Convert ALS Gait ENUM to C++
 UENUM(BlueprintType)
-enum class EGait : uint8 {
+enum class EGait_New : uint8 {
 	EG_None			UMETA(DisplayName = "None"),
 	EG_Walk			UMETA(DisplayName = "Walk"),
 	EG_Run			UMETA(DisplayName = "Run"),
@@ -24,7 +24,7 @@ class PROJECTDEMETER_API UStaminaStat : public UBaseStatComponent
 
 public:	
 	// Sets default values for this component's properties
-	StaminaStat();
+	UStaminaStat();
 
     UPROPERTY(BlueprintAssignable, Category = "Stamina Stats")
     FOnStaminaDepleted OnStaminaDepletedChangeDelegate;
@@ -56,7 +56,7 @@ protected:
     void OnCustomAction(float StaminaCost);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Stamina Stats")
-	void OnGaitUpdate(EGait NewGait);
+	void OnGaitUpdate(EGait_New NewGait);
 
     UFUNCTION()
     virtual void OnSprintStart();
@@ -67,7 +67,6 @@ protected:
     UFUNCTION()
 	virtual void OnWalkStart();
 
-    UFUNCTION()
 	virtual void OnRep_CurrentValueChange() override;
 
     UFUNCTION()

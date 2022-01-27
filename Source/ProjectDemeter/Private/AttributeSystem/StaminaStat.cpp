@@ -4,13 +4,22 @@
 //UE4 Includes
 #include "Net/UnrealNetwork.h"
 
-UStaminaStat::StaminaStat()
+UStaminaStat::UStaminaStat()
 {
-    MaxVaule = 100;
+    MaxValue = 100;
     bShouldRegenerate = true;
     SprintStaminaDrain = 10.f;
     JumptStaminaCost = 20.f;
     RollStmainaCost = 20.f;
+}
+
+void UStaminaStat::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
+{
+
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(UStaminaStat, bIsStaminaDepleted);
+
 }
 
 void UStaminaStat::BeginPlay()
@@ -19,38 +28,38 @@ void UStaminaStat::BeginPlay()
 	// ...
 }
 
-void OnJump()
+void UStaminaStat::OnJump()
 {
     ChangeCurrentValue(-JumptStaminaCost);
 }
 
 
-void OnRoll()
+void UStaminaStat::OnRoll()
 {
     ChangeCurrentValue(-RollStmainaCost);
 }
 
 
- void OnCustomAction(float StaminaCost)
+ void UStaminaStat::OnCustomAction(float StaminaCost)
  {
      ChangeCurrentValue(-StaminaCost);
  }
 
 
-void UStaminaComponent_C::OnGaitUpdate(EGait NewGait)
+void UStaminaStat::OnGaitUpdate(EGait_New NewGait)
 {
 
 	switch (NewGait)
 	{
-	case EGait::EG_None:
+	case EGait_New::EG_None:
 		break;
-	case EGait::EG_Walk:
+	case EGait_New::EG_Walk:
 		OnWalkStart();
 		break;
-	case EGait::EG_Run:
+	case EGait_New::EG_Run:
 		OnRunStart();
 		break;
-	case EGait::EG_Sprint:
+	case EGait_New::EG_Sprint:
 		OnSprintStart();
 		break;
 	default:
@@ -132,7 +141,7 @@ void UStaminaStat::ToggleSprintStaminaDrain(bool bDrain)
         if(GetWorld()->GetTimerManager().IsTimerActive(SprintStaminaDrainTimer) == false)
         {   
             //if not, then drain
-            GetWorld()->GetTimerManager().SetTimer(SprintStaminaDrainTimer,this,UStaminaStat::DrainSprintStamina,1.f,true)
+            GetWorld()->GetTimerManager().SetTimer(SprintStaminaDrainTimer, this, &UStaminaStat::DrainSprintStamina, 1.f, true);
         }          
     }
     else

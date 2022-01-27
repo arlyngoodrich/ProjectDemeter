@@ -72,7 +72,7 @@ void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
 	if (oldCurrentValue != newCurrentValue)
 	{
 		CurrentValue = newCurrentValue;
-		UE_LOG(LogAttributeSystem,Log,TEXT("%s current value is now %f on %s"),*GetName(),*CurrentValue,*GetOwner()->GetNamer());
+		UE_LOG(LogAttributeSystem,Log,TEXT("%s current value is now %f on %s"),*GetName(),CurrentValue,*GetOwner()->GetName());
 
 		OnRep_CurrentValueChange();
 
@@ -95,7 +95,7 @@ void UBaseStatComponent::ToggleRegeneration(bool bShouldStart)
 		{
 			//If not, then start it 
 			GetWorld()->GetTimerManager().SetTimer(RegenerationTimer, this, &UBaseStatComponent::RegenerateValue, 1.f, true);
-			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration started on %s component for %s"),*GetClass()->GetNamer(),*GetOwner()->GetNamer());
+			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration started on %s component for %s"),*GetClass()->GetName(),*GetOwner()->GetName());
 		}
 
 		return;
@@ -108,7 +108,7 @@ void UBaseStatComponent::ToggleRegeneration(bool bShouldStart)
 
 			//If currentliy regenerating, then clear it
 			GetWorld()->GetTimerManager().ClearTimer(RegenerationTimer);
-			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration stopped on %s component for %s"),*GetClass()->GetNamer(),*GetOwner()->GetNamer());
+			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration stopped on %s component for %s"),*GetClass()->GetName(),*GetOwner()->GetName());
 		}
 
 		return;

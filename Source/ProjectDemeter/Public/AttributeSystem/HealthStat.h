@@ -33,19 +33,18 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-    virtual void Initalize() override;
+    virtual void Initialize() override;
 
     UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Health Stats")
     float RegenerationDelay;
 
-    UPROPERTY(BlueprintReadOnly, ReplicatededUsing = OnRep_HasDied, Category =  "Health Stats")
+    UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HasDied, Category =  "Health Stats")
     bool bHasDied;
 
     //Used to bind to component owner to register damage events 
    	UFUNCTION()
 	void OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
- 	UFUNCTION()
     virtual void OnRep_CurrentValueChange() override;
 
     UFUNCTION()
