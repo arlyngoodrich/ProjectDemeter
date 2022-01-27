@@ -52,7 +52,7 @@ void UHealthStat::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const cl
     StartRegenerationDelay();
 }
 
-void UHealthStat::OnRep_CurrentValueChange()
+void UHealthStat::OnCurrentValueChange()
 {
     //Check to see if owner has died
     if(CurrentValue == 0)
@@ -61,7 +61,7 @@ void UHealthStat::OnRep_CurrentValueChange()
         OnRep_HasDied();
     }
 
-    Super::OnRep_CurrentValueChange();
+    Super::OnCurrentValueChange();
 }
 
 void UHealthStat::OnRep_HasDied()

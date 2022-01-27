@@ -45,7 +45,7 @@ protected:
    	UFUNCTION()
 	void OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
-    virtual void OnRep_CurrentValueChange() override;
+    virtual void OnCurrentValueChange() override;
 
     UFUNCTION()
     virtual void OnRep_HasDied();

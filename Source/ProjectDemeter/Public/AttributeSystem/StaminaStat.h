@@ -67,7 +67,7 @@ protected:
     UFUNCTION()
 	virtual void OnWalkStart();
 
-	virtual void OnRep_CurrentValueChange() override;
+    virtual void OnCurrentValueChange() override;
 
     UFUNCTION()
     virtual void OnRep_StaminaDepletedUpdated(); 

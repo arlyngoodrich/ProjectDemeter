@@ -91,10 +91,10 @@ void UStaminaStat::OnWalkStart()
 }
 
 
-void UStaminaStat::OnRep_CurrentValueChange()
+void UStaminaStat::OnCurrentValueChange()
 {
 
-    Super::OnRep_CurrentValueChange();
+    Super::OnCurrentValueChange();
 
     //check if stamina is newly depleted
     if(CurrentValue == 0 && bIsStaminaDepleted == false)
@@ -115,6 +115,7 @@ void UStaminaStat::OnRep_CurrentValueChange()
         ToggleRegeneration(true);
     }
 }
+
 
 void UStaminaStat::OnRep_StaminaDepletedUpdated()
 {

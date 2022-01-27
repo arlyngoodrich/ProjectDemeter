@@ -48,8 +48,14 @@ void UBaseStatComponent::EffectStat(float EffectAmount)
 
 void UBaseStatComponent::OnRep_CurrentValueChange()
 {
-	OnCurrentValueChange.Broadcast();
+	OnCurrentValueChangeDelegate.Broadcast();
 	BP_OnCurrentValueChange();
+	OnCurrentValueChange();
+}
+
+void UBaseStatComponent::OnCurrentValueChange()
+{
+
 }
 
 void UBaseStatComponent::MaxValueReached()
