@@ -59,6 +59,7 @@ void UBaseStatComponent::OnRep_CurrentValueChange()
 
 void UBaseStatComponent::MaxValueReached()
 {
+	ToggleRegeneration(false);
 }
 
 void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
@@ -89,24 +90,28 @@ void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
 void UBaseStatComponent::ToggleRegeneration(bool bShouldStart)
 {
 
-	if (bShouldStart)
+	//Check to see if regeneration should be started and if its OK to regenerate
+	if (bShouldStart && bShouldRegenerate)
 	{
 		//Check to see if it's already running
 		if (GetWorld()->GetTimerManager().IsTimerActive(RegenerationTimer) == false)
 		{
 			//If not, then start it 
 			GetWorld()->GetTimerManager().SetTimer(RegenerationTimer, this, &UBaseStatComponent::RegenerateValue, 1.f, true);
+			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration started on %s component for %s"),*GetClass()->GetNamer(),*GetOwner()->GetNamer());
 		}
 
 		return;
 	}
+	//if not, then stop regeneration if it's currently running
 	else
-	{	//Check to see if it's 
+	{	//Check to see if currently regenerating
 		if (GetWorld()->GetTimerManager().TimerExists(RegenerationTimer) == true)
 		{
 
-			//If it does, then clear it
+			//If currentliy regenerating, then clear it
 			GetWorld()->GetTimerManager().ClearTimer(RegenerationTimer);
+			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration stopped on %s component for %s"),*GetClass()->GetNamer(),*GetOwner()->GetNamer());
 		}
 
 		return;
