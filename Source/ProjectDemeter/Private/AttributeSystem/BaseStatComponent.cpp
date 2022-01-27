@@ -13,13 +13,8 @@ UBaseStatComponent::UBaseStatComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
-
-
 	// ...
 }
-
-
 
 
 // Called when the game starts
@@ -77,6 +72,8 @@ void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
 	if (oldCurrentValue != newCurrentValue)
 	{
 		CurrentValue = newCurrentValue;
+		UE_LOG(LogAttributeSystem,Log,TEXT("%s current value is now %f on %s"),*GetName(),*CurrentValue,*GetOwner()->GetNamer());
+
 		OnRep_CurrentValueChange();
 
 		if (CurrentValue == MaxValue)

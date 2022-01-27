@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
 
-UCLASS( ClassGroup=(AttributeSystem), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(AttributeSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UHealthStat : public UBaseStatComponent
 {
 	GENERATED_BODY()
