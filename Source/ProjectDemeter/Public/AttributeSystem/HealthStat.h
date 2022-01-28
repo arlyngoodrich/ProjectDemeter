@@ -29,6 +29,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "Health Stats")
     float GetRegenerationAmount();
 
+    UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Health Stats")
+    void ToggleHealthRegenDelay(bool bDelayOff);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -37,6 +40,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Health Stats")
     float RegenerationDelay;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health Stats")
+    bool bHealthRegenDelayOff;
 
     UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HasDied, Category =  "Health Stats")
     bool bHasDied;
