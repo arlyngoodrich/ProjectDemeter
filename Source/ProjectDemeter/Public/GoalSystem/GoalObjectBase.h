@@ -28,7 +28,7 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
     FText GoalDescription;
 
-    UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_OnGoalCompleted, Cateogry = "Goal System")
+    UPROPERTY(BlueprintReadOnly, Cateogry = "Goal System")
     bool bHasGoalBeenCompleted;
 
     UPROPERTY(BlueprintAssignable, Category = "Goal System")
@@ -43,13 +43,5 @@ protected:
 
     UFUNCTION(BlueprintCallabe, BlueprintAuthorityOnly, Category = "Goal System")
     void CompleteGoal();
-
-    UFUNCTION()
-    void OnRep_OnGoalCompleted();
-
-    //Internal mehtod to override function called when a goal has been completed
-    virtual void Internal_OnGoalCompleted();
-
-
 
 };

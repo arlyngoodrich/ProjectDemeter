@@ -2,7 +2,6 @@
 #include "Core/Logs_C.h"
 
 //UE4 Includes
-#include "Net/UnrealNetwork.h"
 #include "GameFramework/PlayerController.h"
 
 // Sets default values for this component's properties
@@ -18,7 +17,14 @@ void Initalize(APlayerController* PlayerOwningGoal)
 {
     if(PlayerOwningGoal == nullptr)
     {
+        UE_LOG(LogGoalSystem,Error,TEXT("%s goal class was given null owning player"),*GetClass()->GetName())
+        MarkPendingKill();
+        return;
+    }
 
+    if(PlayerOwningGoal->GetLocalRole()<ROLE_Authority)
+    {
+        UE_LOG(LogGoalSystem,Error,TEXT("%s goal class attempted to be initalized with a non-authoritve player"),*GetClass()->GetName())
         MarkPendingKill();
         return;
     }
@@ -29,5 +35,7 @@ void Initalize(APlayerController* PlayerOwningGoal)
 
 void UGoalObjectBase::CompleteGoal()
 {
-    /
+   bHasGoalBeenCompleted = true;
+   OnGoalCompletedDelegate.Broadcast(); 
 }
+
