@@ -28,7 +28,7 @@ public:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
     FText GoalDescription;
 
-    UPROPERTY(BlueprintReadOnly, Cateogry = "Goal System")
+    UPROPERTY(BlueprintReadOnly, Category = "Goal System")
     bool bHasGoalBeenCompleted;
 
     UPROPERTY(BlueprintAssignable, Category = "Goal System")
@@ -41,7 +41,7 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "Goal System")
     APlayerController* OwningPlayer;
 
-    UFUNCTION(BlueprintCallabe, BlueprintAuthorityOnly, Category = "Goal System")
+    UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Goal System")
     void CompleteGoal();
 
 };

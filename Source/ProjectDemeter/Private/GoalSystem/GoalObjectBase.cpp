@@ -1,4 +1,4 @@
-#include "GoalObjectBase.generated.h"
+#include "GoalSystem/GoalObjectBase.h"
 #include "Core/Logs_C.h"
 
 //UE4 Includes
@@ -9,11 +9,13 @@ UGoalObjectBase::UGoalObjectBase()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	 
 	// ...
 }
 
-void Initalize(APlayerController* PlayerOwningGoal)
+
+
+void UGoalObjectBase::Initalize(APlayerController* PlayerOwningGoal)
 {
     if(PlayerOwningGoal == nullptr)
     {
@@ -35,7 +37,7 @@ void Initalize(APlayerController* PlayerOwningGoal)
 
 void UGoalObjectBase::CompleteGoal()
 {
-   bHasGoalBeenCompleted = true;
-   OnGoalCompletedDelegate.Broadcast(); 
 }
+
+
 
