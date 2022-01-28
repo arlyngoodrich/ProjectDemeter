@@ -52,6 +52,18 @@ void UHealthStat::OnOwnerTakeDamage(AActor* DamagedActor, float Damage, const cl
     StartRegenerationDelay();
 }
 
+
+void UHealthStat::ToggleHealthRegenDelay(bool bDelayOff)
+{
+    if (GetOwnerRole() != ROLE_Authority)
+    {
+        UE_LOG(LogAttributeSystem,Error,TEXT("%s attempted to toggle Health Regen Delay withouth Authority"),*GetOwner()->GetName())
+        return;
+    }
+
+    bHealthRegenDelayOff = bDelayOff;
+}
+
 void UHealthStat::OnCurrentValueChange()
 {
     //Check to see if owner has died
@@ -80,6 +92,12 @@ void UHealthStat::OnRep_HasDied()
  {
      //Don't start timer if the owner has died
      if(bHasDied == true){return;}
+
+     if (bHealthRegenDelayOff == true)
+     {
+         StartRegeneration();
+         return;
+     }
 
     //Check to see if timer exisist.  If yes, then clear
     if(GetWorld()->GetTimerManager().TimerExists(RegenerationDelayTimer))
