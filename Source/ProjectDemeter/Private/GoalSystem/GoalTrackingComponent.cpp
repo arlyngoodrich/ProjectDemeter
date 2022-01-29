@@ -28,6 +28,8 @@ void UGoalTrackingComponent::BeginPlay()
 	
 }
 
+
+
 void UGoalTrackingComponent::Initialize()
 {
 	OwningActor = GetOwner();
@@ -62,10 +64,13 @@ void UGoalTrackingComponent::Internal_AddGoal(TSubclassOf<UGoalObjectBase> GoalT
 	UGoalObjectBase* NewGoalObject = NewObject<UGoalObjectBase>(this,GoalToAdd);
 	NewGoalObject->Initialize(OwningActor);
 	
-	//Add to tracking array
+	//Add to goal object to tracking array
 	ActiveGoals.Add(NewGoalObject);
-	UE_LOG(LogGoalSystem,Log,TEXT("%s was added to %s goal tracking"),*NewGoalObject->GetName(),*OwningActor->GetName());
-	
+
+	//Add goal data to goal data array for replication
+	ActiveGoalData.Add(NewGoalObject->GoalData);
+
+	UE_LOG(LogGoalSystem,Log,TEXT("%s was added to %s goal tracking.  GUID ="),*NewGoalObject->GetName(),*OwningActor->GetName(),*NewGoalObject->GoalData.GoalGUID.ToString(EGuidFormats::Digits));
 }
 
 void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)

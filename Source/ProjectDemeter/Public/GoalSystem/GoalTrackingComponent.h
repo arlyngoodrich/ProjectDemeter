@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GoalData.h"
 #include "Components/ActorComponent.h"
 #include "GoalTrackingComponent.generated.h"
 
@@ -28,8 +29,10 @@ protected:
 	AActor* OwningActor;
 
 	//Should only be references from the server.  Is not replicated and will be null on clients.  
-	UPROPERTY(BlueprintReadOnly,Category = "Goal Info")
 	TArray<UGoalObjectBase*> ActiveGoals;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Goal Info")
+	TArray<FGoalData> ActiveGoalData;
 
 	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal")
 	void BP_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd);

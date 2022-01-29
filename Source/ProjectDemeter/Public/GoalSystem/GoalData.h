@@ -11,12 +11,17 @@ struct FGoalData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Goal Info")
-	FName GoalDisplayName;
+	FGuid GoalGUID;
 
+	//Name text for Goal Tracking UI
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Goal Info")
+	FText GoalDisplayName;
+
+	//Description text for Goal Tracking UI
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Goal Info")
 	FText GoalDescription;
 
+	//Read only for if goal is completed or not 
 	UPROPERTY(BlueprintReadOnly, Category = "Goal Info")
 	bool bGoalCompleted;
 
