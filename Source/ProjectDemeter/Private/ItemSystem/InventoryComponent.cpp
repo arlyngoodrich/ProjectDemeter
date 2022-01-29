@@ -156,9 +156,7 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor)
 		return false;
 	}
 
-	//Create Sat Effect
-	UStatEffect* CreatedEffect;
-	CreatedEffect = NewObject<UStatEffect>(this, Item.StatEffectOnConsume);
+	UStatEffect* CreatedEffect = NewObject<UStatEffect>(this, Item.StatEffectOnConsume);
 
 	//Initialize Effect
 	CreatedEffect->InitalizeEffect(TargetActor);

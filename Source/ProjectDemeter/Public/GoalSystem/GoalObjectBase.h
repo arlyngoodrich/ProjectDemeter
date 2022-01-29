@@ -8,7 +8,6 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGoalCompleted);
 
-class APlayerController;
 /**
  * 
  */
@@ -34,14 +33,14 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Goal System")
     FOnGoalCompleted OnGoalCompletedDelegate;
 
-    virtual void Initialize(APlayerController* PlayerOwningGoal);
+    virtual void Initialize(AActor* OwningActor);
 
 protected:
 
     UPROPERTY(BlueprintReadOnly, Category = "Goal System")
-    APlayerController* OwningPlayer;
+    AActor* OwningPlayer;
 
     UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Goal System")
     void CompleteGoal();
-
+	
 };
