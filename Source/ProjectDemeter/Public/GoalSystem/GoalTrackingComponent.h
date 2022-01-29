@@ -10,7 +10,7 @@ class UGoalObjectBase;
 class APlayerController;
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), Blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UGoalTrackingComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -30,6 +30,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly,Category = "Goal Info")
 	TArray<UGoalObjectBase*> ActiveGoals;
+
+	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal")
+	void BP_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd);
 
 	virtual void Internal_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd);
 

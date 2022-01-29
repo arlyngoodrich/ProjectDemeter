@@ -39,8 +39,31 @@ void UGoalTrackingComponent::Initialize()
 	}
 }
 
+void UGoalTrackingComponent::BP_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd)
+{
+	Internal_AddGoal(GoalToAdd);
+}
+
 void UGoalTrackingComponent::Internal_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd)
 {
+	if(!IsValid(GoalToAdd))
+	{
+		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add invalid goal"),*OwningPlayer->GetName())
+		return;
+	}
+
+	if (OwningPlayer == nullptr)
+	{
+		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add goal without player controller reference"),*GetClass()->GetName())
+		return;
+	}
+	
+	if(OwningPlayer->GetLocalRole()!=ROLE_Authority)
+	{
+		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add goal as non-authority"),*OwningPlayer->GetName())
+		return;
+	}
+	
 	//Initialize Goal 
 	UGoalObjectBase* NewGoalObject = NewObject<UGoalObjectBase>(this,GoalToAdd);
 	NewGoalObject->Initialize(OwningPlayer);
