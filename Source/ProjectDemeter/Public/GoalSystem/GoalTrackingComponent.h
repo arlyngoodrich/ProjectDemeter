@@ -7,7 +7,6 @@
 #include "GoalTrackingComponent.generated.h"
 
 class UGoalObjectBase;
-class APlayerController;
 
 
 UCLASS( ClassGroup=(Custom), Blueprintable, meta=(BlueprintSpawnableComponent) )
@@ -26,7 +25,7 @@ protected:
 	virtual void Initialize();
 
 	UPROPERTY(BlueprintReadOnly, Category= "References")
-	APlayerController* OwningPlayer;
+	AActor* OwningActor;
 	
 	UPROPERTY(BlueprintReadOnly,Category = "Goal Info")
 	TArray<UGoalObjectBase*> ActiveGoals;

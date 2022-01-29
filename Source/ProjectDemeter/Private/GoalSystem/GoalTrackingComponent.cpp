@@ -5,8 +5,6 @@
 #include "GoalSystem/GoalObjectBase.h"
 #include "Core/Logs_C.h"
 
-//UE4 Includes
-#include "GameFramework/PlayerController.h"
 
 // Sets default values for this component's properties
 UGoalTrackingComponent::UGoalTrackingComponent()
@@ -32,11 +30,7 @@ void UGoalTrackingComponent::BeginPlay()
 
 void UGoalTrackingComponent::Initialize()
 {
-	OwningPlayer = Cast<APlayerController>(GetOwner());
-	if (OwningPlayer == nullptr)
-	{
-		UE_LOG(LogGoalSystem,Error,TEXT("%s must have player controller as owner"),*GetClass()->GetName());
-	}
+	OwningActor = GetOwner();
 }
 
 void UGoalTrackingComponent::BP_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd)
@@ -48,29 +42,29 @@ void UGoalTrackingComponent::Internal_AddGoal(TSubclassOf<UGoalObjectBase> GoalT
 {
 	if(!IsValid(GoalToAdd))
 	{
-		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add invalid goal"),*OwningPlayer->GetName())
+		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add invalid goal"),*OwningActor->GetName())
 		return;
 	}
 
-	if (OwningPlayer == nullptr)
+	if (OwningActor == nullptr)
 	{
 		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add goal without player controller reference"),*GetClass()->GetName())
 		return;
 	}
 	
-	if(OwningPlayer->GetLocalRole()!=ROLE_Authority)
+	if(OwningActor->GetLocalRole()!=ROLE_Authority)
 	{
-		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add goal as non-authority"),*OwningPlayer->GetName())
+		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add goal as non-authority"),*OwningActor->GetName())
 		return;
 	}
 	
 	//Initialize Goal 
 	UGoalObjectBase* NewGoalObject = NewObject<UGoalObjectBase>(this,GoalToAdd);
-	NewGoalObject->Initialize(OwningPlayer);
+	NewGoalObject->Initialize(OwningActor);
 	
 	//Add to tracking array
 	ActiveGoals.Add(NewGoalObject);
-	UE_LOG(LogGoalSystem,Log,TEXT("%s was added to %s goal tracking"),*NewGoalObject->GetName(),*OwningPlayer->GetName());
+	UE_LOG(LogGoalSystem,Log,TEXT("%s was added to %s goal tracking"),*NewGoalObject->GetName(),*OwningActor->GetName());
 	
 }
 
@@ -79,7 +73,7 @@ void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)
 
 	if(GoalToRemove == nullptr)
 	{
-		UE_LOG(LogGoalSystem,Error,TEXT("Attempting to remove null goal object from %s"),*OwningPlayer->GetName())
+		UE_LOG(LogGoalSystem,Error,TEXT("Attempting to remove null goal object from %s"),*OwningActor->GetName())
 		return;
 	}
 	//verify goal in array
@@ -87,14 +81,14 @@ void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)
 	{
 		//remove from array
 		ActiveGoals.Remove(GoalToRemove);
-		UE_LOG(LogGoalSystem,Log,TEXT("%s was removed from %s goals"),*GoalToRemove->GetName(),*OwningPlayer->GetName())
+		UE_LOG(LogGoalSystem,Log,TEXT("%s was removed from %s goals"),*GoalToRemove->GetName(),*OwningActor->GetName())
 		
 		//mark for Garbage Collection
 		GoalToRemove->MarkPendingKill();
 	}
 	else
 	{
-		UE_LOG(LogGoalSystem,Warning,TEXT("Goal object %s not found in %s Active Goal"),*GoalToRemove->GetName(),*OwningPlayer->GetName());
+		UE_LOG(LogGoalSystem,Warning,TEXT("Goal object %s not found in %s Active Goal"),*GoalToRemove->GetName(),*OwningActor->GetName());
 		return;
 	}
 }

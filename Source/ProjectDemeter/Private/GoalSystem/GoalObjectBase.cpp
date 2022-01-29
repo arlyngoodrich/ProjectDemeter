@@ -1,8 +1,7 @@
 #include "GoalSystem/GoalObjectBase.h"
 #include "Core/Logs_C.h"
 
-//UE4 Includes
-#include "GameFramework/PlayerController.h"
+
 
 // Sets default values for this component's properties
 UGoalObjectBase::UGoalObjectBase()
@@ -15,23 +14,23 @@ UGoalObjectBase::UGoalObjectBase()
 
 
 
-void UGoalObjectBase::Initialize(APlayerController* PlayerOwningGoal)
+void UGoalObjectBase::Initialize(AActor* OwningActor)
 {
-    if(PlayerOwningGoal == nullptr)
+    if(OwningActor == nullptr)
     {
         UE_LOG(LogGoalSystem,Error,TEXT("%s goal class was given null owning player"),*GetClass()->GetName())
         MarkPendingKill();
         return;
     }
 
-    if(PlayerOwningGoal->GetLocalRole()<ROLE_Authority)
+    if(OwningActor->GetLocalRole()<ROLE_Authority)
     {
         UE_LOG(LogGoalSystem,Error,TEXT("%s goal class attempted to be initalized with a non-authoritve player"),*GetClass()->GetName())
         MarkPendingKill();
         return;
     }
 
-    OwningPlayer = PlayerOwningGoal;
+    OwningPlayer = OwningActor;
 
 }
 
