@@ -31,6 +31,16 @@ void UGoalObjectBase::Initialize(AActor* OwningActor)
     }
 
     OwningPlayer = OwningActor;
+	GoalGUID = FGuid::NewGuid();
+	if(GoalGUID.IsValid())
+	{
+		UE_LOG(LogGoalSystem,Log,TEXT("%s goal object created with GUID: %s"),*GetClass()->GetName(),*GoalGUID.ToString(EGuidFormats::Digits));
+	}
+	else
+	{
+		UE_LOG(LogGoalSystem,Log,TEXT("%s GUID is not valid"),*GetClass()->GetName())
+	}
+	
 
 }
 

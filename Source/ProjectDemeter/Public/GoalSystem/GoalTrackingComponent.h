@@ -26,7 +26,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category= "References")
 	AActor* OwningActor;
-	
+
+	//Should only be references from the server.  Is not replicated and will be null on clients.  
 	UPROPERTY(BlueprintReadOnly,Category = "Goal Info")
 	TArray<UGoalObjectBase*> ActiveGoals;
 

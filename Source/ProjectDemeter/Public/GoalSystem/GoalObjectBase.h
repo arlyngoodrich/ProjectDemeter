@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "GoalSystem/GoalData.h"
 #include "GoalObjectBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGoalCompleted);
@@ -21,14 +22,8 @@ public:
 	
     UGoalObjectBase();
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
-    FName GoalName;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
-    FText GoalDescription;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Goal System")
-    bool bHasGoalBeenCompleted;
+   UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
+   FGoalData GoalData;
 
     UPROPERTY(BlueprintAssignable, Category = "Goal System")
     FOnGoalCompleted OnGoalCompletedDelegate;
@@ -42,5 +37,7 @@ protected:
 
     UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Goal System")
     void CompleteGoal();
+
+	FGuid GoalGUID;
 	
 };
