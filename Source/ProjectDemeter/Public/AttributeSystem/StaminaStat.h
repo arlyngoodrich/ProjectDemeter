@@ -87,7 +87,5 @@ private:
    void DrainSprintStamina();
 
    bool bIsWalking;
-
-
    
 };

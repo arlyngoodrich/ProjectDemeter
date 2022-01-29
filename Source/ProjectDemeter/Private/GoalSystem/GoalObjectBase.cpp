@@ -15,7 +15,7 @@ UGoalObjectBase::UGoalObjectBase()
 
 
 
-void UGoalObjectBase::Initalize(APlayerController* PlayerOwningGoal)
+void UGoalObjectBase::Initialize(APlayerController* PlayerOwningGoal)
 {
     if(PlayerOwningGoal == nullptr)
     {

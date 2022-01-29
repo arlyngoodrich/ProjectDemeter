@@ -34,7 +34,7 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Goal System")
     FOnGoalCompleted OnGoalCompletedDelegate;
 
-    virtual void Initalize(APlayerController* PlayerOwningGoal);
+    virtual void Initialize(APlayerController* PlayerOwningGoal);
 
 protected:
 
