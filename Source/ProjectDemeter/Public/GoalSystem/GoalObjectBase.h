@@ -43,5 +43,5 @@ protected:
 
     UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Goal System")
     void CompleteGoal();
-
+	
 };
