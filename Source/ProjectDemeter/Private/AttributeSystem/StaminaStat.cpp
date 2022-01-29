@@ -22,6 +22,10 @@ void UStaminaStat::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLif
 
 }
 
+float UStaminaStat::GetCurrentStamina(){ return CurrentValue;}
+
+float UStaminaStat::GetMaxStamina() { return MaxValue;}
+
 void UStaminaStat::BeginPlay()
 {
 	Super::BeginPlay();
@@ -71,6 +75,7 @@ void UStaminaStat::OnGaitUpdate(EGait_New NewGait)
 
 void UStaminaStat::OnSprintStart()
 {
+    UE_LOG(LogAttributeSystem,Log,TEXT("%s started to sprint"), *GetOwner()->GetName())
     ToggleRegeneration(false);
     ToggleSprintStaminaDrain(true);
     bIsWalking = false;
@@ -78,6 +83,7 @@ void UStaminaStat::OnSprintStart()
 
 void UStaminaStat::OnRunStart()
 {
+    UE_LOG(LogAttributeSystem, Log, TEXT("%s started to run"), *GetOwner()->GetName())
     ToggleRegeneration(false);
     ToggleSprintStaminaDrain(false);
     bIsWalking = false;
@@ -85,6 +91,7 @@ void UStaminaStat::OnRunStart()
 
 void UStaminaStat::OnWalkStart()
 {
+    UE_LOG(LogAttributeSystem, Log, TEXT("%s started to walk"), *GetOwner()->GetName())
     ToggleRegeneration(true);
     ToggleSprintStaminaDrain(false);
     bIsWalking = true;
@@ -136,8 +143,12 @@ void UStaminaStat::OnRep_StaminaDepletedUpdated()
 
 void UStaminaStat::ToggleSprintStaminaDrain(bool bDrain)
 {
+   
+
     if(bDrain)
     {
+        UE_LOG(LogAttributeSystem, Log, TEXT("%s called start sprint stamina drian"), *GetOwner()->GetName())
+
         //Check to see if already draining
         if(GetWorld()->GetTimerManager().IsTimerActive(SprintStaminaDrainTimer) == false)
         {   

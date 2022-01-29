@@ -29,6 +29,12 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Stamina Stats")
     FOnStaminaDepleted OnStaminaDepletedChangeDelegate;
 
+    UFUNCTION(BlueprintPure, Category = "Stamina Stats")
+    float GetCurrentStamina();
+
+    UFUNCTION(BlueprintPure, Category = "Stamina Stats")
+    float GetMaxStamina();
+
 protected:
 
 	virtual void BeginPlay() override;
