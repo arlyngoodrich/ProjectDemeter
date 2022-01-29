@@ -22,6 +22,10 @@ void UStaminaStat::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLif
 
 }
 
+float UStaminaStat::GetCurrentStamina(){ return CurrentValue;}
+
+float UStaminaStat::GetMaxStamina() { return MaxValue;}
+
 void UStaminaStat::BeginPlay()
 {
 	Super::BeginPlay();
