@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemData.h"
 #include "Blueprint/UserWidget.h"
 #include "InventoryWidget.generated.h"
 
@@ -31,6 +32,9 @@ public:
 
 protected:
 
+	UFUNCTION(BlueprintCallable, Category="Inventory System")
+	void ConsumeItem(FItemData ItemToConsume);
+	
 	//Called by native class when inventory is updated.  Utilizes Inventory Component delegate.  
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory System", DisplayName = "Refresh Inventory UI")
 	void BP_RefreshInventoryUI();

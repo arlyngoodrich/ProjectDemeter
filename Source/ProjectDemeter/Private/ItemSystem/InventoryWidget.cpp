@@ -17,6 +17,11 @@ void UInventoryWidget::SetUpInventoryWidget(UInventoryComponent* CreatingInvento
 	OwningInventory->OnInventoryUpdated.AddDynamic(this,&UInventoryWidget::Internal_RefreshInventory);
 }
 
+void UInventoryWidget::ConsumeItem(FItemData ItemToConsume)
+{
+	OwningInventory->ClientFriendly_ConsumeItem(ItemToConsume,OwningInventory->GetOwner());
+}
+
 void UInventoryWidget::Internal_RefreshInventory()
 {
 	BP_RefreshInventoryUI();

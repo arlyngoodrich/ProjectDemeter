@@ -4,6 +4,7 @@
 #include "ItemSystem/InventoryComponent.h"
 #include "Core/Logs_C.h"
 #include "AttributeSystem/StatEffect.h"
+#include "ItemSystem/InventoryWidget.h"
 
 //UE4 Includes
 #include "Net/UnrealNetwork.h"
@@ -27,6 +28,7 @@ int32 UInventoryComponent::GetMaxInventorySlots() const {return MaxItems;}
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	CreateInventoryWidget();
 
 	// ...
 	
@@ -44,6 +46,19 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 void UInventoryComponent::OnRep_InventoryUpdate() const
 {
 	OnInventoryUpdated.Broadcast();
+}
+
+void UInventoryComponent::CreateInventoryWidget()
+{
+	if(InventoryWidgetClass == nullptr)
+	{
+		UE_LOG(LogInventorySystem,Error,TEXT("%s class inventory widget class is null"),*GetClass()->GetName());
+		return;
+	}
+
+	InventoryWidget = CreateWidget<UInventoryWidget>(GetWorld(),InventoryWidgetClass);
+	InventoryWidget->SetUpInventoryWidget(this);
+	InventoryWidget->AddToViewport();
 }
 
 void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)

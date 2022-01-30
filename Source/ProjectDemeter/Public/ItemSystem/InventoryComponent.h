@@ -7,6 +7,8 @@
 #include "ItemSystem/ItemData.h"
 #include "InventoryComponent.generated.h"
 
+class UInventoryWidget;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
 UCLASS( ClassGroup=(ItemSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
@@ -44,19 +46,23 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
 	int32 MaxItems;
 
+	UPROPERTY(EditDefaultsOnly, Category= "Inventory")
+	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_InventoryUpdate, Category = "Inventory")
 	TArray<FItemData> Inventory;
+
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
+	UInventoryWidget* InventoryWidget;
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_RemoveItem(FItemData Item);
 	bool Server_RemoveItem_Validate(FItemData Item);
 	void Server_RemoveItem_Implementation(FItemData Item);
-
-
+	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ConsumeItem(FItemData Item, AActor* TargetActor);
 	bool Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor);
@@ -67,6 +73,9 @@ protected:
 
 private:
 
+	//Create and adds widget to viewport 
+	void CreateInventoryWidget();
+	
 	bool FindFirstIndexOfItem(FItemData Item, int32& Index);
 
 		
