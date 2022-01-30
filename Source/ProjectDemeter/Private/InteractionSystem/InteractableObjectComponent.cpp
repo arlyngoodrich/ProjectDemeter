@@ -22,7 +22,7 @@ UInteractableObjectComponent::UInteractableObjectComponent()
 }
 
 
-void UInteractableObjectComponent::Interact(AActor* InstigatingActor) const
+void UInteractableObjectComponent::Interact(AActor* InstigatingActor)
 {
 
 	if (!InstigatingActor)

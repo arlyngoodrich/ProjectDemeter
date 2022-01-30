@@ -36,6 +36,13 @@ void AItem::Tick(float DeltaTime)
 
 void AItem::Initialize()
 {
+
+	if(GetOwner())
+	{
+		UE_LOG(LogInteractionSystem,Log,TEXT("%s initalized onto %s"),*GetName(),*GetOwner()->GetName())
+	}
+	
+		
 	InteractionComponent->OnInteractionTriggered.AddDynamic(this, &AItem::OnInteraction);
 }
 
