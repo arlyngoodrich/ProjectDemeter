@@ -37,7 +37,7 @@ protected:
 	void Initialize();
 
 	//Called Interaction Component delegate.
-	void OnInteraction(const AActor* InstigatingActor);
+	void OnInteraction(AActor* InstigatingActor);
 
 	//Used to add the item into an inventory.  Expected use is to be called after interaction.  
 	void AddToTargetInventory(const AActor* TargetActor);

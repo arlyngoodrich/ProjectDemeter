@@ -39,7 +39,8 @@ void AItem::Initialize()
 	InteractionComponent->OnInteractionTriggered.AddDynamic(this, &AItem::OnInteraction);
 }
 
-void AItem::OnInteraction(const AActor* InstigatingActor)
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
+void AItem::OnInteraction(AActor* InstigatingActor)
 {
 	UE_LOG(LogInteractionSystem, Log, TEXT("%s received interaction from %s"), *GetName(), *InstigatingActor->GetName());
 
