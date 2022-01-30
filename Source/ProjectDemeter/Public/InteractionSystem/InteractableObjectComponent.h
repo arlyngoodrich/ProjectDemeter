@@ -18,10 +18,16 @@ public:
 	// Sets default values for this component's properties
 	UInteractableObjectComponent();
 
+	//Called by Interactable Object Sensor on player 
 	void Interact(AActor* InstigatingActor);
 
+	/*
+	 *Called by Interactable Object Sensor on player.  Sets if a player has the object in view.  Will highlight all
+	 *mesh objects when in view. 
+	*/
 	void ToggleFocus(bool bNewIsInFocus);
 
+	//Delegate triggered when the player call interact while the owning actor is in view
 	UPROPERTY(BlueprintAssignable, Category = "Interaction System")
 	FInteractionTriggeredDelegate OnInteractionTriggered;
 
@@ -29,24 +35,26 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	//Text to display while the object is in focus
+	UPROPERTY(EditDefaultsOnly, Category="Interaction System")
+	FText InteractionText;
+
+	//Configuration for if the object should highlight or not. 
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction System")
 	bool bShouldOutline;
 
+	/*
+	 *Configuration for which stencil value the outline should use.  Check the Outline Material Post Process Material
+	 *To see which colors are available.
+	*/
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction System")
 	int32 OutlineStencilValue;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Focus Start")
-	void BP_OnStartFocus();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On End Focus")
-	void BP_OnEndFocus();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Interaction System", DisplayName = "On Interaction Triggered")
-	void BP_OnInteractionTriggered(AActor* InstigatingActor);
-	
+	//Boolean value for if the owning object is in focus by the player.  True if yes, false if no. 
 	UPROPERTY(BlueprintReadOnly, Category = "Interaction System")
 	bool bIsInFocus;
 
-	void ToggleOutline(bool bStartOutline);
+	//Adds or removes outline to all mesh objects on the owning object. 
+	void ToggleOutline(bool bStartOutline) const;
 		
 };

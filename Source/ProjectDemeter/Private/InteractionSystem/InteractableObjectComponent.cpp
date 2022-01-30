@@ -83,7 +83,7 @@ void UInteractableObjectComponent::BeginPlay()
 	
 }
 
-void UInteractableObjectComponent::ToggleOutline(bool bStartOutline)
+void UInteractableObjectComponent::ToggleOutline(bool bStartOutline) const
 {
 	TArray<UMeshComponent*> MeshComponents;
 	GetOwner()->GetComponents<UMeshComponent>(MeshComponents);
