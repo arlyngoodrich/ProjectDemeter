@@ -8,5 +8,7 @@ DEFINE_LOG_CATEGORY(LogHealth);
 DEFINE_LOG_CATEGORY(LogInteractionSystem);
 DEFINE_LOG_CATEGORY(LogInventorySystem);
 DEFINE_LOG_CATEGORY(LogAttributeSystem);
+DEFINE_LOG_CATEGORY(LogGoalSystem);
+
 
 

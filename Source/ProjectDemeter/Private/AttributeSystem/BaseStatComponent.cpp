@@ -13,13 +13,8 @@ UBaseStatComponent::UBaseStatComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
-
-
 	// ...
 }
-
-
 
 
 // Called when the game starts
@@ -53,12 +48,19 @@ void UBaseStatComponent::EffectStat(float EffectAmount)
 
 void UBaseStatComponent::OnRep_CurrentValueChange()
 {
-	OnCurrentValueChange.Broadcast();
+	OnCurrentValueChangeDelegate.Broadcast();
 	BP_OnCurrentValueChange();
+	OnCurrentValueChange();
+}
+
+void UBaseStatComponent::OnCurrentValueChange()
+{
+
 }
 
 void UBaseStatComponent::MaxValueReached()
 {
+	ToggleRegeneration(false);
 }
 
 void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
@@ -76,6 +78,8 @@ void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
 	if (oldCurrentValue != newCurrentValue)
 	{
 		CurrentValue = newCurrentValue;
+		UE_LOG(LogAttributeSystem,Log,TEXT("%s current value is now %f on %s"),*GetName(),CurrentValue,*GetOwner()->GetName());
+
 		OnRep_CurrentValueChange();
 
 		if (CurrentValue == MaxValue)
@@ -89,24 +93,28 @@ void UBaseStatComponent::ChangeCurrentValue(float DeltaAmount)
 void UBaseStatComponent::ToggleRegeneration(bool bShouldStart)
 {
 
-	if (bShouldStart)
+	//Check to see if regeneration should be started and if its OK to regenerate
+	if (bShouldStart && bShouldRegenerate)
 	{
 		//Check to see if it's already running
 		if (GetWorld()->GetTimerManager().IsTimerActive(RegenerationTimer) == false)
 		{
 			//If not, then start it 
 			GetWorld()->GetTimerManager().SetTimer(RegenerationTimer, this, &UBaseStatComponent::RegenerateValue, 1.f, true);
+			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration started on %s component for %s"),*GetClass()->GetName(),*GetOwner()->GetName());
 		}
 
 		return;
 	}
+	//if not, then stop regeneration if it's currently running
 	else
-	{	//Check to see if it's 
+	{	//Check to see if currently regenerating
 		if (GetWorld()->GetTimerManager().TimerExists(RegenerationTimer) == true)
 		{
 
-			//If it does, then clear it
+			//If currentliy regenerating, then clear it
 			GetWorld()->GetTimerManager().ClearTimer(RegenerationTimer);
+			UE_LOG(LogAttributeSystem,Log,TEXT("Regneration stopped on %s component for %s"),*GetClass()->GetName(),*GetOwner()->GetName());
 		}
 
 		return;
