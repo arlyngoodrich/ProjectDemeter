@@ -40,6 +40,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Inventory")
 	int32 GetMaxInventorySlots() const;
+	
 
 
 protected:
@@ -58,6 +59,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Inventory")
 	UInventoryWidget* InventoryWidget;
 
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
+	bool bIsOwnedByPlayer;
+
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
+	APlayerController* OwningPlayer;
+
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_RemoveItem(FItemData Item);
 	bool Server_RemoveItem_Validate(FItemData Item);
@@ -70,11 +77,12 @@ protected:
 
 	UFUNCTION()
 	void OnRep_InventoryUpdate() const;
+	void SetOwningPlayer();
 
 private:
 
 	//Create and adds widget to viewport 
-	void CreateInventoryWidget();
+	void CreateInventoryWidget(APlayerController* PlayerController);
 	
 	bool FindFirstIndexOfItem(FItemData Item, int32& Index);
 

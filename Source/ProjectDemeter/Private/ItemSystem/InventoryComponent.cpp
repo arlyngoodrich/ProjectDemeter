@@ -7,6 +7,7 @@
 #include "ItemSystem/InventoryWidget.h"
 
 //UE4 Includes
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -24,14 +25,18 @@ UInventoryComponent::UInventoryComponent()
 
 int32 UInventoryComponent::GetMaxInventorySlots() const {return MaxItems;}
 
+
 // Called when the game starts
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	CreateInventoryWidget();
 
-	// ...
-	
+	SetOwningPlayer();
+
+	if(bIsOwnedByPlayer)
+	{
+		CreateInventoryWidget(OwningPlayer);
+	}
 }
 
 void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
@@ -48,7 +53,7 @@ void UInventoryComponent::OnRep_InventoryUpdate() const
 	OnInventoryUpdated.Broadcast();
 }
 
-void UInventoryComponent::CreateInventoryWidget()
+void UInventoryComponent::CreateInventoryWidget(APlayerController* PlayerController)
 {
 	if(InventoryWidgetClass == nullptr)
 	{
@@ -56,9 +61,19 @@ void UInventoryComponent::CreateInventoryWidget()
 		return;
 	}
 
-	InventoryWidget = CreateWidget<UInventoryWidget>(GetWorld(),InventoryWidgetClass);
-	InventoryWidget->SetUpInventoryWidget(this);
-	InventoryWidget->AddToViewport();
+	if(PlayerController == nullptr)
+	{
+		UE_LOG(LogInventorySystem,Error,TEXT("%s attempting to create class without valid player controller"))
+		return;
+	}
+
+	//Only create widget if controller is local 
+	if(PlayerController->IsLocalController())
+	{
+		InventoryWidget = CreateWidget<UInventoryWidget>(PlayerController,InventoryWidgetClass);
+		InventoryWidget->SetUpInventoryWidget(this);
+		InventoryWidget->AddToViewport();
+	}
 }
 
 void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)
@@ -184,6 +199,20 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor)
 	return false;
 }
 
+
+void UInventoryComponent::SetOwningPlayer()
+{
+	ACharacter* OwningCharacter = Cast<ACharacter>(GetOwner());
+	if(OwningCharacter)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(OwningCharacter->GetController());
+		if(PlayerController)
+		{
+			bIsOwnedByPlayer = true;
+			OwningPlayer = PlayerController;
+		}
+	}
+}
 
 
 bool UInventoryComponent::FindFirstIndexOfItem(FItemData Item, int32& Index)
