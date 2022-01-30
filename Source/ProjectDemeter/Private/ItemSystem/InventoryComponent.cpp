@@ -45,7 +45,7 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 }
 
 
-void UInventoryComponent::OnRep_InventoryUpdate()
+void UInventoryComponent::OnRep_InventoryUpdate() const
 {
 	OnInventoryUpdated.Broadcast();
 }
