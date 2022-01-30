@@ -23,7 +23,7 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Initalize();
+	Initialize();
 	
 }
 
@@ -34,17 +34,29 @@ void AItem::Tick(float DeltaTime)
 
 }
 
-void AItem::Initalize()
+void AItem::Initialize()
 {
+
+	if(GetOwner())
+	{
+		UE_LOG(LogInteractionSystem,Log,TEXT("%s initalized onto %s"),*GetName(),*GetOwner()->GetName())
+	}
+	
+		
 	InteractionComponent->OnInteractionTriggered.AddDynamic(this, &AItem::OnInteraction);
 }
 
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
 void AItem::OnInteraction(AActor* InstigatingActor)
 {
 	UE_LOG(LogInteractionSystem, Log, TEXT("%s received interaction from %s"), *GetName(), *InstigatingActor->GetName());
 
-	UInventoryComponent* InstigatingInventoryComponent;
-	InstigatingInventoryComponent = InstigatingActor->FindComponentByClass<UInventoryComponent>();
+	AddToTargetInventory(InstigatingActor);
+}
+
+void AItem::AddToTargetInventory(const AActor* TargetActor)
+{
+	UInventoryComponent* InstigatingInventoryComponent = TargetActor->FindComponentByClass<UInventoryComponent>();
 
 	if (!InstigatingInventoryComponent) { return; }
 
