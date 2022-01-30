@@ -2,6 +2,8 @@
 
 
 #include "ItemSystem/InventoryWidget.h"
+
+#include "AttributeSystem/StatEffect.h"
 #include "Core/Logs_C.h"
 #include "ItemSystem/InventoryComponent.h"
 
@@ -19,7 +21,18 @@ void UInventoryWidget::SetUpInventoryWidget(UInventoryComponent* CreatingInvento
 
 void UInventoryWidget::ConsumeItem(FItemData ItemToConsume)
 {
-	OwningInventory->ClientFriendly_ConsumeItem(ItemToConsume,OwningInventory->GetOwner());
+	//Check to see if has a valid consumption effect
+	if(ItemToConsume.StatEffectOnConsume == nullptr)
+	{
+		//If not, then just remove
+		OwningInventory->ClientFriendly_RemoveItem(ItemToConsume);
+	}
+	else
+	{
+		//If yes, then consume it 
+		OwningInventory->ClientFriendly_ConsumeItem(ItemToConsume,OwningInventory->GetOwner());
+	}
+	
 }
 
 void UInventoryWidget::Internal_RefreshInventory()
