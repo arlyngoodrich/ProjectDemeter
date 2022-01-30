@@ -29,7 +29,7 @@ void UInteractionSensorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Initalize();
+	Initialize();
 }
 
 // Called every frame
@@ -44,7 +44,7 @@ void UInteractionSensorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 }
 
-void UInteractionSensorComponent::Initalize()
+void UInteractionSensorComponent::Initialize()
 {
 
 	ACharacter* OwningCharacterCheck;
@@ -217,12 +217,12 @@ bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor)
 	}
 }
 
-bool UInteractionSensorComponent::GetInteractableComponent(AActor* HitActor, UInteractableObjectComponent*& HitActorInterableObjectComponent)
+bool UInteractionSensorComponent::GetInteractableComponent(AActor* HitActor, UInteractableObjectComponent*& HitActorInteractableObjectComponent)
 {
 
-	HitActorInterableObjectComponent = HitActor->FindComponentByClass<UInteractableObjectComponent>();
+	HitActorInteractableObjectComponent = HitActor->FindComponentByClass<UInteractableObjectComponent>();
 
-	if (HitActorInterableObjectComponent)
+	if (HitActorInteractableObjectComponent)
 	{
 		return true;
 	}
