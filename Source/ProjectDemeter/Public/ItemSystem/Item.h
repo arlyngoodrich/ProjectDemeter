@@ -25,16 +25,21 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//Item data used in the inventory
 	UPROPERTY(EditDefaultsOnly, Category = "Item Data")
 	FItemData ItemData;
 
-	UPROPERTY(VisibleAnywhere)
+	//Component that handles interaction with the player
+	UPROPERTY(VisibleAnywhere, Category= "Components")
 	UInteractableObjectComponent* InteractionComponent;
 
-	void Initalize();
+	//Called on being play.  Handles binding to delegates and specifically on interaction triggered.  
+	void Initialize();
 
-	UFUNCTION()
-	void OnInteraction(AActor* InstigatingActor);
+	//Called Interaction Component delegate.
+	void OnInteraction(const AActor* InstigatingActor);
 
+	//Used to add the item into an inventory.  Expected use is to be called after interaction.  
+	void AddToTargetInventory(const AActor* TargetActor);
 
 };

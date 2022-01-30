@@ -23,7 +23,7 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Initalize();
+	Initialize();
 	
 }
 
@@ -34,17 +34,21 @@ void AItem::Tick(float DeltaTime)
 
 }
 
-void AItem::Initalize()
+void AItem::Initialize()
 {
 	InteractionComponent->OnInteractionTriggered.AddDynamic(this, &AItem::OnInteraction);
 }
 
-void AItem::OnInteraction(AActor* InstigatingActor)
+void AItem::OnInteraction(const AActor* InstigatingActor)
 {
 	UE_LOG(LogInteractionSystem, Log, TEXT("%s received interaction from %s"), *GetName(), *InstigatingActor->GetName());
 
-	UInventoryComponent* InstigatingInventoryComponent;
-	InstigatingInventoryComponent = InstigatingActor->FindComponentByClass<UInventoryComponent>();
+	AddToTargetInventory(InstigatingActor);
+}
+
+void AItem::AddToTargetInventory(const AActor* TargetActor)
+{
+	UInventoryComponent* InstigatingInventoryComponent = TargetActor->FindComponentByClass<UInventoryComponent>();
 
 	if (!InstigatingInventoryComponent) { return; }
 
