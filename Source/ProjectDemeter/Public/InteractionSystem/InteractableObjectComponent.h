@@ -19,7 +19,7 @@ public:
 	UInteractableObjectComponent();
 
 	//Called by Interactable Object Sensor on player 
-	void Interact(AActor* InstigatingActor);
+	void Interact(AActor* InstigatingActor) const;
 
 	/*
 	 *Called by Interactable Object Sensor on player.  Sets if a player has the object in view.  Will highlight all

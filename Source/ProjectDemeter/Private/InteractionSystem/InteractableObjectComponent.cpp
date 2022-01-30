@@ -20,7 +20,7 @@ UInteractableObjectComponent::UInteractableObjectComponent()
 }
 
 
-void UInteractableObjectComponent::Interact(AActor* InstigatingActor)
+void UInteractableObjectComponent::Interact(AActor* InstigatingActor) const
 {
 
 	if (!InstigatingActor)
@@ -32,8 +32,7 @@ void UInteractableObjectComponent::Interact(AActor* InstigatingActor)
 	if (GetOwnerRole() == ROLE_Authority)
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("Interaction called on %s"), *GetOwner()->GetName())
-
-		BP_OnInteractionTriggered(InstigatingActor);
+		
 		OnInteractionTriggered.Broadcast(InstigatingActor);
 	}
 	else
@@ -50,7 +49,6 @@ void UInteractableObjectComponent::ToggleFocus(bool bNewIsInFocus)
 	if (bNewIsInFocus)
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("%s is now in focus"), *GetOwner()->GetName())
-		BP_OnStartFocus();
 		
 		if (bShouldOutline)
 		{
@@ -61,7 +59,6 @@ void UInteractableObjectComponent::ToggleFocus(bool bNewIsInFocus)
 	else
 	{
 		UE_LOG(LogInteractionSystem, Log, TEXT("%s is no longer in focus"), *GetOwner()->GetName())
-		BP_OnEndFocus();
 
 		if (bShouldOutline)
 		{
