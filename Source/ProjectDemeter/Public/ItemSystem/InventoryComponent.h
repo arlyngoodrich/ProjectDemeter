@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void  ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor);
 
+	UFUNCTION(BlueprintPure, Category="Inventory")
+	int32 GetMaxInventorySlots() const;
+
 
 protected:
 	// Called when the game starts

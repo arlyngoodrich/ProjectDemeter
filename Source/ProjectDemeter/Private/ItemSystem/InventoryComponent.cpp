@@ -21,8 +21,7 @@ UInventoryComponent::UInventoryComponent()
 	// ...
 }
 
-
-
+int32 UInventoryComponent::GetMaxInventorySlots() const {return MaxItems;}
 
 // Called when the game starts
 void UInventoryComponent::BeginPlay()
@@ -33,8 +32,6 @@ void UInventoryComponent::BeginPlay()
 	
 }
 
-
-
 void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
 {
 
@@ -43,7 +40,6 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >&
 	DOREPLIFETIME(UInventoryComponent, Inventory);
 
 }
-
 
 void UInventoryComponent::OnRep_InventoryUpdate() const
 {
@@ -75,10 +71,7 @@ void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* Tar
 	}
 }
 
-
-
-
-bool UInventoryComponent::AddItem(FItemData Item)
+bool UInventoryComponent::AddItem(const FItemData Item)
 {
 
 	if (GetOwnerRole() != ROLE_Authority)
@@ -106,7 +99,7 @@ bool UInventoryComponent::AddItem(FItemData Item)
 
 }
 
-bool UInventoryComponent::RemoveItem(FItemData Item)
+bool UInventoryComponent::RemoveItem(const FItemData Item)
 {
 	if (GetOwnerRole() != ROLE_Authority)
 	{
