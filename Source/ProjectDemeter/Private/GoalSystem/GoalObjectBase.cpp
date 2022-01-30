@@ -31,7 +31,7 @@ void UGoalObjectBase::Initialize(AActor* OwningActor)
     }
 
     OwningPlayer = OwningActor;
-
+	GoalData.GoalGUID = FGuid::NewGuid();
 }
 
 void UGoalObjectBase::CompleteGoal()

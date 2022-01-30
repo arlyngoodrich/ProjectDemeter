@@ -5,6 +5,9 @@
 #include "GoalSystem/GoalObjectBase.h"
 #include "Core/Logs_C.h"
 
+//UE4 Includes
+#include "Net/UnrealNetwork.h"
+
 
 // Sets default values for this component's properties
 UGoalTrackingComponent::UGoalTrackingComponent()
@@ -23,9 +26,13 @@ void UGoalTrackingComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Initialize();
+}
 
-	// ...
-	
+void UGoalTrackingComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UGoalTrackingComponent, ActiveGoalData);
 }
 
 void UGoalTrackingComponent::Initialize()
@@ -38,7 +45,12 @@ void UGoalTrackingComponent::BP_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd)
 	Internal_AddGoal(GoalToAdd);
 }
 
-void UGoalTrackingComponent::Internal_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd)
+void UGoalTrackingComponent::OnRep_GoalDataUpdate() const
+{
+	OnGoalDataUpdateDelegate.Broadcast();
+}
+
+void UGoalTrackingComponent::Internal_AddGoal(const TSubclassOf<UGoalObjectBase> GoalToAdd)
 {
 	if(!IsValid(GoalToAdd))
 	{
@@ -62,10 +74,16 @@ void UGoalTrackingComponent::Internal_AddGoal(TSubclassOf<UGoalObjectBase> GoalT
 	UGoalObjectBase* NewGoalObject = NewObject<UGoalObjectBase>(this,GoalToAdd);
 	NewGoalObject->Initialize(OwningActor);
 	
-	//Add to tracking array
+	//Add to goal object to tracking array
 	ActiveGoals.Add(NewGoalObject);
-	UE_LOG(LogGoalSystem,Log,TEXT("%s was added to %s goal tracking"),*NewGoalObject->GetName(),*OwningActor->GetName());
-	
+
+	//Add goal data to goal data array for replication
+	ActiveGoalData.Add(NewGoalObject->GoalData);
+
+	OnRep_GoalDataUpdate();
+
+	UE_LOG(LogGoalSystem, Log, TEXT("%s was added to %s goal tracking.  GUID = %s"), *NewGoalObject->GetName(),
+	       *OwningActor->GetName(), *NewGoalObject->GoalData.GoalGUID.ToString(EGuidFormats::Digits));
 }
 
 void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)
@@ -79,17 +97,42 @@ void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)
 	//verify goal in array
 	if(ActiveGoals.Find(GoalToRemove))
 	{
-		//remove from array
+		//remove object from active object goal array
 		ActiveGoals.Remove(GoalToRemove);
-		UE_LOG(LogGoalSystem,Log,TEXT("%s was removed from %s goals"),*GoalToRemove->GetName(),*OwningActor->GetName())
+
+		//remove data from active goal data array 
+		int32 GoalDataIndex;
+		const FGuid GUID = GoalToRemove->GoalData.GoalGUID;
+		FindGoalDataByGUID(GUID,GoalDataIndex);
+		ActiveGoalData.RemoveAt(GoalDataIndex);
 		
+		OnRep_GoalDataUpdate();
+
+		UE_LOG(LogGoalSystem, Log, TEXT("%s with GUID:%s was removed from %s goals"), *GoalToRemove->GetName(),
+		       *GUID.ToString(), *OwningActor->GetName())
+
 		//mark for Garbage Collection
 		GoalToRemove->MarkPendingKill();
 	}
 	else
 	{
-		UE_LOG(LogGoalSystem,Warning,TEXT("Goal object %s not found in %s Active Goal"),*GoalToRemove->GetName(),*OwningActor->GetName());
+		UE_LOG(LogGoalSystem, Warning, TEXT("Goal object %s not found in %s Active Goal"), *GoalToRemove->GetName(),
+		       *OwningActor->GetName());
 		return;
 	}
+}
+
+bool UGoalTrackingComponent::FindGoalDataByGUID(const FGuid GUID, int32& OutGoalDataIndex) const
+{
+	for (int i = 0; i < ActiveGoalData.Num(); ++i)
+	{
+		if(ActiveGoalData[i].GoalGUID == GUID)
+		{
+			OutGoalDataIndex = i;
+			return true;
+		}
+	}
+	
+	return false;
 }
 

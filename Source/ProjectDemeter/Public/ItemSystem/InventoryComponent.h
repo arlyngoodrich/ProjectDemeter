@@ -60,7 +60,7 @@ protected:
 	void Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor);
 
 	UFUNCTION()
-	void OnRep_InventoryUpdate();
+	void OnRep_InventoryUpdate() const;
 
 private:
 
