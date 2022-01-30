@@ -7,6 +7,8 @@
 #include "ItemSystem/ItemData.h"
 #include "InventoryComponent.generated.h"
 
+class UInventoryWidget;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
 UCLASS( ClassGroup=(ItemSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
@@ -36,24 +38,38 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void  ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor);
 
+	UFUNCTION(BlueprintPure, Category="Inventory")
+	int32 GetMaxInventorySlots() const;
+	
+
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
 	int32 MaxItems;
 
+	UPROPERTY(EditDefaultsOnly, Category= "Inventory")
+	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_InventoryUpdate, Category = "Inventory")
 	TArray<FItemData> Inventory;
+
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
+	UInventoryWidget* InventoryWidget;
+
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
+	bool bIsOwnedByPlayer;
+
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
+	APlayerController* OwningPlayer;
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_RemoveItem(FItemData Item);
 	bool Server_RemoveItem_Validate(FItemData Item);
 	void Server_RemoveItem_Implementation(FItemData Item);
-
-
+	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_ConsumeItem(FItemData Item, AActor* TargetActor);
 	bool Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor);
@@ -61,9 +77,13 @@ protected:
 
 	UFUNCTION()
 	void OnRep_InventoryUpdate() const;
+	void SetOwningPlayer();
 
 private:
 
+	//Create and adds widget to viewport 
+	void CreateInventoryWidget(APlayerController* PlayerController);
+	
 	bool FindFirstIndexOfItem(FItemData Item, int32& Index);
 
 		
