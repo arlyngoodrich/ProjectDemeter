@@ -67,20 +67,6 @@ void UInteractableObjectComponent::BeginPlay()
 	
 }
 
-void UInteractableObjectComponent::ToggleOutline(bool bStartOutline) const
-{
-	TArray<UMeshComponent*> MeshComponents;
-	GetOwner()->GetComponents<UMeshComponent>(MeshComponents);
-
-	for (int i = 0; i < MeshComponents.Num(); i++)
-	{
-		MeshComponents[i]->SetRenderCustomDepth(bStartOutline);
-		MeshComponents[i]->SetCustomDepthStencilValue(OutlineStencilValue);
-	}
-}
-
-
-
 void UInteractableObjectComponent::StartFocus()
 {
 	UE_LOG(LogInteractionSystem, Log, TEXT("%s is now in focus"), *GetOwner()->GetName())
@@ -99,8 +85,8 @@ void UInteractableObjectComponent::EndFocus()
 		
 	if (bShouldOutline)
 	{
-		ToggleOutline(true);
-		OnFocusStart.Broadcast();
+		ToggleOutline(false);
+		OnFocusEnd.Broadcast();
 		RemoveInteractionTextWidgetToView();
 	}
 }
@@ -108,6 +94,8 @@ void UInteractableObjectComponent::EndFocus()
 
 void UInteractableObjectComponent::AddInteractionTextWidgetToView()
 {
+	if(InteractionWidgetClass == nullptr || bShouldShowInteractionWidget == false) {return;}
+			
 	InteractionWidget = CreateWidget<UInteractionTextWidget>(GetWorld(),InteractionWidgetClass);
 	InteractionWidget->InteractionText = InteractionText;
 	InteractionWidget->AddToViewport();
@@ -121,8 +109,18 @@ void UInteractableObjectComponent::RemoveInteractionTextWidgetToView()
 	InteractionWidget->RemoveFromParent();
 
 	InteractionWidget = nullptr;
-	
 }
 
+void UInteractableObjectComponent::ToggleOutline(const bool bStartOutline) const
+{
+	TArray<UMeshComponent*> MeshComponents;
+	GetOwner()->GetComponents<UMeshComponent>(MeshComponents);
+
+	for (int i = 0; i < MeshComponents.Num(); i++)
+	{
+		MeshComponents[i]->SetRenderCustomDepth(bStartOutline);
+		MeshComponents[i]->SetCustomDepthStencilValue(OutlineStencilValue);
+	}
+}
 
 
