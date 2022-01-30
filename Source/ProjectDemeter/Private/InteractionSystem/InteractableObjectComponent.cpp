@@ -3,9 +3,11 @@
 
 #include "InteractionSystem/InteractableObjectComponent.h"
 #include "Core/Logs_C.h"
+#include "InteractionSystem/InteractionTextWidget.h"
 
 //UE4 Includes
 #include "Components/MeshComponent.h"
+
 
 // Sets default values for this component's properties
 UInteractableObjectComponent::UInteractableObjectComponent()
@@ -42,33 +44,18 @@ void UInteractableObjectComponent::Interact(AActor* InstigatingActor) const
 
 }
 
-void UInteractableObjectComponent::ToggleFocus(bool bNewIsInFocus)
+void UInteractableObjectComponent::ToggleFocus(const bool bNewIsInFocus)
 {
 	bIsInFocus = bNewIsInFocus;
 
 	if (bNewIsInFocus)
 	{
-		UE_LOG(LogInteractionSystem, Log, TEXT("%s is now in focus"), *GetOwner()->GetName())
-		
-		if (bShouldOutline)
-		{
-			ToggleOutline(true);
-		}
-
+		StartFocus();
 	}
 	else
-	{
-		UE_LOG(LogInteractionSystem, Log, TEXT("%s is no longer in focus"), *GetOwner()->GetName())
-
-		if (bShouldOutline)
-		{
-			ToggleOutline(false);
-		}
-
+	{	
+		EndFocus();
 	}
-
-	
-
 }
 
 // Called when the game starts
@@ -92,6 +79,50 @@ void UInteractableObjectComponent::ToggleOutline(bool bStartOutline) const
 	}
 }
 
+
+
+void UInteractableObjectComponent::StartFocus()
+{
+	UE_LOG(LogInteractionSystem, Log, TEXT("%s is now in focus"), *GetOwner()->GetName())
+		
+	if (bShouldOutline)
+	{
+		ToggleOutline(true);
+		OnFocusStart.Broadcast();
+		AddInteractionTextWidgetToView();
+	}
+}
+
+void UInteractableObjectComponent::EndFocus()
+{
+	UE_LOG(LogInteractionSystem, Log, TEXT("%s is now in focus"), *GetOwner()->GetName())
+		
+	if (bShouldOutline)
+	{
+		ToggleOutline(true);
+		OnFocusStart.Broadcast();
+		RemoveInteractionTextWidgetToView();
+	}
+}
+
+
+void UInteractableObjectComponent::AddInteractionTextWidgetToView()
+{
+	InteractionWidget = CreateWidget<UInteractionTextWidget>(GetWorld(),InteractionWidgetClass);
+	InteractionWidget->InteractionText = InteractionText;
+	InteractionWidget->AddToViewport();
+}
+
+
+void UInteractableObjectComponent::RemoveInteractionTextWidgetToView()
+{
+	if(InteractionWidget == nullptr){return;}
+	
+	InteractionWidget->RemoveFromParent();
+
+	InteractionWidget = nullptr;
+	
+}
 
 
 
