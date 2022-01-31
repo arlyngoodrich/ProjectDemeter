@@ -76,9 +76,5 @@ bool UStatEffect::TriggerEffect()
 
 		return false; 
 	}
-
-	TargetComponent->EffectStat(StatEffectAmount);
-	UE_LOG(LogAttributeSystem, Log, TEXT("%s applied effect on %s"), *GetName(), *TargetComponent->GetName());
 	return true;
-
 }

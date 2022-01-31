@@ -24,21 +24,17 @@ public:
 
 	bool bReadyToTriggerEffect;
 
+	//Checks to make sure target component is valid before being overriden by child classes for implementation
 	virtual bool TriggerEffect();
 
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stat Effect")
 	TSubclassOf<UBaseStatComponent> TargetComponentClass;
-	
-	//Must be negative to decrease and positive to increase
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat Effect")
-	float StatEffectAmount;
-
-	bool GetTargetComponent(const AActor* TargetActor, UBaseStatComponent*& OutTargetComponent) const;
 
 	UPROPERTY()
 	UBaseStatComponent* TargetComponent;
-
-
+	
+	bool GetTargetComponent(const AActor* TargetActor, UBaseStatComponent*& OutTargetComponent) const;
+	
 };
