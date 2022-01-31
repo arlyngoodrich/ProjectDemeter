@@ -20,7 +20,7 @@ class PROJECTDEMETER_API UStatEffect : public UObject
 public:
 	UStatEffect();
 
-	virtual void InitalizeEffect(AActor* TargetActor);
+	virtual void InitializeEffect(AActor* TargetActor);
 
 	bool bReadyToTriggerEffect;
 
@@ -31,12 +31,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Stat Effect")
 	TSubclassOf<UBaseStatComponent> TargetComponentClass;
 	
-	//Must be negative to decrease and positve to increase
+	//Must be negative to decrease and positive to increase
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat Effect")
 	float StatEffectAmount;
 
-	bool GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& OutTargetComponent);
+	bool GetTargetComponent(const AActor* TargetActor, UBaseStatComponent*& OutTargetComponent) const;
 
+	UPROPERTY()
 	UBaseStatComponent* TargetComponent;
 
 

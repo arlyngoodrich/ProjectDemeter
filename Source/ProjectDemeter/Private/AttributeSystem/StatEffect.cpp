@@ -13,7 +13,7 @@ UStatEffect::UStatEffect()
 	TargetComponentClass = nullptr;
 }
 
-void UStatEffect::InitalizeEffect(AActor* TargetActor)
+void UStatEffect::InitializeEffect(AActor* TargetActor)
 {
 	if (TargetActor == nullptr)
 	{
@@ -50,7 +50,7 @@ void UStatEffect::InitalizeEffect(AActor* TargetActor)
 
 }
 
-bool UStatEffect::GetTargetComponent(AActor* TargetActor, UBaseStatComponent*& OutTargetComponent)
+bool UStatEffect::GetTargetComponent(const AActor* TargetActor, UBaseStatComponent*& OutTargetComponent) const
 {
 
 	TArray<UBaseStatComponent*> StatComponents;
