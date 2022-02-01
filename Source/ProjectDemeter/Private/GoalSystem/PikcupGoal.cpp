@@ -1,4 +1,4 @@
-#include "GoalSystem/UPickupGoal.h"
+#include "GoalSystem/PickupGoal.h"
 #include "Core/Logs_C.h"
 
 

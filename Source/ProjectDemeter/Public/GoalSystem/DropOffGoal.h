@@ -3,36 +3,40 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GoalSystem/GoalObjectBase.h"
-#include "PickupGoal.generated.h"
+#include "DropOffGoal.generated.h"
 
 /**
- * Objective for picking up an item of a specific type. Objective complete once item is picked up. Should be used as a subtask within larger goals.   
+ * Objective for dropping off an item of a specific type. Objective complete once item is dropped off.
  */
 
 UCLASS(blueprintable)
-class PROJECTDEMETER_API UPickupGoal : public UGoalObjectBase
+class PROJECTDEMETER_API UDropOffGoal : public UGoalObjectBase
 {
 	GENERATED_BODY()
 
 public:
 	
-   UPickupGoal();
+   UDropOffGoal();
 
    virtual void Initialize(AActor* OwningActor) override;
 
+   //Should be set by object creating this goal
+   //UPROPERTY()
+   //AActor* TargetDropOffActor;
+
 //protected:
 
-   //tracked inventory component to bind to watch for object pickup
+   //tracked inventory component to bind to watch for object dropoff
    //class UInventoryComponent* TrackedInventory;
 
    //tracked item type
    //TODO need to figure out a way to identify unique item types?  Most likely have ItemData set Item class on construct in item data? 
    //TODO need to add delegates to inventory for when an item is added or removed
    //UPROPERTY(BlueprintEditDefaultsOnly, Category = "Goal System")
-   // UClass PickupItemClass
+   // UClass DropOffItemClass
 
    //UFUNCITON()
-   //void OnItemAddedToInventory(FItemData AddedItem);
+   //void OnItemTranferedFromInventory(FItemData AddedItem, UInventoryComponent* TargetInventory);
 
     //void SetInventoryReference();
 
