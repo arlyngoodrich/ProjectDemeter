@@ -2,14 +2,18 @@
 
 #include "CoreMinimal.h"
 #include "GoalSystem/GoalObjectBase.h"
-#include "ItemSystem/Item.h"
+#include "ItemSystem/ItemData.h"
 #include "DropOffGoal.generated.h"
+
+class AItem;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnITemDroppedOff,struct FItemData,Item,class UInventoryComponent*, ReceivingInventory);
 
 /**
  * Objective for dropping off an item of a specific type. Objective complete once item is dropped off.
  */
 
-struct FItemData;
+
 
 UCLASS(blueprintable)
 class PROJECTDEMETER_API UDropOffGoal : public UGoalObjectBase
@@ -26,16 +30,20 @@ public:
    UPROPERTY()
    AActor* TargetDropOffActor;
 
+	UPROPERTY()
+	FOnITemDroppedOff OnITemDroppedOffDelegate;
+
+	//tracked item type
+	UPROPERTY(EditDefaultsOnly, Category = "Goal System")
+	TSubclassOf<AItem> DropOffItemClass;
+
 //protected:
 
    //tracked inventory component to bind to watch for object drop off
    UPROPERTY()
    class UInventoryComponent* TrackedInventory;
 
-   //tracked item type
-   //TODO need to add delegates to inventory for when an item is added or removed
-   UPROPERTY(EditDefaultsOnly, Category = "Goal System")
-	TSubclassOf<AItem> DropOffItemClass;
+
 
     UFUNCTION()
     void OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory);

@@ -11,6 +11,7 @@ class UInventoryWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemAddedToInventory,FItemData,NewItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemRemoved,FItemData,ItemRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemTransfered,FItemData,Item,class UInventoryComponent*,ReceivingInventory);
 
 UCLASS( ClassGroup=(ItemSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
@@ -32,6 +33,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Inventory")
 	FOnItemTransfered OnItemTransferredDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="Inventory")
+	FOnItemRemoved OnItemRemovedDelegate;
 
 	//Authority only method called to add item to inventory.  Must have a valid GUID to be added to inventory 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")

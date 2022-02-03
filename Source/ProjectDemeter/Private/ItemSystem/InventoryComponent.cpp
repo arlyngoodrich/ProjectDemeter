@@ -245,8 +245,9 @@ bool UInventoryComponent::RemoveItemAtIndex(const int32 ItemIndex)
 {
 	if(Inventory.IsValidIndex(ItemIndex))
 	{
-
-
+		const FItemData ItemData =  Inventory[ItemIndex];
+		OnItemRemovedDelegate.Broadcast(ItemData);
+		
 		Inventory.RemoveAt(ItemIndex);
 		OnRep_InventoryUpdate();
 		

@@ -1,6 +1,7 @@
 #include "GoalSystem/DropOffGoal.h"
 #include "Core/Logs_C.h"
 #include "ItemSystem/InventoryComponent.h"
+#include "ItemSystem/Item.h"
 
 
 UDropOffGoal::UDropOffGoal()
@@ -41,6 +42,7 @@ void UDropOffGoal::OnItemTransferredFromInventory(FItemData TransferredItem, UIn
 {
     if (TransferredItem.ItemClass == DropOffItemClass && TargetInventory->GetOwner() == TargetDropOffActor)
     {
+        OnITemDroppedOffDelegate.Broadcast(TransferredItem,TargetInventory);
         CompleteGoal();
     }
 }
