@@ -26,22 +26,23 @@ void UPickupGoal::SetInventoryReference()
         TrackedInventory = OwningPlayer->FindComponentByClass<UInventoryComponent>();
         if(TrackedInventory == nullptr)
         {
-            //Log Error
+            UE_LOG(LogGoalSystem, Error, TEXT("%s goal could not set inventory reference on owning player"),
+                   *GetClass()->GetName());
         }
         else
         {
-            //TrackedInventory->OnItemAddedDelegate.AddDynamic(this,&UPickupGoal::OnItemAddedToInventory);
+            TrackedInventory->OnItemAddedToInventoryDelegate.AddDynamic(this,&UPickupGoal::OnItemAddedToInventory);
         }
     }
 
 
 
-void  UPickupGoal::OnItemAddedToInventory(FItemData AddedItem)
+void  UPickupGoal::OnItemAddedToInventory(const FItemData AddedItem)
 {
-   // if(AddedItem.ItemClass == PickupItemClass)
-  //  {
-      //  CompleteGoal()
-  //  }
+    if (AddedItem.ItemClass == PickupItemClass)
+    {
+        CompleteGoal();
+    }
 }
 
 

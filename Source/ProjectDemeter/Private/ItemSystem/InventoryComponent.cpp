@@ -121,6 +121,8 @@ bool UInventoryComponent::AddItem(const FItemData Item)
 	}
 
 	Inventory.Add(Item);
+	OnItemAddedToInventoryDelegate.Broadcast(Item);
+
 	UE_LOG(LogInventorySystem, Log, TEXT("%s was added to %s's inventory"), *Item.DisplayName.ToString(), *GetOwner()->GetName());
 	
 	OnRep_InventoryUpdate();

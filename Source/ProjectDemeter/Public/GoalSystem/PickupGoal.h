@@ -28,8 +28,6 @@ public:
    class UInventoryComponent* TrackedInventory;
 
    //tracked item type
-   //TODO need to figure out a way to identify unique item types?  Most likely have ItemData set Item class on construct in item data? 
-   //TODO need to add delegates to inventory for when an item is added or removed
    UPROPERTY(EditDefaultsOnly, Category = "Goal System")
    UClass* PickupItemClass;
 
