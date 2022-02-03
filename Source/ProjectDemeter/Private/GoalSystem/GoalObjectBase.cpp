@@ -36,6 +36,7 @@ void UGoalObjectBase::Initialize(AActor* OwningActor)
 
 void UGoalObjectBase::CompleteGoal()
 {
+	OnGoalCompletedDelegate.Broadcast();
 }
 
 

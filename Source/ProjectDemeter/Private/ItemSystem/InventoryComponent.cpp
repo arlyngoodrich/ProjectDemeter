@@ -269,7 +269,7 @@ bool UInventoryComponent::TransferItem(const FItemData Item, UInventoryComponent
 	
 	if(ReceivingInventory == nullptr)
 	{
-		UE_LOG(LogInventorySystem,Error,TEXT("%s attempted to transfer to null inventory"),GetOwner()->GetName())
+		UE_LOG(LogInventorySystem,Error,TEXT("%s attempted to transfer to null inventory"),*GetOwner()->GetName())
 		return false;
 	}
 

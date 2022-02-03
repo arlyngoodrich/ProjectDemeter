@@ -1,7 +1,7 @@
 #include "GoalSystem/PickupGoal.h"
 #include "ItemSystem/InventoryComponent.h"
 #include "Core/Logs_C.h"
-
+#include "ItemSystem/Item.h"
 
 
 UPickupGoal::UPickupGoal()
@@ -37,7 +37,7 @@ void UPickupGoal::SetInventoryReference()
 
 
 
-void  UPickupGoal::OnItemAddedToInventory(const FItemData AddedItem)
+void  UPickupGoal::OnItemAddedToInventory(FItemData AddedItem)
 {
     if (AddedItem.ItemClass == PickupItemClass)
     {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "GoalSystem/GoalObjectBase.h"
 #include "ItemSystem/Item.h"
 #include "DropOffGoal.generated.h"
