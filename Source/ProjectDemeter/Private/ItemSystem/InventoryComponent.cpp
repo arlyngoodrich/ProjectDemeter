@@ -182,7 +182,7 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor)
 	UStatEffect* CreatedEffect = NewObject<UStatEffect>(this, Item.StatEffectOnConsume);
 
 	//Initialize Effect
-	CreatedEffect->InitalizeEffect(TargetActor);
+	CreatedEffect->InitializeEffect(TargetActor);
 
 	//Trigger Effect
 	if (CreatedEffect->bReadyToTriggerEffect)
