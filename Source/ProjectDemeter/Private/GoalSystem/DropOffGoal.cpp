@@ -1,6 +1,6 @@
 #include "GoalSystem/DropOffGoal.h"
 #include "Core/Logs_C.h"
-
+#include "ItemSystem/InventoryComponent.h"
 
 
 UDropOffGoal::UDropOffGoal()
@@ -13,37 +13,36 @@ void UDropOffGoal::Initialize(AActor* OwningActor)
 {
     Super::Initialize(OwningActor);
     
-    //SetInventoryReference();
+    SetInventoryReference();
 
 
 }
 
 
-/*
+
 void UDropOffGoal::SetInventoryReference()
     {
-        if(OwningActor == nullptr){return;}
+        if(OwningPlayer == nullptr){return;}
 
-        TrackedInventory = FindComponentByClass<UInventoryComponent>();
+        TrackedInventory = OwningPlayer->FindComponentByClass<UInventoryComponent>();
         if(TrackedInventory == nullptr)
         {
-            //Log Error
+            UE_LOG(LogGoalSystem,Error,TEXT("%s could not find invnetory on owning player"),*GetClass()->GetName())
         }
         else
         {
-            TrackedInventory->OnItemTransferedDelegate.AddDynamic(this,&UDropOffGoal::OnItemTranferedFromInventory)
+           //TrackedInventory->OnItemTransferredDelegate.AddDynamic(this,&UDropOffGoal::OnItemTranferredFromInventory)
         }
     }
-*/
 
-/*
-void UDropOffGoal::OnItemTranferedFromInventory(FItemData TransferedItem, UInventoryComponent* TargetInventory)
+
+
+void UDropOffGoal::OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory)
 {
 
-    if(TransferedItem.Class == DropOffItemClass && TargetInventory->GetOwner() == TargetDropOffActor)
+    if(TransferredItem.ItemClass == DropOffItemClass && TargetInventory->GetOwner() == TargetDropOffActor)
     {
-        CompletedGoal();
+        CompleteGoal();
     }
 
 }
-*/

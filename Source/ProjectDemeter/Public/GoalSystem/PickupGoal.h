@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GoalSystem/GoalObjectBase.h"
+#include "ItemSystem/Item.h"
 #include "ItemSystem/ItemData.h"
 #include "PickupGoal.generated.h"
 
@@ -29,7 +30,7 @@ public:
 
    //tracked item type
    UPROPERTY(EditDefaultsOnly, Category = "Goal System")
-   UClass* PickupItemClass;
+   TSubclassOf<AItem> PickupItemClass;
 
   UFUNCTION()
   void OnItemAddedToInventory(FItemData AddedItem);
