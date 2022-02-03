@@ -89,7 +89,7 @@ void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)
 	}
 }
 
-void UInventoryComponent::ClientFriendly_TransferItem(FItemData Item,UInventoryComponent* ReceivingInventory)
+void UInventoryComponent::ClientFriendly_TransferItem(const FItemData Item,UInventoryComponent* ReceivingInventory)
 {
 
 	if(ReceivingInventory == nullptr)
