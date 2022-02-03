@@ -39,7 +39,7 @@ public:
 	TSubclassOf<AItem> DropOffItemClass;
 
     UFUNCTION()
-    void OnItemTransferredFromInventory(FItemData AddedItem, UInventoryComponent* TargetInventory);
+    void OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory);
 
 	void SetInventoryReference();
 

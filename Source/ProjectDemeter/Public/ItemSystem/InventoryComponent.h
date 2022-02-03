@@ -11,6 +11,7 @@ class UInventoryWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemAddedToInventory,FItemData,NewItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemTransfered,FItemData,Item,class UInventoryComponent*,ReceivingInventory);
 
 UCLASS( ClassGroup=(ItemSystem), blueprintable, meta=(BlueprintSpawnableComponent) )
 class PROJECTDEMETER_API UInventoryComponent : public UActorComponent
@@ -26,7 +27,11 @@ public:
 	FOnInventoryUpdated OnInventoryUpdated;
 
 	//Called when an item is added to the inventory
+	UPROPERTY(BlueprintAssignable, Category="Inventory")
 	FOnItemAddedToInventory OnItemAddedToInventoryDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category="Inventory")
+	FOnItemTransfered OnItemTransferredDelegate;
 
 	//Authority only method called to add item to inventory.  Must have a valid GUID to be added to inventory 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
@@ -143,7 +148,7 @@ private:
 	//Finds first index of an item in inventory by item class. Will return false if item not found.
 	bool FindFirstIndexOfItemType(TSubclassOf<class AItem> ItemClass, int32& Index);
 
-	//Finds index of an item in an inventory by GUID.  Will return false if item not foudn. 
+	//Finds index of an item in an inventory by GUID.  Will return false if item not found. 
 	bool FindItemIndex(FGuid ItemGUID, int32& Index);
 		
 };

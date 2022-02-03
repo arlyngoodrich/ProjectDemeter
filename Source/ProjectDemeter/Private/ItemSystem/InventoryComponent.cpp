@@ -278,6 +278,8 @@ bool UInventoryComponent::TransferItem(const FItemData Item, UInventoryComponent
 	{
 		UE_LOG(LogInventorySystem, Log, TEXT("%s transfered from %s to %s"), *Item.DisplayName.ToString(),
 		       *GetOwner()->GetName(), *ReceivingInventory->GetOwner()->GetName())
+
+		OnItemTransferredDelegate.Broadcast(Item,ReceivingInventory);
 		return true; 
 	}
 
