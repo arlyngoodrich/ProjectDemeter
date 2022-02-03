@@ -25,4 +25,7 @@ struct FItemData : public FTableRowBase
 	UPROPERTY()
 	UClass* ItemClass;
 
+	UPROPERTY()
+	FGuid ItemGUID;
+
 };

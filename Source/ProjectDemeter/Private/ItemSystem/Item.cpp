@@ -43,8 +43,8 @@ void AItem::Initialize()
 		UE_LOG(LogInteractionSystem,Log,TEXT("%s initalized onto %s"),*GetName(),*GetOwner()->GetName())
 	}
 	
-		
 	InteractionComponent->OnInteractionTriggered.AddDynamic(this, &AItem::OnInteraction);
+	ItemData.ItemGUID = FGuid::NewGuid();
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef

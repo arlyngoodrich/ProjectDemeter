@@ -8,6 +8,7 @@
 
 //UE4 Includes
 #include "GameFramework/Character.h"
+#include "ItemSystem/Item.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -88,6 +89,25 @@ void UInventoryComponent::ClientFriendly_RemoveItem(FItemData Item)
 	}
 }
 
+void UInventoryComponent::ClientFriendly_TransferItem(FItemData Item,UInventoryComponent* ReceivingInventory)
+{
+
+	if(ReceivingInventory == nullptr)
+	{
+		UE_LOG(LogInventorySystem, Error, TEXT("%s attempting to transfer %s to null inventory"),
+			   *Item.DisplayName.ToString(), *GetOwner()->GetName())
+		return;
+	}
+	if(GetOwnerRole()==ROLE_Authority)
+	{
+		TransferItem(Item,ReceivingInventory);
+	}
+	else
+	{
+		Server_TransferItem(Item,ReceivingInventory);
+	}
+}
+
 
 void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor)
 {
@@ -101,6 +121,40 @@ void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* Tar
 	}
 }
 
+bool UInventoryComponent::CanItemBeAdded(const FItemData Item) const
+{
+	if (Inventory.Num() == MaxItems)
+	{
+		UE_LOG(LogInventorySystem, Log, TEXT("Cannot add %s item to inventory because %s is full"),
+		       *Item.DisplayName.ToString(), *GetOwner()->GetName())
+
+		return false; 
+	}
+
+	if(Item.ItemGUID.IsValid()== false)
+	{
+		UE_LOG(LogInventorySystem, Log, TEXT("%s does not have valid GUID, cannot be added to %s inventory"),
+		       *Item.DisplayName.ToString(), *GetOwner()->GetName())
+		return false;
+	}
+
+	return true;
+	
+}
+
+bool UInventoryComponent::IsItemInInventory(const FItemData Item)
+{
+	int32 ItemIndex;
+	return FindItemIndex(Item.ItemGUID,ItemIndex);
+}
+
+bool UInventoryComponent::IsItemTypeInInventory(const TSubclassOf<AItem> ItemClass)
+{
+	int32 ItemIndex;
+	return FindFirstIndexOfItemType(ItemClass,ItemIndex);
+	
+}
+
 bool UInventoryComponent::AddItem(const FItemData Item)
 {
 
@@ -110,25 +164,52 @@ bool UInventoryComponent::AddItem(const FItemData Item)
 			
 		return false;
 	}
-
-
-
-	if (Inventory.Num() == MaxItems)
+	
+	if(CanItemBeAdded(Item) == false)
 	{
-		UE_LOG(LogInventorySystem,Log,TEXT("Attempting to add %s item but inventory for %s is full"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
-
-		return false; 
+		return false;
 	}
 
 	Inventory.Add(Item);
 	OnItemAddedToInventoryDelegate.Broadcast(Item);
 
 	UE_LOG(LogInventorySystem, Log, TEXT("%s was added to %s's inventory"), *Item.DisplayName.ToString(), *GetOwner()->GetName());
-	
 	OnRep_InventoryUpdate();
 	
 	return true;
 
+}
+
+
+bool UInventoryComponent::RemoveItemType(TSubclassOf<AItem> ItemClass)
+{
+	
+	if (GetOwnerRole() != ROLE_Authority)
+	{
+		UE_LOG(LogInventorySystem, Log, TEXT("Attempting to remove %s item from %s inventory as non-authority"),
+		       *ItemClass->GetName(), *GetOwner()->GetName())
+
+		return false;
+	}
+
+	int32 ItemIndex;
+	if (FindFirstIndexOfItemType(ItemClass,ItemIndex))
+	{
+		if(RemoveItemAtIndex(ItemIndex))
+		{
+			UE_LOG(LogInventorySystem,Log,TEXT("%s reomved from %s"),*ItemClass->GetName(),*GetOwner()->GetName())
+			return true;
+		}
+		else
+		{
+			UE_LOG(LogInventorySystem, Log, TEXT("%s could not be removed from %s inventory."),
+			       *ItemClass->GetName(), *GetOwner()->GetName())
+			return false;
+		}
+	}
+
+	return false;
+	 
 }
 
 bool UInventoryComponent::RemoveItem(const FItemData Item)
@@ -137,27 +218,76 @@ bool UInventoryComponent::RemoveItem(const FItemData Item)
 	{
 		UE_LOG(LogInventorySystem, Log, TEXT("Attempting to remove %s item from %s inventory as non-authority"), *Item.DisplayName.ToString(), *GetOwner()->GetName())
 
-			return false;
+		return false;
 	}
 
 	int32 ItemIndex;
-	if (FindFirstIndexOfItem(Item,ItemIndex))
+	if(FindItemIndex(Item.ItemGUID,ItemIndex))
 	{
+		if(RemoveItemAtIndex(ItemIndex))
+		{
+			UE_LOG(LogInventorySystem,Log,TEXT("%s reomved from %s"),*Item.DisplayName.ToString(),*GetOwner()->GetName())
+			return true;
+		}
+		else
+		{
+			UE_LOG(LogInventorySystem, Log, TEXT("%s could not be removed from %s inventory."),
+				   *Item.DisplayName.ToString(), *GetOwner()->GetName())
+			return false;
+		}
+	}
+
+	return false;
+	
+}
+
+bool UInventoryComponent::RemoveItemAtIndex(const int32 ItemIndex)
+{
+	if(Inventory.IsValidIndex(ItemIndex))
+	{
+
+
 		Inventory.RemoveAt(ItemIndex);
 		OnRep_InventoryUpdate();
-
-		UE_LOG(LogInventorySystem, Log, TEXT("%s removed from %s inventory."), *Item.DisplayName.ToString(), *GetOwner()->GetName())
+		
 		return true;
 	}
 	else
 	{
-
-		UE_LOG(LogInventorySystem,Log,TEXT("%s not found in %s inventory.  Could not remove item"),*Item.DisplayName.ToString(),*GetOwner()->GetName())
 		return false;
 	}
+
 }
 
-bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor)
+bool UInventoryComponent::TransferItem(const FItemData Item, UInventoryComponent* ReceivingInventory)
+{
+	if(GetOwnerRole()!=ROLE_Authority)
+	{
+		UE_LOG(LogInventorySystem,Error,TEXT("%s attempted to transfer item as non-authority"),*GetOwner()->GetName())
+		return false;
+	}
+	
+	if(ReceivingInventory == nullptr)
+	{
+		UE_LOG(LogInventorySystem,Error,TEXT("%s attempted to transfer to null inventory"),GetOwner()->GetName())
+		return false;
+	}
+
+
+	if(ReceivingInventory->AddItem(Item) && RemoveItem(Item))
+	{
+		UE_LOG(LogInventorySystem, Log, TEXT("%s transfered from %s to %s"), *Item.DisplayName.ToString(),
+		       *GetOwner()->GetName(), *ReceivingInventory->GetOwner()->GetName())
+		return true; 
+	}
+
+	UE_LOG(LogInventorySystem,Log,TEXT("%s could not be transfered between %s and %s"),*Item.DisplayName.ToString(),
+			   *GetOwner()->GetName(), *ReceivingInventory->GetOwner()->GetName())
+	return false;
+	
+}
+
+bool UInventoryComponent::ConsumeItem(const FItemData Item, AActor* TargetActor)
 {
 	//Confirm Authority
 	if (GetOwnerRole() != ROLE_Authority)
@@ -168,7 +298,7 @@ bool UInventoryComponent::ConsumeItem(FItemData Item, AActor* TargetActor)
 
 	//Confirm in inventory
 	int32 ItemIndex;
-	if (FindFirstIndexOfItem(Item, ItemIndex) == false)
+	if (FindItemIndex(Item.ItemGUID, ItemIndex) == false)
 	{
 		UE_LOG(LogInventorySystem,Error,TEXT("Attempted to consume %s item from %s inventory when item not server inventory "),*Item.DisplayName.ToString(),*GetOwner()->GetName())
 		return false;
@@ -217,12 +347,26 @@ void UInventoryComponent::SetOwningPlayer()
 }
 
 
-bool UInventoryComponent::FindFirstIndexOfItem(FItemData Item, int32& Index)
+bool UInventoryComponent::FindFirstIndexOfItemType(const TSubclassOf<class AItem> ItemClass, int32& Index)
 {
 
 	for (int32 i = 0; i < Inventory.Num(); i++)
 	{
-		if (Inventory[i].DisplayName == Item.DisplayName)
+		if (Inventory[i].ItemClass->GetClass() == ItemClass->GetClass())
+		{
+			Index = i;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool UInventoryComponent::FindItemIndex(const FGuid ItemGUID, int32& Index)
+{
+	for (int32 i = 0; i < Inventory.Num(); i++)
+	{
+		if (Inventory[i].ItemGUID == ItemGUID)
 		{
 			Index = i;
 			return true;
@@ -251,4 +395,14 @@ bool UInventoryComponent::Server_ConsumeItem_Validate(FItemData Item, AActor* Ta
 void UInventoryComponent::Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor)
 {
 	ConsumeItem(Item, TargetActor);
+}
+
+bool UInventoryComponent::Server_TransferItem_Validate(FItemData Item, UInventoryComponent* TargetInventory)
+{
+	return true;
+}
+
+void UInventoryComponent::Server_TransferItem_Implementation(FItemData Item, UInventoryComponent* TargetInventory)
+{
+	TransferItem(Item,TargetInventory);
 }
