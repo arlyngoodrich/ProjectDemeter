@@ -1,4 +1,5 @@
 #include "GoalSystem/PickupGoal.h"
+#include "ItemSystem/InventoryComponent.h"
 #include "Core/Logs_C.h"
 
 
@@ -11,37 +12,37 @@ UPickupGoal::UPickupGoal()
 
 void UPickupGoal::Initialize(AActor* OwningActor)
 {
-    Super::Initalize(AActor* OwningActor);
+    Super::Initialize(OwningActor);
 
-    //SetInventoryReferences();
+    SetInventoryReference();
 }
 
 
-/*
+
 void UPickupGoal::SetInventoryReference()
     {
-        if(OwningActor == nullptr){return;}
+        if(OwningPlayer == nullptr){return;}
 
-        TrackedInventory = FindComponentByClass<UInventoryComponent>();
+        TrackedInventory = OwningPlayer->FindComponentByClass<UInventoryComponent>();
         if(TrackedInventory == nullptr)
         {
             //Log Error
         }
         else
         {
-            TrackedInventory->OnItemAddedDelegate.AddDynamic(this,&UPickupGoal::OnItemAddedToInventory)
+            //TrackedInventory->OnItemAddedDelegate.AddDynamic(this,&UPickupGoal::OnItemAddedToInventory);
         }
     }
-*/
 
-/*
+
+
 void  UPickupGoal::OnItemAddedToInventory(FItemData AddedItem)
 {
-    if(AddedItem.ItemClass == PickupItemClass)
-    {
-        CompleteGoal()
-    }
+   // if(AddedItem.ItemClass == PickupItemClass)
+  //  {
+      //  CompleteGoal()
+  //  }
 }
 
-*/
+
 

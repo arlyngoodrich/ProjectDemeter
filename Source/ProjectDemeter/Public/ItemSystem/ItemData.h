@@ -22,4 +22,7 @@ struct FItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
 	TSubclassOf<UStatEffect> StatEffectOnConsume = nullptr;
 
+	UPROPERTY()
+	UClass* ItemClass;
+
 };

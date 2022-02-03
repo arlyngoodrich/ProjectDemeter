@@ -14,6 +14,7 @@ AItem::AItem()
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 	InteractionComponent = CreateDefaultSubobject<UInteractableObjectComponent>(TEXT("Interaction Component"));
+	ItemData.ItemClass = GetClass();
 }
 
 

@@ -11,7 +11,7 @@ UDropOffGoal::UDropOffGoal()
 
 void UDropOffGoal::Initialize(AActor* OwningActor)
 {
-    Super::Initalize(AActor* OwningActor);
+    Super::Initialize(OwningActor);
     
     //SetInventoryReference();
 
