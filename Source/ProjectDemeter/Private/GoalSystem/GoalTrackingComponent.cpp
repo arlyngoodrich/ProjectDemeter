@@ -109,7 +109,9 @@ void UGoalTrackingComponent::Internal_AddGoal(UGoalObjectBase* GoalObjectBase)
 	//Add goal data to goal data array for replication
 	ActiveGoalData.Add(GoalObjectBase->GoalData);
 	OnRep_GoalDataUpdate();
-	
+
+	UE_LOG(LogGoalSystem, Log, TEXT("%s was added to %s goal tracking.  GUID = %s"), *GoalObjectBase->GetName(),
+	   *OwningActor->GetName(), *GoalObjectBase->GoalData.GoalGUID.ToString(EGuidFormats::Digits));
 }
 
 void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)
