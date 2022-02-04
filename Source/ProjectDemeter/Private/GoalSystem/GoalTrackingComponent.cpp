@@ -19,6 +19,8 @@ UGoalTrackingComponent::UGoalTrackingComponent()
 	// ...
 }
 
+TArray<UGoalObjectBase*> UGoalTrackingComponent::GetActiveGoals() {return ActiveGoals;}
+TArray<FGoalData> UGoalTrackingComponent::GetActiveGoalData(){ return ActiveGoalData;}
 
 // Called when the game starts
 void UGoalTrackingComponent::BeginPlay()
@@ -155,6 +157,7 @@ void UGoalTrackingComponent::OnGoalDataUpdate(const FGoalData GoalData)
 		OnRep_GoalDataUpdate();
 	}
 }
+
 
 
 bool UGoalTrackingComponent::FindGoalDataByGUID(const FGuid GUID, int32& OutGoalDataIndex) const

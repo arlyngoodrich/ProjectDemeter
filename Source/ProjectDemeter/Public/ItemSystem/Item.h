@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InventoryComponent.h"
 #include "GameFramework/Actor.h"
 #include "ItemSystem/ItemData.h"
 #include "Item.generated.h"
@@ -20,6 +21,10 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//Used to add the item into an inventory.  Expected use is to be called after interaction. 
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly,Category="Interaction")
+	void AddToTargetInventory(const AActor* TargetActor);
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,8 +44,6 @@ protected:
 	//Called Interaction Component delegate.
 	UFUNCTION()
 	void OnInteraction(AActor* InstigatingActor);
-
-	//Used to add the item into an inventory.  Expected use is to be called after interaction.  
-	void AddToTargetInventory(const AActor* TargetActor);
+	
 
 };

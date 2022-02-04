@@ -32,6 +32,20 @@ public:
 	UFUNCTION()
 	void OnGoalDataUpdate(FGoalData GoalData);
 
+	//Blueprint method only so internal method can be overriden by child classes
+	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal Type")
+	void BP_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd);
+
+	//Blueprint method only so internal method can be overriden by child classes
+	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal")
+	void BP_AddGoal(UGoalObjectBase* GoalObjectBase);
+	
+	UFUNCTION(BlueprintPure,Category="Goal System")
+	TArray<UGoalObjectBase*> GetActiveGoals();
+
+	UFUNCTION(BlueprintPure,Category="Goal System")
+	TArray<FGoalData> GetActiveGoalData();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -50,14 +64,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_GoalDataUpdate, Category = "Goal Info")
 	TArray<FGoalData> ActiveGoalData;
 	
-	//Blueprint method only so internal method can be overriden by child classes
-	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal Type")
-	void BP_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd);
 
-	//Blueprint method only so internal method can be overriden by child classes
-	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal")
-	void BP_AddGoal(UGoalObjectBase* GoalObjectBase);
-	
 	/*
 	* Method called when the Goal Data array property is replicated to the client.  Also called on server functions when
 	* the array is modified natively.  

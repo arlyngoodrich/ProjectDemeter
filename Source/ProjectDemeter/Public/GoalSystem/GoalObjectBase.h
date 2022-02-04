@@ -28,6 +28,7 @@ public:
    FGoalData GoalData;
 
 	//Called by spawning object
+	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category= "Goal System")
    virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal);
 
 protected:

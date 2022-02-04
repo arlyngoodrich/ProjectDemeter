@@ -30,7 +30,7 @@ public:
 	FOnItemPickedUp OnItemPickedUpDelegate;
 
 	//tracked item type
-	UPROPERTY(EditDefaultsOnly, Category = "Goal System")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Goal System", meta = (ExposeOnSpawn = true))
 	TSubclassOf<AItem> PickupItemClass;
 	
 //protected:
