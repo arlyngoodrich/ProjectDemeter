@@ -47,5 +47,7 @@ public:
     void OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory);
 
 	void SetInventoryReference();
+
+	virtual void CompleteGoal() override;
 	
 };

@@ -46,7 +46,7 @@ void UDeliveryGoal::SetupPickupGoal()
 	PickupGoalSubData.GoalDisplayName = PickupGoalDisplayText;
 
 	GoalData.SubGoalData.Add(PickupGoalSubData);
-	OnGoalDataUpdateDelegate.Broadcast(GoalData);
+	OwningGoalTracker->OnGoalDataUpdate(GoalData);
 }
 
 void UDeliveryGoal::SetupDropOffGoal()
@@ -62,7 +62,7 @@ void UDeliveryGoal::SetupDropOffGoal()
 	DropOffGoalSubData.GoalDisplayName = DropOffGoalDisplayText;
 
 	GoalData.SubGoalData.Add(DropOffGoalSubData);
-	OnGoalDataUpdateDelegate.Broadcast(GoalData);
+	OwningGoalTracker->OnGoalDataUpdate(GoalData);
 }
 
 void UDeliveryGoal::OnItemPickedUp(FItemData Item)
@@ -72,6 +72,8 @@ void UDeliveryGoal::OnItemPickedUp(FItemData Item)
 	{
 		//Add item to Item GUID to make sure we're tracking it 
 		ItemGUID = Item.ItemGUID;
+		GoalData.SubGoalData[0].bGoalCompleted = true;
+		OwningGoalTracker->OnGoalDataUpdate(GoalData);
 	}
 	else
 	{
@@ -99,6 +101,11 @@ void UDeliveryGoal::OnItemDroppedOff(FItemData Item, UInventoryComponent* Receiv
 	if(Item.ItemGUID == ItemGUID)
 	{
 		bDropOffComplete = true;
+		GoalData.SubGoalData[1].bGoalCompleted = true;
+
+		//Complete goal will update goal data in owning tracker
+		//OwningGoalTracker->OnGoalDataUpdate(GoalData);
+		
 		CompleteGoal();
 	}
 	else

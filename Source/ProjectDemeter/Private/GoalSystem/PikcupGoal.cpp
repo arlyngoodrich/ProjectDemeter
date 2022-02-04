@@ -37,6 +37,7 @@ void UPickupGoal::SetInventoryReference()
 
 
 
+
 void  UPickupGoal::OnItemAddedToInventory(FItemData AddedItem)
 {
     if (AddedItem.ItemClass == PickupItemClass)
@@ -46,5 +47,11 @@ void  UPickupGoal::OnItemAddedToInventory(FItemData AddedItem)
     }
 }
 
+void UPickupGoal::CompleteGoal()
+{
+    Super::CompleteGoal();
+
+    TrackedInventory->OnItemAddedToInventoryDelegate.RemoveDynamic(this,&UPickupGoal::OnItemAddedToInventory);
+}
 
 

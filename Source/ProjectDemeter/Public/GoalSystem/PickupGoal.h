@@ -46,5 +46,6 @@ public:
 
   void SetInventoryReference();
 
+	virtual void CompleteGoal() override;
 	
 };

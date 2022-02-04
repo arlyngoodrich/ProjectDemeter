@@ -20,16 +20,19 @@ class PROJECTDEMETER_API UDeliveryGoal : public UGoalObjectBase
 	GENERATED_BODY()
 
 public:
-	void SetupPickupGoal();
-	
-	void SetupDropOffGoal();
-	
+
+	//Called by object creating goal
 	virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
 
+	//Should be set by the creating object 
 	UPROPERTY(BlueprintReadWrite,Category="Goal System", Meta = (ExposeOnSpawn=true))
 	AActor* DeliveryTarget;
 
 protected:
+
+	void SetupPickupGoal();
+	
+	void SetupDropOffGoal();
 
 	UPROPERTY(EditDefaultsOnly,Category="Goal System")
 	TSubclassOf<AItem> ItemDeliveryClass;
@@ -69,6 +72,5 @@ protected:
 	void CheckToResetPickupGoals();
 
 	bool bDropOffComplete;
-
 	
 };

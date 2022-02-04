@@ -1,6 +1,6 @@
 #include "GoalSystem/GoalObjectBase.h"
 #include "Core/Logs_C.h"
-
+#include "GoalSystem/GoalTrackingComponent.h"
 
 
 // Sets default values for this component's properties
@@ -39,7 +39,10 @@ void UGoalObjectBase::Initialize(AActor* OwningActor,UGoalTrackingComponent* Goa
 void UGoalObjectBase::CompleteGoal()
 {
 	GoalData.bGoalCompleted = true;
-	OnGoalDataUpdateDelegate.Broadcast(GoalData);
+	if(bIsSubGoal==false)
+	{
+		OwningGoalTracker->OnGoalDataUpdate(GoalData);
+	}
 }
 
 

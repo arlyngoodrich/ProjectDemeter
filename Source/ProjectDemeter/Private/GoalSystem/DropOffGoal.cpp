@@ -34,8 +34,6 @@ void UDropOffGoal::SetInventoryReference()
     }
 }
 
-
-
 // ReSharper disable once CppParameterMayBeConst
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
 void UDropOffGoal::OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory)
@@ -45,4 +43,11 @@ void UDropOffGoal::OnItemTransferredFromInventory(FItemData TransferredItem, UIn
         OnITemDroppedOffDelegate.Broadcast(TransferredItem,TargetInventory);
         CompleteGoal();
     }
+}
+
+void UDropOffGoal::CompleteGoal()
+{
+    Super::CompleteGoal();
+
+    TrackedInventory->OnItemTransferredDelegate.RemoveDynamic(this, &UDropOffGoal::OnItemTransferredFromInventory);
 }
