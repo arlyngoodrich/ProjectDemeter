@@ -14,8 +14,10 @@ AItem::AItem()
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 	InteractionComponent = CreateDefaultSubobject<UInteractableObjectComponent>(TEXT("Interaction Component"));
+	ItemData.ItemClass = GetClass();
 }
 
+FItemData AItem::GetItemData() {return ItemData;}
 
 
 // Called when the game starts or when spawned
@@ -24,7 +26,6 @@ void AItem::BeginPlay()
 	Super::BeginPlay();
 
 	Initialize();
-	
 }
 
 // Called every frame
@@ -42,8 +43,8 @@ void AItem::Initialize()
 		UE_LOG(LogInteractionSystem,Log,TEXT("%s initalized onto %s"),*GetName(),*GetOwner()->GetName())
 	}
 	
-		
 	InteractionComponent->OnInteractionTriggered.AddDynamic(this, &AItem::OnInteraction);
+	ItemData.ItemGUID = FGuid::NewGuid();
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
@@ -65,6 +66,7 @@ void AItem::AddToTargetInventory(const AActor* TargetActor)
 		this->Destroy();
 	}
 }
+
 
 
 

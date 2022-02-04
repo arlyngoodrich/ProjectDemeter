@@ -19,6 +19,8 @@ UGoalTrackingComponent::UGoalTrackingComponent()
 	// ...
 }
 
+TArray<UGoalObjectBase*> UGoalTrackingComponent::GetActiveGoals() {return ActiveGoals;}
+TArray<FGoalData> UGoalTrackingComponent::GetActiveGoalData(){ return ActiveGoalData;}
 
 // Called when the game starts
 void UGoalTrackingComponent::BeginPlay()
@@ -32,7 +34,9 @@ void UGoalTrackingComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UGoalTrackingComponent, ActiveGoalData);
+	//Different than default notify, makes replication updates whenever goal data is updated in array
+	DOREPLIFETIME_CONDITION_NOTIFY(UGoalTrackingComponent, ActiveGoalData, COND_None, REPNOTIFY_Always);
+	
 }
 
 void UGoalTrackingComponent::Initialize()
@@ -40,9 +44,14 @@ void UGoalTrackingComponent::Initialize()
 	OwningActor = GetOwner();
 }
 
-void UGoalTrackingComponent::BP_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd)
+void UGoalTrackingComponent::BP_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd)
 {
-	Internal_AddGoal(GoalToAdd);
+	Internal_AddGoalType(GoalToAdd);
+}
+
+void UGoalTrackingComponent::BP_AddGoal(UGoalObjectBase* GoalObjectBase)
+{
+	Internal_AddGoal(GoalObjectBase);
 }
 
 void UGoalTrackingComponent::OnRep_GoalDataUpdate() const
@@ -50,7 +59,7 @@ void UGoalTrackingComponent::OnRep_GoalDataUpdate() const
 	OnGoalDataUpdateDelegate.Broadcast();
 }
 
-void UGoalTrackingComponent::Internal_AddGoal(const TSubclassOf<UGoalObjectBase> GoalToAdd)
+void UGoalTrackingComponent::Internal_AddGoalType(const TSubclassOf<UGoalObjectBase> GoalToAdd)
 {
 	if(!IsValid(GoalToAdd))
 	{
@@ -72,7 +81,7 @@ void UGoalTrackingComponent::Internal_AddGoal(const TSubclassOf<UGoalObjectBase>
 	
 	//Initialize Goal 
 	UGoalObjectBase* NewGoalObject = NewObject<UGoalObjectBase>(this,GoalToAdd);
-	NewGoalObject->Initialize(OwningActor);
+	NewGoalObject->Initialize(OwningActor,this,false);
 	
 	//Add to goal object to tracking array
 	ActiveGoals.Add(NewGoalObject);
@@ -84,6 +93,25 @@ void UGoalTrackingComponent::Internal_AddGoal(const TSubclassOf<UGoalObjectBase>
 
 	UE_LOG(LogGoalSystem, Log, TEXT("%s was added to %s goal tracking.  GUID = %s"), *NewGoalObject->GetName(),
 	       *OwningActor->GetName(), *NewGoalObject->GoalData.GoalGUID.ToString(EGuidFormats::Digits));
+}
+
+void UGoalTrackingComponent::Internal_AddGoal(UGoalObjectBase* GoalObjectBase)
+{
+	if(GoalObjectBase == nullptr)
+	{
+		UE_LOG(LogGoalSystem,Error,TEXT("%s attempted to add null goal."),*GetOwner()->GetName())
+		return;
+	}
+	
+	//Add to goal object to tracking array
+	ActiveGoals.Add(GoalObjectBase);
+
+	//Add goal data to goal data array for replication
+	ActiveGoalData.Add(GoalObjectBase->GoalData);
+	OnRep_GoalDataUpdate();
+
+	UE_LOG(LogGoalSystem, Log, TEXT("%s was added to %s goal tracking.  GUID = %s"), *GoalObjectBase->GetName(),
+	   *OwningActor->GetName(), *GoalObjectBase->GoalData.GoalGUID.ToString(EGuidFormats::Digits));
 }
 
 void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)
@@ -122,6 +150,18 @@ void UGoalTrackingComponent::Internal_RemoveGoal(UGoalObjectBase* GoalToRemove)
 	}
 }
 
+void UGoalTrackingComponent::OnGoalDataUpdate(const FGoalData GoalData)
+{
+	int32 GoalIndex;
+	if(FindGoalDataByGUID(GoalData.GoalGUID,GoalIndex))
+	{
+		ActiveGoalData[GoalIndex] = GoalData;
+		OnRep_GoalDataUpdate();
+	}
+}
+
+
+
 bool UGoalTrackingComponent::FindGoalDataByGUID(const FGuid GUID, int32& OutGoalDataIndex) const
 {
 	for (int i = 0; i < ActiveGoalData.Num(); ++i)
@@ -135,4 +175,5 @@ bool UGoalTrackingComponent::FindGoalDataByGUID(const FGuid GUID, int32& OutGoal
 	
 	return false;
 }
+
 

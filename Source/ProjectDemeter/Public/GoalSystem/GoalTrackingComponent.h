@@ -28,6 +28,24 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Goal System")
 	FGoalDataUpdate OnGoalDataUpdateDelegate;
 
+	//Called by tracked goals to trigger updates to GaolData Struct.  This should drive UI updates on owning local player.
+	UFUNCTION()
+	void OnGoalDataUpdate(FGoalData GoalData);
+
+	//Blueprint method only so internal method can be overriden by child classes
+	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal Type")
+	void BP_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd);
+
+	//Blueprint method only so internal method can be overriden by child classes
+	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal")
+	void BP_AddGoal(UGoalObjectBase* GoalObjectBase);
+	
+	UFUNCTION(BlueprintPure,Category="Goal System")
+	TArray<UGoalObjectBase*> GetActiveGoals();
+
+	UFUNCTION(BlueprintPure,Category="Goal System")
+	TArray<FGoalData> GetActiveGoalData();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -46,10 +64,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_GoalDataUpdate, Category = "Goal Info")
 	TArray<FGoalData> ActiveGoalData;
 	
-	//Blueprint method only so internal method can be overriden by child classes
-	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal")
-	void BP_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd);
-	
+
 	/*
 	* Method called when the Goal Data array property is replicated to the client.  Also called on server functions when
 	* the array is modified natively.  
@@ -61,7 +76,13 @@ protected:
 	* Internal overridable function to add Goals to tracking.  Will add both the goal object to the server
 	* and goal data to the server and client
 	*/
-	virtual void Internal_AddGoal(TSubclassOf<UGoalObjectBase> GoalToAdd);
+	virtual void Internal_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd);
+	
+	/*
+	* Internal overridable function to add a Goal pointer to tracking.  Will add both the goal object to the server
+	* and goal data to the server and client
+	*/
+	virtual void Internal_AddGoal(UGoalObjectBase* GoalObjectBase);
 
 	/*
 	 *Internal overrideable function to remove goals from tracking.  Will remove the goal object from the server the goal
@@ -71,5 +92,6 @@ protected:
 
 	//Helper function to find the index given a goal GUID
 	bool FindGoalDataByGUID(FGuid GUID, int32& OutGoalDataIndex) const;
+
 
 };
