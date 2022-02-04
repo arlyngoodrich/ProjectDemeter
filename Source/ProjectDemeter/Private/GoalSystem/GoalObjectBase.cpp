@@ -32,7 +32,7 @@ void UGoalObjectBase::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* Go
         return;
     }
 
-    OwningPlayer = OwningPlayer;
+    OwningActor = OwningPlayer;
 	OwningGoalTracker = GoalTrackingComponent;
 	bIsSubGoal = bSetIsSubGoal;
 	GoalData.GoalGUID = FGuid::NewGuid();
