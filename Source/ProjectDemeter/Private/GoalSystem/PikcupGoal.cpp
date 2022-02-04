@@ -10,9 +10,9 @@ UPickupGoal::UPickupGoal()
 }
 
 
-void UPickupGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
+void UPickupGoal::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
 {
-    Super::Initialize(OwningActor,GoalTrackingComponent,bSetIsSubGoal);
+    Super::Initialize(OwningPlayer,GoalTrackingComponent,bSetIsSubGoal);
 
     SetInventoryReference();
 }
@@ -21,7 +21,7 @@ void UPickupGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTra
 
 void UPickupGoal::SetInventoryReference()
 {
-    if(OwningPlayer == nullptr){return;}
+    if(OwningActor == nullptr){return;}
 
     GetInventoryComponentFromOwner(TrackedInventory);
     

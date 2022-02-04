@@ -16,23 +16,23 @@ UGoalObjectBase::UGoalObjectBase()
 
 
 
-void UGoalObjectBase::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
+void UGoalObjectBase::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
 {
-    if(OwningActor == nullptr)
+    if(OwningPlayer == nullptr)
     {
         UE_LOG(LogGoalSystem,Error,TEXT("%s goal class was given null owning player"),*GetClass()->GetName())
         MarkPendingKill();
         return;
     }
 
-    if(OwningActor->GetLocalRole()<ROLE_Authority)
+    if(OwningPlayer->GetLocalRole()<ROLE_Authority)
     {
         UE_LOG(LogGoalSystem,Error,TEXT("%s goal class attempted to be initalized with a non-authoritve player"),*GetClass()->GetName())
         MarkPendingKill();
         return;
     }
 
-    OwningPlayer = OwningActor;
+    OwningPlayer = OwningPlayer;
 	OwningGoalTracker = GoalTrackingComponent;
 	bIsSubGoal = bSetIsSubGoal;
 	GoalData.GoalGUID = FGuid::NewGuid();
@@ -49,18 +49,18 @@ void UGoalObjectBase::CompleteGoal()
 
 bool UGoalObjectBase::GetInventoryComponentFromOwner(UInventoryComponent*& InventoryComponent) const
 {
-	if (OwningPlayer == nullptr) { return false; }
+	if (OwningActor == nullptr) { return false; }
 
 	AActor* ActorToSearch;
 
-	APlayerController* PlayerController = Cast<APlayerController>(OwningPlayer);
+	APlayerController* PlayerController = Cast<APlayerController>(OwningActor);
 	if (PlayerController)
 	{
 		ActorToSearch = PlayerController->GetCharacter();
 	}
 	else
 	{
-		ActorToSearch = OwningPlayer;
+		ActorToSearch = OwningActor;
 	}
 
 	InventoryComponent = ActorToSearch->FindComponentByClass<UInventoryComponent>();

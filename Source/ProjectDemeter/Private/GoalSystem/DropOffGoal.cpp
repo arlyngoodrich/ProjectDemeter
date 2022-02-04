@@ -10,9 +10,9 @@ UDropOffGoal::UDropOffGoal()
 }
 
 
-void UDropOffGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
+void UDropOffGoal::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
 {
-    Super::Initialize(OwningActor,GoalTrackingComponent,bSetIsSubGoal);
+    Super::Initialize(OwningPlayer,GoalTrackingComponent,bSetIsSubGoal);
     
     SetInventoryReference();
 }
@@ -21,7 +21,7 @@ void UDropOffGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTr
 
 void UDropOffGoal::SetInventoryReference()
 {
-    if (OwningPlayer == nullptr) { return; }
+    if (OwningActor == nullptr) { return; }
 
     GetInventoryComponentFromOwner(TrackedInventory);
         

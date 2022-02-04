@@ -27,15 +27,22 @@ public:
    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
    FGoalData GoalData;
 
-	//Called by spawning object
+	//
+	/**
+	 * @brief Called by spawning object
+	 * @param OwningPlayer should usually be the player controller but can also be an actor for testing
+	 * @param GoalTrackingComponent the goal component that is tracking this goal.  Should be the component on the
+	 * actor or player controller.
+	 * @param bSetIsSubGoal used in native code for creating sub codes.  Should always be false when used in blueprints.
+	 */
 	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category= "Goal System")
-   virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal);
+   virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal);
 
 protected:
 
 	//Will typically be a player controller but may be an actor if used for testing
     UPROPERTY(BlueprintReadOnly, Category = "Goal System")
-    AActor* OwningPlayer;
+    AActor* OwningActor;
 
 	//Goal tracking component that spawned this goal
 	UPROPERTY(BlueprintReadOnly, Category = "Goal System")
