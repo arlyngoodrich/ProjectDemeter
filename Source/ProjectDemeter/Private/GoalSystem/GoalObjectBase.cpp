@@ -1,6 +1,8 @@
 #include "GoalSystem/GoalObjectBase.h"
 #include "Core/Logs_C.h"
+#include "GameFramework/Character.h"
 #include "GoalSystem/GoalTrackingComponent.h"
+#include "ItemSystem/InventoryComponent.h"
 
 
 // Sets default values for this component's properties
@@ -42,6 +44,34 @@ void UGoalObjectBase::CompleteGoal()
 	if(bIsSubGoal==false)
 	{
 		OwningGoalTracker->OnGoalDataUpdate(GoalData);
+	}
+}
+
+bool UGoalObjectBase::GetInventoryComponentFromOwner(UInventoryComponent*& InventoryComponent) const
+{
+	if (OwningPlayer == nullptr) { return false; }
+
+	AActor* ActorToSearch;
+
+	APlayerController* PlayerController = Cast<APlayerController>(OwningPlayer);
+	if (PlayerController)
+	{
+		ActorToSearch = PlayerController->GetCharacter();
+	}
+	else
+	{
+		ActorToSearch = OwningPlayer;
+	}
+
+	InventoryComponent = ActorToSearch->FindComponentByClass<UInventoryComponent>();
+
+	if (InventoryComponent)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 

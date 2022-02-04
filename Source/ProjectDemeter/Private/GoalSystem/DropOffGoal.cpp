@@ -23,7 +23,8 @@ void UDropOffGoal::SetInventoryReference()
 {
     if (OwningPlayer == nullptr) { return; }
 
-    TrackedInventory = OwningPlayer->FindComponentByClass<UInventoryComponent>();
+    GetInventoryComponentFromOwner(TrackedInventory);
+        
     if (TrackedInventory == nullptr)
     {
         UE_LOG(LogGoalSystem, Error, TEXT("%s could not find invnetory on owning player"), *GetClass()->GetName())

@@ -23,7 +23,8 @@ void UPickupGoal::SetInventoryReference()
 {
     if(OwningPlayer == nullptr){return;}
 
-    TrackedInventory = OwningPlayer->FindComponentByClass<UInventoryComponent>();
+    GetInventoryComponentFromOwner(TrackedInventory);
+    
     if(TrackedInventory == nullptr)
     {
         UE_LOG(LogGoalSystem, Error, TEXT("%s goal could not set inventory reference on owning player"),

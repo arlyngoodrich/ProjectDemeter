@@ -33,7 +33,7 @@ public:
 
 protected:
 
-	//Will typically be a player but may be an actor if used for testing
+	//Will typically be a player controller but may be an actor if used for testing
     UPROPERTY(BlueprintReadOnly, Category = "Goal System")
     AActor* OwningPlayer;
 
@@ -48,5 +48,7 @@ protected:
 	//Called when all objectives are complete.  Will tell owning goal tracker to update goal data as well 
     UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Goal System")
     virtual void CompleteGoal();
+	
+	bool GetInventoryComponentFromOwner(class UInventoryComponent*& InventoryComponent) const;
 	
 };

@@ -36,16 +36,16 @@ public:
 //protected:
 
    //tracked inventory component to bind to watch for object pickup
-   UPROPERTY()
-   class UInventoryComponent* TrackedInventory;
+	UPROPERTY()
+	class UInventoryComponent* TrackedInventory;
 
 
 
-  UFUNCTION()
-  void OnItemAddedToInventory(FItemData AddedItem);
+	UFUNCTION()
+	void OnItemAddedToInventory(FItemData AddedItem);
 
-  void SetInventoryReference();
-
+	void SetInventoryReference();
+	
 	virtual void CompleteGoal() override;
 	
 };
