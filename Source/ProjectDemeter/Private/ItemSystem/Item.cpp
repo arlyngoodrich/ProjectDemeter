@@ -17,6 +17,7 @@ AItem::AItem()
 	ItemData.ItemClass = GetClass();
 }
 
+FItemData AItem::GetItemData() {return ItemData;}
 
 
 // Called when the game starts or when spawned
@@ -25,7 +26,6 @@ void AItem::BeginPlay()
 	Super::BeginPlay();
 
 	Initialize();
-	
 }
 
 // Called every frame
@@ -66,6 +66,7 @@ void AItem::AddToTargetInventory(const AActor* TargetActor)
 		this->Destroy();
 	}
 }
+
 
 
 

@@ -26,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly,Category="Interaction")
 	void AddToTargetInventory(const AActor* TargetActor);
 
+	UFUNCTION(BlueprintPure,Category="Item Data")
+	FItemData GetItemData();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

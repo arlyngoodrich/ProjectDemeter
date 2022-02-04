@@ -26,15 +26,15 @@ public:
 
    virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
 
-   //Should be set by object creating this goal
-   UPROPERTY()
-   AActor* TargetDropOffActor;
-
 	UPROPERTY()
 	FOnITemDroppedOff OnITemDroppedOffDelegate;
 
+	//Should be set by object creating this goal
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Goal System", meta=(ExposeOnSpawn))
+	AActor* TargetDropOffActor;
+
 	//tracked item type
-	UPROPERTY(EditDefaultsOnly, Category = "Goal System")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Goal System", meta=(ExposeOnSpawn))
 	TSubclassOf<AItem> DropOffItemClass;
 
 //protected:
