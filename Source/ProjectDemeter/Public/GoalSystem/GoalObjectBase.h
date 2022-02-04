@@ -7,7 +7,9 @@
 #include "GoalSystem/GoalData.h"
 #include "GoalObjectBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGoalCompleted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoalDataUpdate,FGoalData,GoalData);
+
+class UGoalTrackingComponent;
 
 /**
  * 
@@ -25,15 +27,22 @@ public:
    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
    FGoalData GoalData;
 
-    UPROPERTY(BlueprintAssignable, Category = "Goal System")
-    FOnGoalCompleted OnGoalCompletedDelegate;
+	UPROPERTY(BlueprintAssignable,Category="GoalSystem")
+	FOnGoalDataUpdate OnGoalDataUpdateDelegate;
 
-   virtual void Initialize(AActor* OwningActor);
+	
+   virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal);
 
 protected:
 
     UPROPERTY(BlueprintReadOnly, Category = "Goal System")
     AActor* OwningPlayer;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Goal System")
+	UGoalTrackingComponent* OwningGoalTracker;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Goal System")
+	bool bIsSubGoal;
 
     UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Goal System")
     void CompleteGoal();

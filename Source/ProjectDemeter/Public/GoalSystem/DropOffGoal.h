@@ -24,7 +24,7 @@ public:
 	
    UDropOffGoal();
 
-   virtual void Initialize(AActor* OwningActor) override;
+   virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
 
    //Should be set by object creating this goal
    UPROPERTY()
@@ -43,12 +43,9 @@ public:
    UPROPERTY()
    class UInventoryComponent* TrackedInventory;
 
-
-
     UFUNCTION()
     void OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory);
 
 	void SetInventoryReference();
-
 	
 };

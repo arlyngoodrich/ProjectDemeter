@@ -32,7 +32,10 @@ void UGoalTrackingComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UGoalTrackingComponent, ActiveGoalData);
+	//Different than default notify, makes replication updates whenever goal data is updated in array
+	DOREPLIFETIME_CONDITION_NOTIFY(UGoalTrackingComponent, ActiveGoalData, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME(UGoalTrackingComponent,ActiveGoalData);
+	
 }
 
 void UGoalTrackingComponent::Initialize()
@@ -72,7 +75,7 @@ void UGoalTrackingComponent::Internal_AddGoal(const TSubclassOf<UGoalObjectBase>
 	
 	//Initialize Goal 
 	UGoalObjectBase* NewGoalObject = NewObject<UGoalObjectBase>(this,GoalToAdd);
-	NewGoalObject->Initialize(OwningActor);
+	NewGoalObject->Initialize(OwningActor,this,false);
 	
 	//Add to goal object to tracking array
 	ActiveGoals.Add(NewGoalObject);
@@ -134,5 +137,9 @@ bool UGoalTrackingComponent::FindGoalDataByGUID(const FGuid GUID, int32& OutGoal
 	}
 	
 	return false;
+}
+
+void UGoalTrackingComponent::OnGoalDataUpdate(FGoalData GoalData)
+{
 }
 

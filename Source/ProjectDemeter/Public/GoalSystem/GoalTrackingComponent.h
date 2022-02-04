@@ -28,6 +28,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Goal System")
 	FGoalDataUpdate OnGoalDataUpdateDelegate;
 
+	UFUNCTION()
+	void OnGoalDataUpdate(FGoalData GoalData);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -71,5 +74,6 @@ protected:
 
 	//Helper function to find the index given a goal GUID
 	bool FindGoalDataByGUID(FGuid GUID, int32& OutGoalDataIndex) const;
+
 
 };

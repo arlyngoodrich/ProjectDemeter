@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GoalTrackingComponent.h"
 #include "GoalSystem/GoalObjectBase.h"
 #include "ItemSystem/ItemData.h"
 #include "PickupGoal.generated.h"
@@ -23,7 +24,7 @@ public:
 	
    UPickupGoal();
 
-   virtual void Initialize(AActor* OwningActor) override;
+   virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
 
 	UPROPERTY()
 	FOnItemPickedUp OnItemPickedUpDelegate;

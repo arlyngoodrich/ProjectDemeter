@@ -10,9 +10,9 @@ UDropOffGoal::UDropOffGoal()
 }
 
 
-void UDropOffGoal::Initialize(AActor* OwningActor)
+void UDropOffGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
 {
-    Super::Initialize(OwningActor);
+    Super::Initialize(OwningActor,GoalTrackingComponent,bSetIsSubGoal);
     
     SetInventoryReference();
 }

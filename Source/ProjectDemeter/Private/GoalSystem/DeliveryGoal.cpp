@@ -10,13 +10,12 @@
 
 
 
-void UDeliveryGoal::Initialize(AActor* OwningActor)
+void UDeliveryGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
 {
-	Super::Initialize(OwningActor);
+	Super::Initialize(OwningActor,GoalTrackingComponent,bSetIsSubGoal);
 	SetInventoryReference();
 	SetupPickupGoal();
 	SetupDropOffGoal();
-
 }
 
 void UDeliveryGoal::SetInventoryReference()
@@ -37,19 +36,33 @@ void UDeliveryGoal::SetInventoryReference()
 
 void UDeliveryGoal::SetupPickupGoal()
 {
-	PickupGoal = NewObject<UPickupGoal>(this,UPickupGoal::StaticClass());
-	PickupGoal->Initialize(OwningPlayer);
+	PickupGoal = NewObject<UPickupGoal>(this,UPickupGoal::StaticClass());	
+	PickupGoal->Initialize(OwningPlayer,OwningGoalTracker,true);
 	PickupGoal->PickupItemClass = ItemDeliveryClass;
 	PickupGoal->OnItemPickedUpDelegate.AddDynamic(this,&UDeliveryGoal::OnItemPickedUp);
+
+	FSubGoalData PickupGoalSubData;
+	PickupGoalSubData.GoalGUID = PickupGoal->GoalData.GoalGUID;
+	PickupGoalSubData.GoalDisplayName = PickupGoalDisplayText;
+
+	GoalData.SubGoalData.Add(PickupGoalSubData);
+	OnGoalDataUpdateDelegate.Broadcast(GoalData);
 }
 
 void UDeliveryGoal::SetupDropOffGoal()
 {
 	DropOffGoal = NewObject<UDropOffGoal>(this,UDropOffGoal::StaticClass());
-	DropOffGoal->Initialize(OwningPlayer);
+	DropOffGoal->Initialize(OwningPlayer,OwningGoalTracker,true);
 	DropOffGoal->TargetDropOffActor = DeliveryTarget;
 	DropOffGoal->DropOffItemClass = ItemDeliveryClass;
 	DropOffGoal->OnITemDroppedOffDelegate.AddDynamic(this,&UDeliveryGoal::OnItemDroppedOff);
+
+	FSubGoalData DropOffGoalSubData;
+	DropOffGoalSubData.GoalGUID = DropOffGoal->GoalData.GoalGUID;
+	DropOffGoalSubData.GoalDisplayName = DropOffGoalDisplayText;
+
+	GoalData.SubGoalData.Add(DropOffGoalSubData);
+	OnGoalDataUpdateDelegate.Broadcast(GoalData);
 }
 
 void UDeliveryGoal::OnItemPickedUp(FItemData Item)

@@ -10,9 +10,9 @@ UPickupGoal::UPickupGoal()
 }
 
 
-void UPickupGoal::Initialize(AActor* OwningActor)
+void UPickupGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
 {
-    Super::Initialize(OwningActor);
+    Super::Initialize(OwningActor,GoalTrackingComponent,bSetIsSubGoal);
 
     SetInventoryReference();
 }

@@ -21,8 +21,10 @@ class PROJECTDEMETER_API UDeliveryGoal : public UGoalObjectBase
 
 public:
 	void SetupPickupGoal();
+	
 	void SetupDropOffGoal();
-	virtual void Initialize(AActor* OwningActor) override;
+	
+	virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
 
 	UPROPERTY(BlueprintReadWrite,Category="Goal System", Meta = (ExposeOnSpawn=true))
 	AActor* DeliveryTarget;
@@ -31,6 +33,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,Category="Goal System")
 	TSubclassOf<AItem> ItemDeliveryClass;
+
+	UPROPERTY(EditDefaultsOnly,Category="Goal System")
+	FText PickupGoalDisplayText;
+
+	UPROPERTY(EditDefaultsOnly,Category="Goal System")
+	FText DropOffGoalDisplayText;
 	
 	UPROPERTY()
 	UPickupGoal* PickupGoal;
