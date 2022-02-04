@@ -14,7 +14,7 @@ class UDropOffGoal;
 /**
  * 
  */
-UCLASS()
+UCLASS(blueprintable)
 class PROJECTDEMETER_API UDeliveryGoal : public UGoalObjectBase
 {
 	GENERATED_BODY()
@@ -25,24 +25,24 @@ public:
 	virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
 
 	//Should be set by the creating object 
-	UPROPERTY(BlueprintReadWrite,Category="Goal System", Meta = (ExposeOnSpawn=true))
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Goal System", Meta = (ExposeOnSpawn=true))
 	AActor* DeliveryTarget;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Goal System",Meta = (ExposeOnSpawn=true))
+	TSubclassOf<AItem> ItemDeliveryClass;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Goal System",Meta = (ExposeOnSpawn=true))
+	FText PickupGoalDisplayText;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Goal System",Meta = (ExposeOnSpawn=true))
+	FText DropOffGoalDisplayText;
+	
 protected:
 
 	void SetupPickupGoal();
 	
 	void SetupDropOffGoal();
 
-	UPROPERTY(EditDefaultsOnly,Category="Goal System")
-	TSubclassOf<AItem> ItemDeliveryClass;
-
-	UPROPERTY(EditDefaultsOnly,Category="Goal System")
-	FText PickupGoalDisplayText;
-
-	UPROPERTY(EditDefaultsOnly,Category="Goal System")
-	FText DropOffGoalDisplayText;
-	
 	UPROPERTY()
 	UPickupGoal* PickupGoal;
 

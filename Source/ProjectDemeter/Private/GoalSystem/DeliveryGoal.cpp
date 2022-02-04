@@ -68,7 +68,7 @@ void UDeliveryGoal::SetupDropOffGoal()
 void UDeliveryGoal::OnItemPickedUp(FItemData Item)
 {
 
-	if(ItemGUID.IsValid())
+	if(Item.ItemGUID.IsValid())
 	{
 		//Add item to Item GUID to make sure we're tracking it 
 		ItemGUID = Item.ItemGUID;
@@ -77,7 +77,7 @@ void UDeliveryGoal::OnItemPickedUp(FItemData Item)
 	}
 	else
 	{
-		UE_LOG(LogGoalSystem,Error,TEXT("%s was given invalid item GUID for deliver"),*GetClass()->GetName())
+		UE_LOG(LogGoalSystem,Error,TEXT("%s was given invalid item GUID for deliveru"),*GetClass()->GetName())
 	}
 }
 
