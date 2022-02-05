@@ -49,11 +49,9 @@ public:
 
 	UFUNCTION()
 	void SetInventoryReference();
-
-	UFUNCTION()
+	
 	virtual void CompleteGoal() override;
-
-	UFUNCTION()
+	
 	virtual void ResetCharacterReferences() override;
 	
 };

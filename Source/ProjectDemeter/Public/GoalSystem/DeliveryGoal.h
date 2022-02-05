@@ -71,8 +71,7 @@ protected:
 
 	UFUNCTION()
 	void CheckToResetPickupGoals();
-
-	UFUNCTION()
+	
 	virtual void ResetCharacterReferences() override;
 
 	bool bDropOffComplete;
