@@ -28,7 +28,6 @@ UInteractionSensorComponent::UInteractionSensorComponent()
 void UInteractionSensorComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	Initialize();
 }
 
@@ -46,6 +45,7 @@ void UInteractionSensorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 void UInteractionSensorComponent::Initialize()
 {
+	
 	ACharacter_C* OwningCharacterCheck = Cast<ACharacter_C>(GetOwner());
 
 	if(!OwningCharacterCheck)
@@ -62,14 +62,21 @@ void UInteractionSensorComponent::Initialize()
 		{
 			//Not controlled by player character
 			//Check to see if ever possessed by player
-			OwningCharacterCheck->OnCharacterPossessedDelegate.AddDynamic(this,&UInteractionSensorComponent::Initialize);
+			UE_LOG(LogInteractionSystem, Log,
+			       TEXT("Interaction systm on %s not possessed by player.  Will wait for player possession"),
+			       *GetOwner()->GetName())
+			OwningCharacterCheck->OnCharacterPossessedDelegate.AddDynamic(this,&UInteractionSensorComponent::OnNewPossession);
 		}
 		else
 		{
 			OwningController = OwningControllerCheck;
-			UE_LOG(LogInteractionSystem, Log, TEXT("Interaction Sensor Component succesfully initalized on %s"), *GetOwner()->GetName())
-				
-			ToggleInteraction(true);
+			
+
+			if(OwningController->IsLocalPlayerController())
+			{
+				ToggleInteraction(true);
+				UE_LOG(LogInteractionSystem, Log, TEXT("Interaction Sensor Component succesfully initalized on %s"), *GetOwner()->GetName())
+			}		
 		}
 	}
 }
@@ -93,7 +100,7 @@ void UInteractionSensorComponent::Interact()
 	}
 }
 
-void UInteractionSensorComponent::TriggerInteraction(UInteractableObjectComponent* ComponentInView)
+void UInteractionSensorComponent::TriggerInteraction(UInteractableObjectComponent* ComponentInView) const
 {
 	ComponentInView->Interact(GetOwner());
 }
@@ -108,7 +115,7 @@ void UInteractionSensorComponent::Server_TriggerInteraction_Implementation(UInte
 	TriggerInteraction(ComponentInView);
 }
 
-void UInteractionSensorComponent::ToggleInteraction(bool bShouldCheckForInteraction)
+void UInteractionSensorComponent::ToggleInteraction(const bool bShouldCheckForInteraction)
 {
 	bShouldCheckForInteractable = bShouldCheckForInteraction;
 
@@ -130,7 +137,7 @@ void UInteractionSensorComponent::InteractionCheckLoop()
 	if (GetHitActorInView(HitActorInView))
 	{
 		//If Actor in view is not the same as the new actor in view, set as new one.  
-		//Otherwise don't check for interactable componet if it's the same
+		//Otherwise don't check for interactable component if it's the same
 		if (HitActorInView != ActorInView)
 		{
 
@@ -170,7 +177,7 @@ void UInteractionSensorComponent::InteractionCheckLoop()
 
 }
 
-bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor)
+bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor) const
 {
 
 	if (!OwningController) { return false; }
@@ -214,7 +221,9 @@ bool UInteractionSensorComponent::GetHitActorInView(AActor*& HitActor)
 	}
 }
 
-bool UInteractionSensorComponent::GetInteractableComponent(AActor* HitActor, UInteractableObjectComponent*& HitActorInteractableObjectComponent)
+bool UInteractionSensorComponent::GetInteractableComponent(const AActor* HitActor,
+                                                           UInteractableObjectComponent*&
+                                                           HitActorInteractableObjectComponent)
 {
 
 	HitActorInteractableObjectComponent = HitActor->FindComponentByClass<UInteractableObjectComponent>();
@@ -227,6 +236,15 @@ bool UInteractionSensorComponent::GetInteractableComponent(AActor* HitActor, UIn
 	{
 		return false;
 	}
+}
+
+void UInteractionSensorComponent::OnNewPossession(AController* NewController)
+{
+	UE_LOG(LogInteractionSystem,Log,TEXT("New possession called for %s"),*GetOwner()->GetName())
+	Initialize();
+	//FTimerHandle Timer;
+	//GetWorld()->GetTimerManager().SetTimer(Timer,this,&UInteractionSensorComponent::Initialize,1.f,false,1.f);
+	
 }
 
 

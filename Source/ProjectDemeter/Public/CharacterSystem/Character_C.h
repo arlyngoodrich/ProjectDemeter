@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Character_C.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterPossessed);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterPossessed,AController*,NewController);
 
 UCLASS()
 class PROJECTDEMETER_API ACharacter_C : public ACharacter

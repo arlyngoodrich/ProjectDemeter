@@ -68,7 +68,7 @@ protected:
 	void Interact();
 
 	//Internal method to handle interaction called by the player
-	void TriggerInteraction(UInteractableObjectComponent* ComponentInView);
+	void TriggerInteraction(UInteractableObjectComponent* ComponentInView) const;
 
 	//RPC for clients to request server to interact with an object 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -86,10 +86,12 @@ protected:
 
 	//Helper function to get the actor from line trace
 	UFUNCTION()
-	bool GetHitActorInView(AActor*& HitActor);
+	bool GetHitActorInView(AActor*& HitActor) const;
 
 	//Helper function that checks for an interactable object component on an actor 
 	UFUNCTION()
-	bool GetInteractableComponent(AActor* HitActor, UInteractableObjectComponent*& HitActorInteractableObjectComponent);
-		
+	static bool GetInteractableComponent(const AActor* HitActor, UInteractableObjectComponent*& HitActorInteractableObjectComponent);
+
+	UFUNCTION()
+	void OnNewPossession(AController* NewController);
 };
