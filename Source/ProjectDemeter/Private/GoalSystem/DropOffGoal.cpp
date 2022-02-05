@@ -10,9 +10,10 @@ UDropOffGoal::UDropOffGoal()
 }
 
 
-void UDropOffGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
+void UDropOffGoal::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent, const bool bSetIsSubGoal,
+                              const FText DisplayNameText, const FText DisplayDescriptionText)
 {
-    Super::Initialize(OwningActor,GoalTrackingComponent,bSetIsSubGoal);
+    Super::Initialize(OwningPlayer,GoalTrackingComponent,bSetIsSubGoal, DisplayNameText, DisplayDescriptionText);
     
     SetInventoryReference();
 }
@@ -21,9 +22,10 @@ void UDropOffGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTr
 
 void UDropOffGoal::SetInventoryReference()
 {
-    if (OwningPlayer == nullptr) { return; }
+    if (OwningActor == nullptr) { return; }
 
-    TrackedInventory = OwningPlayer->FindComponentByClass<UInventoryComponent>();
+    GetInventoryComponentFromOwner(TrackedInventory);
+        
     if (TrackedInventory == nullptr)
     {
         UE_LOG(LogGoalSystem, Error, TEXT("%s could not find invnetory on owning player"), *GetClass()->GetName())
@@ -50,4 +52,11 @@ void UDropOffGoal::CompleteGoal()
     Super::CompleteGoal();
 
     TrackedInventory->OnItemTransferredDelegate.RemoveDynamic(this, &UDropOffGoal::OnItemTransferredFromInventory);
+}
+
+void UDropOffGoal::ResetCharacterReferences()
+{
+    Super::ResetCharacterReferences();
+
+    SetInventoryReference();
 }

@@ -18,6 +18,13 @@ void ACharacter_C::BeginPlay()
 	
 }
 
+void ACharacter_C::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	UE_LOG(LogTemp,Log,TEXT("%s possessed by %s"),*GetName(),*NewController->GetName())
+	OnCharacterPossessedDelegate.Broadcast(NewController);
+}
+
 // Called every frame
 void ACharacter_C::Tick(float DeltaTime)
 {

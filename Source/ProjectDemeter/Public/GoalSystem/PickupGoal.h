@@ -24,7 +24,8 @@ public:
 	
    UPickupGoal();
 
-   virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
+	virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal,
+							 FText DisplayNameText, FText DisplayDescriptionText) override;
 
 	UPROPERTY()
 	FOnItemPickedUp OnItemPickedUpDelegate;
@@ -36,16 +37,16 @@ public:
 //protected:
 
    //tracked inventory component to bind to watch for object pickup
-   UPROPERTY()
-   class UInventoryComponent* TrackedInventory;
+	UPROPERTY()
+	class UInventoryComponent* TrackedInventory;
 
+	UFUNCTION()
+	void OnItemAddedToInventory(FItemData AddedItem);
 
-
-  UFUNCTION()
-  void OnItemAddedToInventory(FItemData AddedItem);
-
-  void SetInventoryReference();
-
+	UFUNCTION()
+	void SetInventoryReference();
+	
 	virtual void CompleteGoal() override;
 	
+	virtual void ResetCharacterReferences() override;
 };

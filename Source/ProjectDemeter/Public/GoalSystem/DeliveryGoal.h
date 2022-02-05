@@ -22,7 +22,8 @@ class PROJECTDEMETER_API UDeliveryGoal : public UGoalObjectBase
 public:
 
 	//Called by object creating goal
-	virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
+	virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal,
+                            FText DisplayNameText, FText DisplayDescriptionText) override;
 
 	//Should be set by the creating object 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Goal System", Meta = (ExposeOnSpawn=true))
@@ -39,7 +40,7 @@ public:
 	
 protected:
 
-	void SetupPickupGoal();
+	void SetupPickupGoal(bool bIsReplacement);
 	
 	void SetupDropOffGoal();
 
@@ -70,6 +71,8 @@ protected:
 
 	UFUNCTION()
 	void CheckToResetPickupGoals();
+	
+	virtual void ResetCharacterReferences() override;
 
 	bool bDropOffComplete;
 	

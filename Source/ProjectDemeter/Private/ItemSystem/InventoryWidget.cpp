@@ -17,6 +17,8 @@ void UInventoryWidget::SetUpInventoryWidget(UInventoryComponent* CreatingInvento
 	OwningInventory = CreatingInventory;
 	NumberOfSlots = OwningInventory->GetMaxInventorySlots();
 	OwningInventory->OnInventoryUpdated.AddDynamic(this,&UInventoryWidget::Internal_RefreshInventory);
+	OwningInventory->GetOwner()->OnDestroyed.AddDynamic(this,&UInventoryWidget::InternalRemoveWidget);
+	
 }
 
 void UInventoryWidget::ConsumeItem(FItemData ItemToConsume)
@@ -38,6 +40,11 @@ void UInventoryWidget::ConsumeItem(FItemData ItemToConsume)
 void UInventoryWidget::Internal_RefreshInventory()
 {
 	BP_RefreshInventoryUI();
+}
+
+void UInventoryWidget::InternalRemoveWidget(AActor* DestroyedActor)
+{
+	RemoveFromParent();
 }
 
 void UInventoryWidget::NativeConstruct()

@@ -10,9 +10,10 @@ UPickupGoal::UPickupGoal()
 }
 
 
-void UPickupGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
+void UPickupGoal::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent, const bool bSetIsSubGoal,
+                             const FText DisplayNameText, const FText DisplayDescriptionText)
 {
-    Super::Initialize(OwningActor,GoalTrackingComponent,bSetIsSubGoal);
+    Super::Initialize(OwningPlayer,GoalTrackingComponent,bSetIsSubGoal,DisplayNameText, DisplayDescriptionText);
 
     SetInventoryReference();
 }
@@ -21,9 +22,10 @@ void UPickupGoal::Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTra
 
 void UPickupGoal::SetInventoryReference()
 {
-    if(OwningPlayer == nullptr){return;}
+    if(OwningActor == nullptr){return;}
 
-    TrackedInventory = OwningPlayer->FindComponentByClass<UInventoryComponent>();
+    GetInventoryComponentFromOwner(TrackedInventory);
+    
     if(TrackedInventory == nullptr)
     {
         UE_LOG(LogGoalSystem, Error, TEXT("%s goal could not set inventory reference on owning player"),
@@ -52,6 +54,12 @@ void UPickupGoal::CompleteGoal()
     Super::CompleteGoal();
 
     TrackedInventory->OnItemAddedToInventoryDelegate.RemoveDynamic(this,&UPickupGoal::OnItemAddedToInventory);
+}
+
+void UPickupGoal::ResetCharacterReferences()
+{
+    Super::ResetCharacterReferences();
+    SetInventoryReference();
 }
 
 

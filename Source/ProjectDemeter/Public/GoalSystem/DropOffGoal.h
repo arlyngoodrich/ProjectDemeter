@@ -24,7 +24,8 @@ public:
 	
    UDropOffGoal();
 
-   virtual void Initialize(AActor* OwningActor,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
+	virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal,
+							 FText DisplayNameText, FText DisplayDescriptionText) override;
 
 	UPROPERTY()
 	FOnITemDroppedOff OnITemDroppedOffDelegate;
@@ -46,8 +47,11 @@ public:
     UFUNCTION()
     void OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory);
 
+	UFUNCTION()
 	void SetInventoryReference();
-
+	
 	virtual void CompleteGoal() override;
+	
+	virtual void ResetCharacterReferences() override;
 	
 };
