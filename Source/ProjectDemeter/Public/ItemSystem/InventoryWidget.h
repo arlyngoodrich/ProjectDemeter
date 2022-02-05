@@ -43,6 +43,9 @@ protected:
 	UFUNCTION()
 	virtual void Internal_RefreshInventory();
 
+	UFUNCTION()
+	void InternalRemoveWidget(AActor* DestroyedActor);
+	
 	virtual void NativeConstruct() override;
 	
 };
