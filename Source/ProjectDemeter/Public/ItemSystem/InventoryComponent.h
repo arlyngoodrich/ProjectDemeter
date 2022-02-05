@@ -7,6 +7,7 @@
 #include "ItemSystem/ItemData.h"
 #include "InventoryComponent.generated.h"
 
+class AItem;
 class UInventoryWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
@@ -40,6 +41,14 @@ public:
 	//Authority only method called to add item to inventory.  Must have a valid GUID to be added to inventory 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
 	bool AddItem(FItemData Item);
+
+	//Creates new item and initialize remaining pieces of Item Data 
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
+	bool AddItemType(TSubclassOf<AItem> NewItemType);
+
+	//Creates new item but parent class will be nullptr.  Should only be used for testing.
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
+	bool AddAbstractItem(FItemData ItemData, UClass* Class, FItemData& UpdatedItemData);
 
 	//Authority only method called to remove an item type from the inventory. 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
@@ -150,7 +159,7 @@ private:
 	bool RemoveItemAtIndex(int32 ItemIndex);
 
 	//Finds first index of an item in inventory by item class. Will return false if item not found.
-	bool FindFirstIndexOfItemType(TSubclassOf<class AItem> ItemClass, int32& Index);
+	bool FindFirstIndexOfItemType(const UClass* ItemClass, int32& Index);
 
 	//Finds index of an item in an inventory by GUID.  Will return false if item not found. 
 	bool FindItemIndex(FGuid ItemGUID, int32& Index);

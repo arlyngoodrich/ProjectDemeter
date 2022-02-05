@@ -180,6 +180,25 @@ bool UInventoryComponent::AddItem(const FItemData Item)
 
 }
 
+bool UInventoryComponent::AddItemType(const TSubclassOf<AItem> NewItemType)
+{
+	FItemData ItemData = NewItemType.GetDefaultObject()->GetItemData();
+	ItemData.ItemClass = NewItemType->GetClass();
+	ItemData.ItemGUID = FGuid::NewGuid();
+
+	return AddItem(ItemData);
+}
+
+bool UInventoryComponent::AddAbstractItem(FItemData ItemData, UClass* Class,FItemData& UpdatedItemData)
+{
+	ItemData.ItemClass = nullptr;
+	ItemData.ItemGUID = FGuid::NewGuid();
+	ItemData.ItemClass = Class;
+	UpdatedItemData = ItemData;
+
+	return AddItem(ItemData);
+}
+
 
 bool UInventoryComponent::RemoveItemType(TSubclassOf<AItem> ItemClass)
 {
@@ -350,7 +369,7 @@ void UInventoryComponent::SetOwningPlayer()
 }
 
 
-bool UInventoryComponent::FindFirstIndexOfItemType(const TSubclassOf<class AItem> ItemClass, int32& Index)
+bool UInventoryComponent::FindFirstIndexOfItemType(const UClass* ItemClass, int32& Index)
 {
 
 	for (int32 i = 0; i < Inventory.Num(); i++)
