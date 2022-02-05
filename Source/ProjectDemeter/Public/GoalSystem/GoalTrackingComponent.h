@@ -34,7 +34,7 @@ public:
 
 	//Blueprint method only so internal method can be overriden by child classes
 	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal Type")
-	void BP_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd);
+	void BP_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd,FText DisplayText, FText DescriptionText);
 
 	//Blueprint method only so internal method can be overriden by child classes
 	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category="Goal System", DisplayName = "Add Goal")
@@ -76,7 +76,7 @@ protected:
 	* Internal overridable function to add Goals to tracking.  Will add both the goal object to the server
 	* and goal data to the server and client
 	*/
-	virtual void Internal_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd);
+	virtual void Internal_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd, FText DisplayText, FText DescriptionText);
 	
 	/*
 	* Internal overridable function to add a Goal pointer to tracking.  Will add both the goal object to the server

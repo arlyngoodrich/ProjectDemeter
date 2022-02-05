@@ -44,9 +44,10 @@ void UGoalTrackingComponent::Initialize()
 	OwningActor = GetOwner();
 }
 
-void UGoalTrackingComponent::BP_AddGoalType(TSubclassOf<UGoalObjectBase> GoalToAdd)
+void UGoalTrackingComponent::BP_AddGoalType(const TSubclassOf<UGoalObjectBase> GoalToAdd, const FText DisplayText,
+                                            const FText DescriptionText)
 {
-	Internal_AddGoalType(GoalToAdd);
+	Internal_AddGoalType(GoalToAdd,DisplayText,DescriptionText);
 }
 
 void UGoalTrackingComponent::BP_AddGoal(UGoalObjectBase* GoalObjectBase)
@@ -59,7 +60,8 @@ void UGoalTrackingComponent::OnRep_GoalDataUpdate() const
 	OnGoalDataUpdateDelegate.Broadcast();
 }
 
-void UGoalTrackingComponent::Internal_AddGoalType(const TSubclassOf<UGoalObjectBase> GoalToAdd)
+void UGoalTrackingComponent::Internal_AddGoalType(const TSubclassOf<UGoalObjectBase> GoalToAdd, const FText DisplayText,
+                                                  const FText DescriptionText)
 {
 	if(!IsValid(GoalToAdd))
 	{
@@ -81,7 +83,7 @@ void UGoalTrackingComponent::Internal_AddGoalType(const TSubclassOf<UGoalObjectB
 	
 	//Initialize Goal 
 	UGoalObjectBase* NewGoalObject = NewObject<UGoalObjectBase>(this,GoalToAdd);
-	NewGoalObject->Initialize(OwningActor,this,false);
+	NewGoalObject->Initialize(OwningActor,this,false,DisplayText,DescriptionText);
 	
 	//Add to goal object to tracking array
 	ActiveGoals.Add(NewGoalObject);

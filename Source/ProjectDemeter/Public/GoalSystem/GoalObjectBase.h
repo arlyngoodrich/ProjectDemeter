@@ -24,19 +24,26 @@ public:
    UGoalObjectBase();
 
 	//Goal data that will be shown on UI
-   UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Goal System")
+   UPROPERTY(BlueprintReadOnly, Category = "Goal System")
    FGoalData GoalData;
 
-	//
+	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly,Category="Goal System", DisplayName ="Initialize")
+	void BP_Initialize(AActor* OwningPlayer, UGoalTrackingComponent* GoalTrackingComponent, FText DisplayNameText,
+	                   FText DisplayDescriptionText);
+	
 	/**
 	 * @brief Called by spawning object
 	 * @param OwningPlayer should usually be the player controller but can also be an actor for testing
 	 * @param GoalTrackingComponent the goal component that is tracking this goal.  Should be the component on the
 	 * actor or player controller.
 	 * @param bSetIsSubGoal used in native code for creating sub codes.  Should always be false when used in blueprints.
+	 * @param DisplayNameText will be used to set the GoalData and displayed on the UI
+	 * @param DisplayDescriptionText will be used to set the GoalData and displayed on the UI
 	 */
-	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly, Category= "Goal System")
-   virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal);
+	virtual void Initialize(AActor* OwningPlayer, UGoalTrackingComponent* GoalTrackingComponent, bool bSetIsSubGoal,
+	                        FText DisplayNameText, FText DisplayDescriptionText);
+
+	
 
 protected:
 

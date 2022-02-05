@@ -14,10 +14,18 @@ UGoalObjectBase::UGoalObjectBase()
 	// ...
 }
 
-
-
-void UGoalObjectBase::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal)
+void UGoalObjectBase::BP_Initialize(AActor* OwningPlayer, UGoalTrackingComponent* GoalTrackingComponent,
+	FText DisplayNameText, FText DisplayDescriptionText)
 {
+	Initialize(OwningPlayer,GoalTrackingComponent,false,DisplayNameText,DisplayDescriptionText);
+}
+
+
+void UGoalObjectBase::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal,
+	 FText DisplayNameText, FText DisplayDescriptionText)
+{
+
+	
     if(OwningPlayer == nullptr)
     {
         UE_LOG(LogGoalSystem,Error,TEXT("%s goal class was given null owning player"),*GetClass()->GetName())
@@ -36,6 +44,8 @@ void UGoalObjectBase::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* Go
 	OwningGoalTracker = GoalTrackingComponent;
 	bIsSubGoal = bSetIsSubGoal;
 	GoalData.GoalGUID = FGuid::NewGuid();
+	GoalData.GoalDisplayName = DisplayNameText;
+	GoalData.GoalDescription = DisplayDescriptionText;
 }
 
 void UGoalObjectBase::CompleteGoal()
@@ -57,6 +67,8 @@ bool UGoalObjectBase::GetInventoryComponentFromOwner(UInventoryComponent*& Inven
 	if (PlayerController)
 	{
 		ActorToSearch = PlayerController->GetCharacter();
+		if(ActorToSearch == nullptr)
+		{return false;}
 	}
 	else
 	{

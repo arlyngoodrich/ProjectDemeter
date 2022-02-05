@@ -24,7 +24,8 @@ public:
 	
    UDropOffGoal();
 
-   virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
+	virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal,
+							 FText DisplayNameText, FText DisplayDescriptionText) override;
 
 	UPROPERTY()
 	FOnITemDroppedOff OnITemDroppedOffDelegate;

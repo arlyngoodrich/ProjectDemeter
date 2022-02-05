@@ -24,7 +24,8 @@ public:
 	
    UPickupGoal();
 
-   virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal) override;
+	virtual void Initialize(AActor* OwningPlayer,UGoalTrackingComponent* GoalTrackingComponent,bool bSetIsSubGoal,
+							 FText DisplayNameText, FText DisplayDescriptionText) override;
 
 	UPROPERTY()
 	FOnItemPickedUp OnItemPickedUpDelegate;
