@@ -3,10 +3,10 @@
 
 #include "InteractionSystem/InteractionSensorComponent.h"
 #include "InteractionSystem/InteractableObjectComponent.h"
+#include "CharacterSystem/Character_C.h"
 #include "Core/Logs_C.h"
 
 //UE4 Includes 
-#include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
 #include "DrawDebugHelpers.h"
 #include "Net/UnrealNetwork.h"
@@ -46,11 +46,7 @@ void UInteractionSensorComponent::TickComponent(float DeltaTime, ELevelTick Tick
 
 void UInteractionSensorComponent::Initialize()
 {
-
-	ACharacter* OwningCharacterCheck;
-	APlayerController* OwningControllerCheck;
-
-	OwningCharacterCheck = Cast<ACharacter>(GetOwner());
+	ACharacter_C* OwningCharacterCheck = Cast<ACharacter_C>(GetOwner());
 
 	if(!OwningCharacterCheck)
 	{
@@ -60,12 +56,13 @@ void UInteractionSensorComponent::Initialize()
 	}
 	else
 	{
-		OwningControllerCheck = Cast<APlayerController>(OwningCharacterCheck->GetController());
+		APlayerController* OwningControllerCheck = Cast<APlayerController>(OwningCharacterCheck->GetController());
 
 		if (!OwningControllerCheck)
 		{
 			//Not controlled by player character
-
+			//Check to see if ever possessed by player
+			OwningCharacterCheck->OnCharacterPossessedDelegate.AddDynamic(this,&UInteractionSensorComponent::Initialize);
 		}
 		else
 		{

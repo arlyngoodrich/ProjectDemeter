@@ -58,6 +58,7 @@ protected:
 	AActor* ActorInView;
 
 	//Called on begin play to set reference and kick off the interaction check loop
+	UFUNCTION()
 	void Initialize();
 
 	/*Called by player input to interact with an object if it's in view.  The player will see the interaction text and

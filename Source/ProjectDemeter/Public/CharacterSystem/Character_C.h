@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Character_C.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterPossessed);
 
 UCLASS()
 class PROJECTDEMETER_API ACharacter_C : public ACharacter
@@ -16,9 +17,14 @@ public:
 	// Sets default values for this character's properties
 	ACharacter_C(const class FObjectInitializer& ObjectInitializer);
 
+	UPROPERTY(BlueprintAssignable,Category="Character")
+	FOnCharacterPossessed OnCharacterPossessedDelegate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void PossessedBy(AController* NewController) override;
 
 public:	
 	// Called every frame
