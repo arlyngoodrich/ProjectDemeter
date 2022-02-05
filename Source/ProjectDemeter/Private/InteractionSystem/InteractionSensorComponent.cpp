@@ -242,8 +242,6 @@ void UInteractionSensorComponent::OnNewPossession(AController* NewController)
 {
 	UE_LOG(LogInteractionSystem,Log,TEXT("New possession called for %s"),*GetOwner()->GetName())
 	Initialize();
-	//FTimerHandle Timer;
-	//GetWorld()->GetTimerManager().SetTimer(Timer,this,&UInteractionSensorComponent::Initialize,1.f,false,1.f);
 	
 }
 
