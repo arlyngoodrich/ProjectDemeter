@@ -1,5 +1,6 @@
 #include "GoalSystem/GoalObjectBase.h"
 #include "Core/Logs_C.h"
+#include "Core/PlayerController_C.h"
 #include "GameFramework/Character.h"
 #include "GoalSystem/GoalTrackingComponent.h"
 #include "ItemSystem/InventoryComponent.h"
@@ -46,6 +47,13 @@ void UGoalObjectBase::Initialize(AActor* OwningPlayer,UGoalTrackingComponent* Go
 	GoalData.GoalGUID = FGuid::NewGuid();
 	GoalData.GoalDisplayName = DisplayNameText;
 	GoalData.GoalDescription = DisplayDescriptionText;
+
+	APlayerController_C* PlayerController = Cast<APlayerController_C>(OwningActor);
+	if(PlayerController)
+	{
+		PlayerController->OnPawnPossessedDelegate.AddDynamic(this,&UGoalObjectBase::ResetCharacterReferences);
+	}
+	
 }
 
 void UGoalObjectBase::CompleteGoal()
@@ -55,6 +63,11 @@ void UGoalObjectBase::CompleteGoal()
 	{
 		OwningGoalTracker->OnGoalDataUpdate(GoalData);
 	}
+}
+
+void UGoalObjectBase::ResetCharacterReferences()
+{
+	
 }
 
 bool UGoalObjectBase::GetInventoryComponentFromOwner(UInventoryComponent*& InventoryComponent) const

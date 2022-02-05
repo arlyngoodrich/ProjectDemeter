@@ -62,6 +62,9 @@ protected:
 	//Called when all objectives are complete.  Will tell owning goal tracker to update goal data as well 
     UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Goal System")
     virtual void CompleteGoal();
+
+	UFUNCTION()
+	virtual void ResetCharacterReferences();
 	
 	bool GetInventoryComponentFromOwner(class UInventoryComponent*& InventoryComponent) const;
 	

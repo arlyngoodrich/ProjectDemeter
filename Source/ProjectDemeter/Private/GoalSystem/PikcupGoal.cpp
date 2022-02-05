@@ -56,4 +56,10 @@ void UPickupGoal::CompleteGoal()
     TrackedInventory->OnItemAddedToInventoryDelegate.RemoveDynamic(this,&UPickupGoal::OnItemAddedToInventory);
 }
 
+void UPickupGoal::ResetCharacterReferences()
+{
+    Super::ResetCharacterReferences();
+    SetInventoryReference();
+}
+
 

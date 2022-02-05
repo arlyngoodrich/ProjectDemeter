@@ -53,3 +53,10 @@ void UDropOffGoal::CompleteGoal()
 
     TrackedInventory->OnItemTransferredDelegate.RemoveDynamic(this, &UDropOffGoal::OnItemTransferredFromInventory);
 }
+
+void UDropOffGoal::ResetCharacterReferences()
+{
+    Super::ResetCharacterReferences();
+
+    SetInventoryReference();
+}

@@ -40,13 +40,15 @@ public:
 	UPROPERTY()
 	class UInventoryComponent* TrackedInventory;
 
-
-
 	UFUNCTION()
 	void OnItemAddedToInventory(FItemData AddedItem);
 
+	UFUNCTION()
 	void SetInventoryReference();
-	
+
+	UFUNCTION()
 	virtual void CompleteGoal() override;
-	
+
+	UFUNCTION()
+	virtual void ResetCharacterReferences() override;
 };

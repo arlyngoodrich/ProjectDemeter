@@ -142,3 +142,11 @@ void UDeliveryGoal::CheckToResetPickupGoals()
 		SetupPickupGoal(true);
 	}
 }
+
+void UDeliveryGoal::ResetCharacterReferences()
+{
+	Super::ResetCharacterReferences();
+
+	SetInventoryReference();
+	
+}

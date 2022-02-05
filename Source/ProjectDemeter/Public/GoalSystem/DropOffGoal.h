@@ -47,8 +47,13 @@ public:
     UFUNCTION()
     void OnItemTransferredFromInventory(FItemData TransferredItem, UInventoryComponent* TargetInventory);
 
+	UFUNCTION()
 	void SetInventoryReference();
 
+	UFUNCTION()
 	virtual void CompleteGoal() override;
+
+	UFUNCTION()
+	virtual void ResetCharacterReferences() override;
 	
 };
