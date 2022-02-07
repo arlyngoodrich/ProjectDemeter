@@ -150,11 +150,6 @@ protected:
 	//Helper function called in BeginPlay to set owning player
 	void SetOwningPlayer();
 
-private:
-
-	//Create and adds widget to viewport 
-	void CreateInventoryWidget(APlayerController* PlayerController);
-
 	//Helper function to remove an item at index.  Used by RemoveItem and RemoveItemType
 	bool RemoveItemAtIndex(int32 ItemIndex);
 
@@ -163,5 +158,12 @@ private:
 
 	//Finds index of an item in an inventory by GUID.  Will return false if item not found. 
 	bool FindItemIndex(FGuid ItemGUID, int32& Index);
+
+private:
+
+	//Create and adds widget to viewport 
+	void CreateInventoryWidget(APlayerController* PlayerController);
+
+
 		
 };
