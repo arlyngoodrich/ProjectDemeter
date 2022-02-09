@@ -73,11 +73,11 @@ public:
 
 	//Authority only method to consume item.  Item must have valid GUID. 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
-	bool ConsumeItem(FItemData Item, AActor* TargetActor);
+	bool UseItem(FItemData Item, AActor* TargetActor);
 
 	//Client friendly method to consume item.  Item must have valid GUID. 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void  ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor);
+	void  ClientFriendly_UseItem(FItemData Item, AActor* TargetActor);
 
 	//Checks if an item can be added to an inventory.  Will check local version of inventory.  
 	UFUNCTION(BlueprintPure, Category="Inventory")
@@ -133,9 +133,9 @@ protected:
 
 	//Server RPC to consume item.  Must have valid GUID
 	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_ConsumeItem(FItemData Item, AActor* TargetActor);
-	bool Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor);
-	void Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor);
+	void Server_UseItem(FItemData Item, AActor* TargetActor);
+	bool Server_UseItem_Validate(FItemData Item, AActor* TargetActor);
+	void Server_UseItem_Implementation(FItemData Item, AActor* TargetActor);
 
 	//Server RPC to Transfer Item.  Must have valid GUID.
 	UFUNCTION(Server,Reliable,WithValidation)

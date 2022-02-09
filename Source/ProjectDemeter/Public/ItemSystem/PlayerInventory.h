@@ -12,7 +12,7 @@ struct FInventorySlotData
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	int32 ActionIndex;
+	int32 ActionSlot;
 
 	UPROPERTY(BlueprintReadOnly, Category="Inventory")
 	bool bHasItem;
@@ -43,10 +43,14 @@ public:
 	FOnActionSlotUpdate OnActionSlotUpdateDelegate;
 	
 	UFUNCTION(BlueprintCallable,BlueprintAuthorityOnly,Category="Inventory")
-	void SetItemInSlot(int32 ActionIndex,FItemData Item);
+	void SetItemInSlot(int32 ActionSlot,FItemData Item);
 
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	void UseItemInActionSlot(int32 ActionSlot);
+	
 	UFUNCTION(BlueprintCallable,Category="Inventory")
-	bool GetItemFromSlot(int32 ActionSlotIndex,FItemData& Item);
+	bool GetItemFromSlot(int32 ActionSlot,FItemData& Item);
+
 	
 protected:
 	
@@ -58,15 +62,24 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Replicated, Category="Inventory")
 	TArray<FInventorySlotData> ActionSlots;
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION()
 	void OnRep_ActionSlotsUpdate() const;
 
+	UFUNCTION()
+	void CheckForActionItemRemoval(FItemData Item);
+
+	UFUNCTION()
+	void RemoveItemFromSlot(int32 ActionSlot);
 
 private:
 
-	void RefreshSlots();
+	void CreateSlots();
 
-	bool GetSlotIndex(int32 ActionIndex, int32&ArrayIndex);
+	bool GetSlotIndex(int32 ActionSlot, int32&ArrayIndex);
+
+	FGuid NullGUID;
 
 	
 };

@@ -21,20 +21,10 @@ void UInventoryWidget::SetUpInventoryWidget(UInventoryComponent* CreatingInvento
 	
 }
 
-void UInventoryWidget::ConsumeItem(FItemData ItemToConsume)
+void UInventoryWidget::UseItem(FItemData ItemToConsume)
 {
-	//Check to see if has a valid consumption effect
-	if(ItemToConsume.StatEffectOnConsume == nullptr)
-	{
-		//If not, then just remove
-		OwningInventory->ClientFriendly_RemoveItem(ItemToConsume);
-	}
-	else
-	{
 		//If yes, then consume it 
-		OwningInventory->ClientFriendly_ConsumeItem(ItemToConsume,OwningInventory->GetOwner());
-	}
-	
+		OwningInventory->ClientFriendly_UseItem(ItemToConsume,OwningInventory->GetOwner());
 }
 
 void UInventoryWidget::Internal_RefreshInventory()

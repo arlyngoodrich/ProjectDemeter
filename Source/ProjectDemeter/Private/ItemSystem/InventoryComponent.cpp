@@ -109,15 +109,15 @@ void UInventoryComponent::ClientFriendly_TransferItem(const FItemData Item,UInve
 }
 
 
-void UInventoryComponent::ClientFriendly_ConsumeItem(FItemData Item, AActor* TargetActor)
+void UInventoryComponent::ClientFriendly_UseItem(FItemData Item, AActor* TargetActor)
 {
 	if (GetOwnerRole() == ROLE_Authority)
 	{
-		ConsumeItem(Item, TargetActor);
+		UseItem(Item, TargetActor);
 	}
 	else
 	{
-		Server_ConsumeItem(Item, TargetActor);
+		Server_UseItem(Item, TargetActor);
 	}
 }
 
@@ -264,10 +264,10 @@ bool UInventoryComponent::RemoveItemAtIndex(const int32 ItemIndex)
 {
 	if(Inventory.IsValidIndex(ItemIndex))
 	{
-		const FItemData ItemData =  Inventory[ItemIndex];
-		OnItemRemovedDelegate.Broadcast(ItemData);
-		
+		const FItemData ItemData =  Inventory[ItemIndex];		
 		Inventory.RemoveAt(ItemIndex);
+
+		OnItemRemovedDelegate.Broadcast(ItemData);
 		OnRep_InventoryUpdate();
 		
 		return true;
@@ -309,7 +309,7 @@ bool UInventoryComponent::TransferItem(const FItemData Item, UInventoryComponent
 	
 }
 
-bool UInventoryComponent::ConsumeItem(const FItemData Item, AActor* TargetActor)
+bool UInventoryComponent::UseItem(const FItemData Item, AActor* TargetActor)
 {
 	//Confirm Authority
 	if (GetOwnerRole() != ROLE_Authority)
@@ -409,14 +409,14 @@ void UInventoryComponent::Server_RemoveItem_Implementation(FItemData Item)
 	RemoveItem(Item);
 }
 
-bool UInventoryComponent::Server_ConsumeItem_Validate(FItemData Item, AActor* TargetActor)
+bool UInventoryComponent::Server_UseItem_Validate(FItemData Item, AActor* TargetActor)
 {
 	return true;
 }
 
-void UInventoryComponent::Server_ConsumeItem_Implementation(FItemData Item, AActor* TargetActor)
+void UInventoryComponent::Server_UseItem_Implementation(FItemData Item, AActor* TargetActor)
 {
-	ConsumeItem(Item, TargetActor);
+	UseItem(Item, TargetActor);
 }
 
 bool UInventoryComponent::Server_TransferItem_Validate(FItemData Item, UInventoryComponent* TargetInventory)

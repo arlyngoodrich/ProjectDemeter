@@ -33,7 +33,7 @@ public:
 protected:
 
 	UFUNCTION(BlueprintCallable, Category="Inventory System")
-	void ConsumeItem(FItemData ItemToConsume);
+	void UseItem(FItemData ItemToConsume);
 	
 	//Called by native class when inventory is updated.  Utilizes Inventory Component delegate.  
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory System", DisplayName = "Refresh Inventory UI")
